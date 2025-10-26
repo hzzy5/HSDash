@@ -1,1 +1,1 @@
-hallo das ist unser projekt.
+## SNAKE PROJEKT Gruppe 1
