@@ -1,20 +1,21 @@
-function Player(name, x, y) {
-  this.name = name;
-  this.x = x;
-  this.y = y;
-}
+class Player {
 
-// Methode auf dem Prototypen definieren
-Player.prototype.move = function(dx, dy) {
-  this.x += dx;
-  this.y += dy;
-};
+  //Konstruktor
+  constructor (_name, _x, _y) {
+    this.name = _name;
+    this.x = _x;
+    this.y = _y;
+  }
 
-Player.prototype.sayHello = function() {
-  console.log(`Hi, ich bin ${this.name}!`);
-};
+  //Methode, die die Position beim Springen verändert
+  jump (_x, _y) {
+    //code
+  }
 
-// Instanz erzeugen
-const p = new Player("Alex", 10, 20);
-p.move(5, -3);
-p.sayHello();
+  //Methode, die die Position des Players updatet. Wird im Controller aufgerufen
+  update () {
+    //code
+  } 
+
+  
+} //end class player
