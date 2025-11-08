@@ -15,6 +15,6 @@ Player.prototype.sayHello = function() {
 };
 
 // Instanz erzeugen
-const p = new Player("Alex", 10, 20);
+const p = new Player("Lasse", 10, 20);
 p.move(5, -3);
 p.sayHello();
