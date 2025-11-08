@@ -14,7 +14,4 @@ Player.prototype.sayHello = function() {
   console.log(`Hi, ich bin ${this.name}!`);
 };
 
-// Instanz erzeugen
-const p = new Player("Lasse", 10, 20);
-p.move(5, -3);
-p.sayHello();
+export { Player };
