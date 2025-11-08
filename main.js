@@ -1,17 +1,20 @@
 import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs"; //mjs für Moduldateien
 //weitere Importe aus den Moduldateien
 
+let app;
+let player;
+let barrier;
+let speed = 10;
 
-(async() => {                             
-    // Canvas initialisieren                   
-    const app = new PIXI.Application();     
+window.onload = async function() {
+    app = new PIXI.Application();
+
     await app.init({
         width: window.innerWidth,
-        height: window.innerHeight, 
-        // resizeTo: window,
-        backgroundAlpha: 0.7,
-        backgroundColor: 0x6495ED,
-    });
+        height: window.innerHeight,
+        backgroundAlpha: 0.9,
+        backgroundColor: 0xD3D3D3,
+  });
 
     //Um die weißen Ränder zu entfernen
     app.canvas.style.position = 'absolute';
@@ -19,49 +22,99 @@ import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs
     //Ins DOM hinzufügen
     document.body.appendChild(app.canvas);
 
-    
-    //Player  
-    const player = new PIXI.Sprite.from;
-    const rectangle = new PIXI.Graphics();
-
-
-
-
-    /*-------------------------------------------------------------------------------
-        Klasse Text erlaubt uns Text zu schreiben.*/
-    const style = new PIXI.TextStyle({
-        fill: 0x0000,
-        fontSize: 24
+    //preloade Assets
+    PIXI.Assets.add({
+        alias: "player", //name
+        src: "assets/player.png", //pfad
     });
-    const message = new PIXI.Text({ text: "hi!", style }); //Style definieren und an ganze Text-Blöcke übergeben, um Code-Duplikation zu vermeiden.
-    message.x = 100;
-    message.y = 100;
-    app.stage.addChild(message);
 
-    const text = new PIXI.Text({
-        text: 'Hello Pixi',
-        style: {
-            // `fill` is the same as the `color` property in CSS.
-            fill: '#ffffff',
-            fontFamily: 'Montserrat Medium', //oder das was installiert ist
-            fontSize: 72,
-            fontStyle: 'italic',
-            fontWeight: 'bold',
-            stroke: { color: '#4a1850', width: 5 },
-            dropShadow: {
-                color: '#4a1850',
-                blur: 4,
-                angle: Math.PI / 6,
-                distance: 6,
-            },
-            wordWrap: true,
-            wordWrapWidth: 440
-        }
-    }); 
-    text.x = 1000;
-    text.y = 200;
+    PIXI.Assets.add({
+        alias: "barrier",
+        src: "assets/barrier.png",
+    });
 
-    app.stage.addChild(text);
+    await PIXI.Assets.load(["player", "barrier"]);
+
+    //Player erstellen
+    player = PIXI.Sprite.from("player");
+    // player.anchor.set(0.5); //Mittelpunkt im Bild
+    player.x = 0 ;
+    player.y = 400;
+    app.stage.addChild(player);
+
+    //Player erstellen
+    barrier = PIXI.Sprite.from("barrier");
+    // barrier.anchor.set(0.5);
+    barrier.x = 1350;
+    barrier.y = 600;
+    app.stage.addChild(barrier);
+
+    app.ticker.add(gameLoop);
 
 
-})(); //end async
+    //keyboard movement mit eventlisteners
+    // window.addEventListener("keydown", keyDown); //gedrückt
+    // window.addEventListener("keyup", keyUp); //losgelassen
+
+};
+
+//Collision Detection player vs barrier 
+function gameLoop(delta) {
+    player.x += speed;
+    barrier.x -= speed;
+
+    if (rectsInteract(player, barrier)) {
+        speed = 0;
+    }
+}
+
+function rectsInteract(a, b) {
+    let aBox = a.getBounds();
+    let bBox = b.getBounds();
+
+    return aBox.x-35 + aBox.width > bBox.x &&   //hier ungenau: -35, da es noch transparente Ränder gibt. 
+           aBox.x-35 < bBox.x + bBox.width &&
+           aBox.y + aBox.height > bBox.y &&
+           aBox.y < bBox.y + bBox.height;
+}
+
+
+
+
+// function keyDown(e) {
+//     console.log(e.keyCode); //40
+// }
+
+// function keyUp(e) {
+//     console.log(e.keyCode); //38
+// }
+
+
+
+
+
+/*
+//W 
+if (keys["87"]) {
+    player.y -=5
+}
+
+//A 
+if (keys["65"]) {
+    player.x -=5
+}
+
+//S 
+if (keys["83"]) {
+    player.y +=5
+}
+
+//D
+if (keys["68"]) {
+    player.x +=5
+}
+
+*/ 
+
+
+// })(); //end async
