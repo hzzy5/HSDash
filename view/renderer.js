@@ -1,17 +1,34 @@
 let app;
 let playerGraphic;
+let ground;
 
-function initRenderer(width = "100vw", height = "100vh") {
+function initRenderer() {
   // Pixi-App erstellen
   app = new PIXI.Application({
-    width,
-    height,
-    backgroundColor: 0x87ceeb,
+    width: window.innerWidth,
+    height: window.innerHeight,
+    backgroundColor: 0x87ceeb, // Hellblau
+    antialias: true, // Kanten glätten -> sonst Linien gezackt
+    resizeTo: window // Automatisch an Fenstergröße anpassen
   });
   
   // Das Canvas der App in die Seite einfügen
-  document.body.appendChild(app.view);  // In Pixi ist alles wie eine Bühne aufgebaut und man fügt elemente übereinander als Kinder ein
-  // --> Ganz hinten ist die Wurzel von allen Elementen (hier der body vom document)
+  document.body.appendChild(app.view); // app.view ist das Canvas-Element
+
+  // Grünen Boden erstellen
+  ground = new PIXI.Graphics();
+  ground.beginFill(0x2d5a27); // Dunkelgrüne Farbe
+  ground.drawRect(0, app.screen.height - 100, app.screen.width, 100);
+  ground.endFill();
+  app.stage.addChild(ground);
+
+  // Event Listener für Fenstergrößenänderungen
+  window.addEventListener('resize', () => {
+    ground.clear();
+    ground.beginFill(0x2d5a27);
+    ground.drawRect(0, app.screen.height - 100, app.screen.width, 100);
+    ground.endFill();
+  });
 }
 
 

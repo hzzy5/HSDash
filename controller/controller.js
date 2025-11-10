@@ -1,20 +1,26 @@
+import { Player } from '../model/player.js';
+
 const keys = {};
+let player;
 
 document.addEventListener("keydown", (e) => {
   keys[e.key] = true;
 });
 
-document.addEventListener("keydown", (e) => {
-  keys[e.key] = true;
+document.addEventListener("keyup", (e) => {
+  keys[e.key] = false;
 });
 
-function update(){
+export function initController(playerInstance) {
+    player = playerInstance;
+    requestAnimationFrame(update);
+}
+
+function update() {
     if (keys["a"]) player.move(-5, 0);
     if (keys["d"]) player.move(5, 0);
     requestAnimationFrame(update);
 }
-
-update();
 
 
 
