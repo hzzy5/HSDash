@@ -7,7 +7,7 @@ initRenderer();
 
 // Spieler erstellen (100px ist die Bodenhöhe)
 const startY = window.innerHeight - 120; // 20px ist die Spielerhöhe
-const player = new Player("Lasse", 50, startY);
+const player = new Player(50, startY);
 
 //Funktion aus renderer.js aufrufen, um die Spieler-Graphik zu erstellen (Hier nur Quadrat als Platzhalter)
 createPlayerSprite(player);
