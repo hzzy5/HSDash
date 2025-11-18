@@ -61,11 +61,12 @@ export class Controller {
         this.renderer.positionSprite(this.enemySprite, this.enemy.x, this.enemy.y);
 
         //Abfrage
-        window.addEventListener("keydown", (e) => this.keyIsDown(e))
+        window.addEventListener("keydown", (e) => this.keyIsDown(e));
 
         //Gameloop starten
-        this.renderer.app.ticker.add((delta) => this.gameLoop(delta));;
+        this.renderer.app.ticker.add((delta) => this.gameLoop(delta));
     }
+    /*vllt iwie optimieren: nur zeichnen, wenn etwas geändert wurde.*/
     
     //gameloop starten
     gameLoop(delta) {

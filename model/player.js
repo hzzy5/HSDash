@@ -46,5 +46,8 @@ export class Player {
     //code
   } 
 
-  
+  /*Kann PIXI.js Spritesheets umsetzen?
+    Prüfung: Spezifische Fragen: Wenn man ... ergänzen wollen würde, wo würde man das einfügen sollen?
+    Pixelkollisiotnserkennung ausprobieren. Wenn zu schwer, dann Blockbasiert.
+    Schwerkraft*/
 } //end class player
