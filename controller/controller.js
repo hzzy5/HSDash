@@ -23,6 +23,12 @@ export class Controller {
     //jumpsound
     jumpsound;
 
+    //hintergrundmusik
+    backroundmusicLevel;
+
+    //wird die hintergrundmusik gerade abgespielt?
+    musicplaying = false;
+
     //Für den Hintergrund 
     backgroundX = 0;
     backgroundSpeed = -10; //nach links bewegen
@@ -75,6 +81,13 @@ export class Controller {
             src: ["../assets/audio/jump.mp3"],
             volume: 0.5
           });
+
+        //hintergrundmusik
+        this.backroundmusicLevel = new Howl({
+            src: ["../assets/audio/hintergrundmusik-level.mp3"],
+            volume: 0.5,
+            loop: true
+          });
     }
     
     //gameloop starten
@@ -117,6 +130,10 @@ export class Controller {
             console.log("Leertaste ("+ e.keyCode +", " + e.code + ") ist gedrückt.");
             this.player.jump(); 
             this.jumpsound.play();
+            if(!this.musicplaying){
+                this.backroundmusicLevel.play();
+                this.musicplaying = true;
+            }
             this.renderer.positionSprite(this.playerSprite, this.player.x, this.player.y);  
         }
     }
