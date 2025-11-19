@@ -2,6 +2,7 @@ import { Player } from "../model/player.js";
 import { Enemy } from "../model/enemy.js";
 import { Renderer } from "../view/renderer.js"; 
 //import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs";
+import { Howl } from "https://cdn.skypack.dev/howler";
 
 export class Controller {
 
@@ -18,6 +19,9 @@ export class Controller {
     playerSprite;
     enemy;
     enemySprite;
+
+    //jumpsound
+    jumpsound;
 
     //Für den Hintergrund 
     backgroundX = 0;
@@ -65,6 +69,12 @@ export class Controller {
 
         //Gameloop starten
         this.renderer.app.ticker.add((delta) => this.gameLoop(delta));;
+
+        //sound
+        this.jumpsound = new Howl({
+            src: ["../assets/audio/jump.mp3"],
+            volume: 0.5
+          });
     }
     
     //gameloop starten
@@ -106,6 +116,7 @@ export class Controller {
         if(e.keyCode === 32 || e.code === 'Space' && this.player.y >= this.player.ground) {
             console.log("Leertaste ("+ e.keyCode +", " + e.code + ") ist gedrückt.");
             this.player.jump(); 
+            this.jumpsound.play();
             this.renderer.positionSprite(this.playerSprite, this.player.x, this.player.y);  
         }
     }
