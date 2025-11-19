@@ -7,15 +7,18 @@ export class Player {
     this.y = _y;
 
     this.speed = _speed; //speed beim player vermutlich nicht nötig. Nur fürs testen, später entfernen.
-    this.jumpForce = 0;
+    this.velocity = 0; //Fallgeschwindigkeit. Vielleicht velocity benennen.
     this.isJumping = false;
-    this._ground = _y //Das soll der Startwert sein. Er wird einmal initialsiiert und nicht mehr geändert
+
+    //Das sind "private" Variablen. Sie werden einmal initialsiiert und nicht mehr geändert.
+    this._ground = _y 
+    this._gravitation = -12;
   }
 
   //Methode, die aufgerufen wird, wenn Space gedrückt wird.
   jump() {
     if (!this.isJumping) {
-          this.jumpForce = -12;
+          this.velocity = -10.05; //das ist die Gravitation. Am besten eine Variable gravity definieren und dann velocity +=gravity.
           console.log("gesprungen");
           this.isJumping = true;
       }
@@ -24,18 +27,18 @@ export class Player {
   //Methode, die in jedem Frame der GameLoop aufgerufen wird
   updatePosition() {
     //Wenn der Spieler gerade springt
-      if (this.isJumping) {                            //if (this.jumpForce <= 450) { wäre auch noch möglich, da man bei 450 auf dem Boden ist. 
+      if (this.isJumping) {                            //if (this.velocity <= 450) { wäre auch noch möglich, da man bei 450 auf dem Boden ist. 
         console.log("ich bin bereit zum fallen")
-          this.y += this.jumpForce;
-          this.jumpForce += 0.5;     //Gravitation. Spieler fällt langsam nach unten
-          console.log("ich falle")
+          this.y += this.velocity;
+          this.velocity += 0.5;     //Gravitation. Spieler fällt langsam nach unten
+          console.log("ich falle");
 
         //Boden prüfen: Wenn er den Boden erreicht hat, steht er wieder auf dem Boden und springt nicht weiter.
         if (this.y >= this._ground) {
           this.y = this._ground;
-          this.jumpForce = 0;
+          this.velocity = 0;
           this.isJumping = false;
-          console.log("bin unten")
+          console.log("bin unten");
         }
       }
   }
