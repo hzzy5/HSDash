@@ -42,7 +42,7 @@ function createPlayerSprite(player) {
 }
 
 function renderPlayer(player) {
-    playerGraphic.x = player.x;
+    playerGraphic.x = player.x;s
     playerGraphic.y = player.y;
 }
 
