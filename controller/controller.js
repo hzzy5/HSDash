@@ -104,7 +104,7 @@ export class Controller {
     }
 
     keyIsDown(e) {
-        if(e.keyCode === 32 || e.code === 'Space' & this.player.y <= this.player.ground) {
+        if(e.keyCode === 32 || e.code === 'Space') {
             console.log("Leertaste ("+ e.keyCode +", " + e.code + ") ist gedrückt.");
             this.player.jump(); 
             this.renderer.positionSprite(this.playerSprite, this.player.x, this.player.y);  
