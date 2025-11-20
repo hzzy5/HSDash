@@ -15,6 +15,10 @@ Player.prototype.sayHello = function() {
 };
 
 // Instanz erzeugen
-const p = new Player("Alex", 10, 20);
-p.move(5, -3);
-p.sayHello();
+//const p = new Player("Alex", 10, 20);
+//p.move(5, -3);
+//p.sayHello();
+
+// neu für testen: Player-Klasse exportieren!
+export { Player };
+
