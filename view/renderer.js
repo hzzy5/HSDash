@@ -36,9 +36,20 @@ function createPlayerSprite(player) {
   // Einfaches rotes Quadrat als Platzhalter
   playerGraphic = new PIXI.Graphics();
   playerGraphic.beginFill(0xff0000);
-  playerGraphic.drawRect(0, 0, 20, 20);
+  playerGraphic.drawRect(0, 0, player.width, player.height);
   playerGraphic.endFill();
   app.stage.addChild(playerGraphic);
+}
+
+function createPlatform(x, y, width, height, color = 0x8b4513) {
+  const gfx = new PIXI.Graphics();
+  gfx.beginFill(color);
+  gfx.drawRect(0, 0, width, height);
+  gfx.endFill();
+  gfx.x = x;
+  gfx.y = y;
+  app.stage.addChild(gfx);
+  return { x, y, width, height };
 }
 
 function renderPlayer(player) {
@@ -47,10 +58,19 @@ function renderPlayer(player) {
   playerGraphic.y = player.y;
 }
 
-function startGameLoop(player) {
-  app.ticker.add(() => {     // von PIXI -> wie requestAnimationFrame() vorher (ticker ruft bei jedem frame 60fps 60 mal pro sekunde die funktion auf)
-    renderPlayer(player);
+function startGameLoop(updateOrPlayer) {
+  // updateOrPlayer kann entweder eine Update-Funktion (dt) => player
+  // oder direkt das Player-Objekt sein (älteres Verhalten).
+  app.ticker.add((delta) => {     // von PIXI -> wie requestAnimationFrame()
+    const dt = delta / 60; // grobe Sekunden seit letztem Frame
+    if (typeof updateOrPlayer === 'function') {
+      const player = updateOrPlayer(dt); // Controller aktualisiert Model und liefert Player zurück
+      if (player) renderPlayer(player);
+    } else if (updateOrPlayer) {
+      // Einfaches Rendering des übergebenen Player-Objekts (Controller aktualisiert intern)
+      renderPlayer(updateOrPlayer);
+    }
   });
 }
 
-export { initRenderer, createPlayerSprite, startGameLoop }; //modernes java script -> macht funktionen öfffentlich damit andere dateien sie importieren können
+export { initRenderer, createPlayerSprite, startGameLoop, createPlatform }; //modernes java script -> macht funktionen öfffentlich damit andere dateien sie importieren können
