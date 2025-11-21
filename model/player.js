@@ -12,7 +12,7 @@ function Player(x, y) {
   // Sprint-Geschwindigkeit (px/s) — Standard: 1.8x normale Geschwindigkeit
   this.sprintSpeed = Math.round(this.speed * 1.8);
   // Vertikale Geschwindigkeit und Sprung-Parameter
-  this.vy = 0; // px/s
+  this.vy = 0; // px/s  vy= velocity
   this.onGround = false;
   this.jumpVelocity = Math.round(-480 * scale); // px/s (negativ = nach oben)
   // Dash Eigenschaften

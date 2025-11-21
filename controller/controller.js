@@ -15,7 +15,7 @@ document.addEventListener("keydown", (e) => {
     if (player && !player.onGround) dashRequested = true;
   }
   // Space oder ArrowUp immer als Sprung-Request
-  if (k === ' ' || k === 'arrowup') jumpRequested = true;
+  if (k === ' ') jumpRequested = true;
 });
 
 document.addEventListener("keyup", (e) => {
