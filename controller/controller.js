@@ -3,19 +3,26 @@ const keys = {};
 let player = null;
 let jumpRequested = false;
 let dashRequested = false;
+const DEBUG = true;
+let lastJumpY = null;
+let lastJumpTime = 0;
 // Collider-Liste (Rects mit x,y,width,height)
 let colliders = [];
 
 // Normalize key names to lower-case to avoid issues when Shift is held ("A" vs "a")
+console.log('[controller] loaded');
 document.addEventListener("keydown", (e) => {
   const k = (typeof e.key === 'string') ? e.key.toLowerCase() : e.key;
   keys[k] = true;
   // Wenn 'w' gedrückt wird: dash in der Luft; auf dem Boden macht 'w' nichts
   if (k === 'w') {
-    if (player && !player.onGround) dashRequested = true;
+    if (player && !player.onGround) {
+      dashRequested = true;
+      if (DEBUG) console.log('[controller] dashRequested set (w pressed) y=', player ? player.y : null);
+    }
   }
   // Space oder ArrowUp immer als Sprung-Request
-  if (k === ' ') jumpRequested = true;
+  if (k === ' ' || k === 'arrowup') jumpRequested = true;
 });
 
 document.addEventListener("keyup", (e) => {
@@ -75,9 +82,17 @@ export function updatePlayer(dt) {
   // Wenn Dash angefordert wurde und wir in der Luft sind, starte den Dash (sofern verfügbar)
   if (dashRequested) {
     if (!player.onGround && player.dashCooldownRemaining <= 0 && player.dashTimeRemaining <= 0) {
-      player.dashTimeRemaining = (player.dashDuration !== undefined) ? player.dashDuration : 0.12;
-      player.dashCooldownRemaining = (player.dashCooldown !== undefined) ? player.dashCooldown : 0.6;
-      player.dashDir = (dir !== 0) ? dir : player.facing || 1;
+      // Allow a single in-air dash per airborne period (falling or rising).
+      if (player.airDashAvailable) {
+        player.dashTimeRemaining = (player.dashDuration !== undefined) ? player.dashDuration : 0.12;
+        player.dashCooldownRemaining = (player.dashCooldown !== undefined) ? player.dashCooldown : 0.6;
+        player.dashDir = (dir !== 0) ? dir : player.facing || 1;
+        // consume the in-air dash for this airborne period
+        player.airDashAvailable = false;
+        if (DEBUG) console.log('[controller] dash started (in-air)', { dashDir: player.dashDir, vy: player.vy });
+      } else {
+        if (DEBUG) console.log('[controller] dash denied (in-air already used)', { airDashAvailable: player.airDashAvailable, vy: player.vy });
+      }
     }
     dashRequested = false;
   }
@@ -87,6 +102,12 @@ export function updatePlayer(dt) {
   if (player.dashTimeRemaining > 0) {
     const dashSpeed = (player.dashSpeed !== undefined) ? player.dashSpeed : 800;
     dx = player.dashDir * dashSpeed * dt;
+    if (DEBUG) {
+      console.log('[controller] dashing', { dx, dashSpeed, dt, dashDir: player.dashDir, y: player.y, lastJumpY });
+      if (lastJumpY !== null && player.y > lastJumpY + 1) {
+        console.log('[controller] player is below jump-start Y', { y: player.y, lastJumpY });
+      }
+    }
   } else {
     // Normale Bewegung
     dx = dir * currentSpeed * dt;
@@ -116,8 +137,12 @@ export function updatePlayer(dt) {
 
   // SPRINGEN: wenn eine Sprunganforderung vorliegt und wir auf dem Boden sind
   if (jumpRequested && player.onGround) {
+    // Merke Start-Y des Sprungs für Debugging
+    lastJumpY = player.y;
+    lastJumpTime = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
     player.vy = (player.jumpVelocity !== undefined) ? player.jumpVelocity : -480;
     player.onGround = false;
+    if (DEBUG) console.log('[controller] jump triggered, startY=', lastJumpY, 'jumpVelocity=', player.vy);
   }
   // Springanforderung wurde verarbeitet (einmaliges Trigger)
   jumpRequested = false;
@@ -136,6 +161,8 @@ export function updatePlayer(dt) {
           player.y = c.y - player.height;
           player.vy = 0;
           player.onGround = true;
+          // beim Landen wieder In-Air-Dash verfügbar machen
+          player.airDashAvailable = true;
         } else if (player.vy < 0) {
           // trifft Decke
           player.y = c.y + c.height;

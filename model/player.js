@@ -23,6 +23,8 @@ function Player(x, y) {
   this.dashCooldownRemaining = 0;
   this.dashDir = 0; // -1 oder 1
   this.facing = 1; // zuletzt bekannte Blickrichtung
+  // Ob noch ein In-Air-Dash verfügbar ist (wird beim Landen zurückgesetzt)
+  this.airDashAvailable = true;
 
   // Hilfskoordinaten (linke/obere Ecke = x,y)
   this.x1 = this.x;
