@@ -15,7 +15,7 @@ body {
     align-items: stretch;
     justify-content: center;
     overflow: hidden;
-    background: #87ceeb; /* Fallback-Hintergrund, entspricht PIXI Farbe */
+    background: #87ceeb; /* Sky fallback in case parallax textures don't fully cover */
 }
 
 #game-container {

@@ -35,6 +35,17 @@ export function initController(playerInstance) {
   player = playerInstance;
   // Default Ground-Collider (entspricht Renderer ground)
   const computeGround = () => {
+    // If renderer created a groundTile, use its position/height so visual and collider match
+    try {
+      if (window.app && window.app.parallaxLayers && window.app.parallaxLayers.groundTile) {
+        const gt = window.app.parallaxLayers.groundTile;
+        const gh = gt.height || Math.max(32, Math.round(window.innerHeight * 0.12));
+        const gy = (typeof gt.y === 'number') ? gt.y : (window.innerHeight - gh);
+        return { x: 0, y: gy, width: window.innerWidth, height: gh };
+      }
+    } catch (e) {
+      // fallthrough to default
+    }
     const gh = Math.max(32, Math.round(window.innerHeight * 0.12));
     return { x: 0, y: window.innerHeight - gh, width: window.innerWidth, height: gh };
   };
