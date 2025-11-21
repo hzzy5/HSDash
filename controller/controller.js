@@ -27,12 +27,14 @@ document.addEventListener("keyup", (e) => {
 export function initController(playerInstance) {
   player = playerInstance;
   // Default Ground-Collider (entspricht Renderer ground)
-  colliders = [
-    { x: 0, y: window.innerHeight - 100, width: window.innerWidth, height: 100 }
-  ];
+  const computeGround = () => {
+    const gh = Math.max(32, Math.round(window.innerHeight * 0.12));
+    return { x: 0, y: window.innerHeight - gh, width: window.innerWidth, height: gh };
+  };
+  colliders = [ computeGround() ];
   // Bei Resize Ground anpassen
   window.addEventListener('resize', () => {
-    colliders[0] = { x: 0, y: window.innerHeight - 100, width: window.innerWidth, height: 100 };
+    colliders[0] = computeGround();
   });
 }
 

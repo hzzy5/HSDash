@@ -2,16 +2,19 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HSD jump</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.3.2/pixi.min.js"></script>
   <!-- PIXI Script als erstes einbinden, da andere Skripte davon abhängen -->
+  <!-- Module-Skripte werden unten eingebunden, nachdem DOM-Container existiert -->
+</head>
+<body>
+  <div id="game-container" aria-label="Spielbereich"></div>
   <script src="model/player.js" type="module"></script>
   <script src="controller/controller.js" type="module"></script>
   <script src="view/renderer.js" type="module"></script>
-  <script src="main.js" type="module"></script> 
+  <script src="main.js" type="module"></script>
   <!--type=module damit man Klasse/Objekte importieren/exportieren kann-->
-</head>
-<body>
 </body>
 </html>

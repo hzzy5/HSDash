@@ -1,20 +1,22 @@
 function Player(x, y) {
   this.x = x;
   this.y = y;
-  // Default Größe
-  this.width = 40;
-  this.height = 80;
+  // Default Größe (responsive relativ zur Fensterhöhe)
+  const refH = (typeof window !== 'undefined' && window.innerHeight) ? window.innerHeight : 800;
+  const scale = refH / 800; // Basis-Referenzhöhe 800px
+  this.height = Math.max(24, Math.round(80 * scale));
+  this.width = Math.max(12, Math.round(40 * scale));
 
-  // Default Geschwindigkeit (px/s) — kann vom Controller verwendet werden
-  this.speed = 220;
+  // Default Geschwindigkeit (px/s) — skaliert mit Fenstergröße
+  this.speed = Math.max(80, Math.round(220 * scale));
   // Sprint-Geschwindigkeit (px/s) — Standard: 1.8x normale Geschwindigkeit
   this.sprintSpeed = Math.round(this.speed * 1.8);
   // Vertikale Geschwindigkeit und Sprung-Parameter
   this.vy = 0; // px/s
   this.onGround = false;
-  this.jumpVelocity = -480; // px/s (negativ = nach oben)
+  this.jumpVelocity = Math.round(-480 * scale); // px/s (negativ = nach oben)
   // Dash Eigenschaften
-  this.dashSpeed = 800; // px/s
+  this.dashSpeed = Math.max(200, Math.round(800 * scale)); // px/s
   this.dashDuration = 0.12; // Sekunden
   this.dashCooldown = 0.6; // Sekunden zwischen Dashes
   this.dashTimeRemaining = 0;
