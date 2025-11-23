@@ -1,32 +1,32 @@
 // Einfache Input-Verfolgung und zentralisierte Update-Funktion
-const keys = {};
+const keys = {}; // Alle eingaben
 let player = null;
 let jumpRequested = false;
 let dashRequested = false;
 // Collider-Liste (Rects mit x,y,width,height)
-let colliders = [];
+let colliders = []; //Für kollisionen
 
-// Normalize key names to lower-case to avoid issues when Shift is held ("A" vs "a")
-document.addEventListener("keydown", (e) => {
+// Weil man mit shift sprintet werden Eingaben nicht auf Großschreibung überprüft
+document.addEventListener("keydown", (e) => { //Immer wenn eine Taste gedrückt wurde
   const k = (typeof e.key === 'string') ? e.key.toLowerCase() : e.key;
   keys[k] = true;
   // Wenn 'w' gedrückt wird: dash in der Luft; auf dem Boden macht 'w' nichts
   if (k === 'w') {
-    if (player && !player.onGround) dashRequested = true;
+    if (player && !player.onGround) dashRequested = true; //Man kann nur dashen wenn es einen player gibt und dieser nicht auf dem boden ist
   }
-  // Space oder ArrowUp immer als Sprung-Request
+  // Leertaste immer als jump request
   if (k === ' ') jumpRequested = true;
 });
 
-document.addEventListener("keyup", (e) => {
+document.addEventListener("keyup", (e) => { //Wenn taste nicht mehr gedrückt dann muss das im array auch wieder zurückgesetzt werden
   const k = (typeof e.key === 'string') ? e.key.toLowerCase() : e.key;
   keys[k] = false;
 });
 
-// Initialisiert den Controller mit der Spielerinstanz (keine eigene Loop mehr)
+// Initialisiert den Controller mit der Spielerinstanz
 export function initController(playerInstance) {
   player = playerInstance;
-  // Default Ground-Collider (entspricht Renderer ground)
+  // Default Ground-Collider (entspricht Renderer ground) -> Später wieder wegmachen wenn wir keinen ground mehr machen
   colliders = [
     { x: 0, y: window.innerHeight - 100, width: window.innerWidth, height: 100 }
   ];
@@ -52,8 +52,8 @@ export function updatePlayer(dt) {
   // Verwende player.speed wenn vorhanden, sonst Fallback 220 px/s
   let dir = 0;
   // keys stored lower-cased; arrow keys become 'arrowleft' / 'arrowright'
-  if (keys['a'] || keys['arrowleft']) dir -= 1;
-  if (keys['d'] || keys['arrowright']) dir += 1;
+  if (keys['a']) dir -= 1; 
+  if (keys['d']) dir += 1;
   // Sprint (Shift) erkennen
   // Shift normalized is 'shift'
   const sprintHeld = !!keys['shift'];

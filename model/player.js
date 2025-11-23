@@ -2,7 +2,7 @@ class Player {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    // Default Größe
+    // Default Größe in Pixel
     this.width = 40;
     this.height = 80;
 
@@ -11,9 +11,9 @@ class Player {
     // Sprint-Geschwindigkeit (px/s) — Standard: 1.8x normale Geschwindigkeit
     this.sprintSpeed = Math.round(this.speed * 1.8);
     // Vertikale Geschwindigkeit und Sprung-Parameter
-    this.vy = 0; // px/s  vy= velocity
-    this.onGround = false;
-    this.jumpVelocity = -480; // px/s (negativ = nach oben)
+    this.vy = 0; // px/s  velocity -> positiv = nach unten, negativ = nach oben
+    this.onGround = false; // Wenn true kann der Spieler springen sonst nicht
+    this.jumpVelocity = -480; // wenn spieler springt wird vy auf diesen Wert gesetzt und wird dann wieder langsamer durch die schwerkraft
 
     // Dash Eigenschaften
     this.dashSpeed = 800; // px/s
@@ -24,7 +24,7 @@ class Player {
     this.dashDir = 0; // -1 oder 1 (links oder rechts)
     this.facing = 1; // zuletzt bekannte Blickrichtung
 
-    // Hilfskoordinaten (linke/obere Ecke = x,y)
+    // Hilfskoordinaten für Kollisionen (linke/obere Ecke = x,y)
     this.x1 = this.x;
     this.y1 = this.y;
     this.x2 = this.x + this.width; // rechte Kante

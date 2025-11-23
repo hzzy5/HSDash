@@ -33,7 +33,7 @@ function initRenderer() {
 
 
 function createPlayerSprite(player) {
-  // Einfaches rotes Quadrat als Platzhalter
+  // Einfaches rotes Quadrat als Platzhalter -> Figur wird später eingefügt
   playerGraphic = new PIXI.Graphics();
   playerGraphic.beginFill(0xff0000);
   playerGraphic.drawRect(0, 0, player.width, player.height);
@@ -58,18 +58,12 @@ function renderPlayer(player) {
   playerGraphic.y = player.y;
 }
 
-function startGameLoop(updateOrPlayer) {
-  // updateOrPlayer kann entweder eine Update-Funktion (dt) => player
-  // oder direkt das Player-Objekt sein (älteres Verhalten).
+function startGameLoop(updateFunction) {
+  
   app.ticker.add((delta) => {     // von PIXI -> wie requestAnimationFrame()
     const dt = delta / 60; // grobe Sekunden seit letztem Frame
-    if (typeof updateOrPlayer === 'function') {
-      const player = updateOrPlayer(dt); // Controller aktualisiert Model und liefert Player zurück
-      if (player) renderPlayer(player);
-    } else if (updateOrPlayer) {
-      // Einfaches Rendering des übergebenen Player-Objekts (Controller aktualisiert intern)
-      renderPlayer(updateOrPlayer);
-    }
+    const player = updateFunction(dt); // Controller aktualisiert Model und liefert Player zurück
+    if (player) renderPlayer(player);
   });
 }
 

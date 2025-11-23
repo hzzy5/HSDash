@@ -13,7 +13,7 @@ const player = new Player(50, startY);
 createPlayerSprite(player);
 // Controller initialisieren (Input etc.)
 initController(player);
-// Beispiel-Plattform hinzufügen (sichtbar und kollisionsfähig)
+// Beispiel-Plattformen hinzufügen (sichtbar und kollisionsfähig)
 const plat = { x: 220, y: window.innerHeight - 150, width: 160, height: 10 };
 addCollider(plat);
 createPlatform(plat.x, plat.y, plat.width, plat.height);
