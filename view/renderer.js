@@ -58,12 +58,14 @@ function renderPlayer(player) {
   playerGraphic.y = player.y;
 }
 
-function startGameLoop(updateFunction) {
-  
+function startGameLoop(updateFunction) { //updateFunction kommt aus controller.js
+
   app.ticker.add((delta) => {     // von PIXI -> wie requestAnimationFrame()
-    const dt = delta / 60; // grobe Sekunden seit letztem Frame
+    // delta -> zeit seit dem letzen Frame ind PIXI-einheiten (60 FPS -> delta=1)
+    const dt = delta / 60; // grobe Sekunden seit letztem Frame 
+    // ohne dt würde die geschwindigkeit von der FPS abhängen also je höher die FPS desto schneller der Spieler
     const player = updateFunction(dt); // Controller aktualisiert Model und liefert Player zurück
-    if (player) renderPlayer(player);
+    if (player) renderPlayer(player); // Renderer rendert den Spieler nur wenn es einen gibt
   });
 }
 
