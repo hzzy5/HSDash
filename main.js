@@ -9,17 +9,21 @@ let speed = 10;
 
 window.onload = async function() {
     let controller = new Controller();
-    controller.initController();
+    await controller.initController(); //warten bis alles initialisiert ist, bevor man die app startet.
+    //controller.renderer.startGameLoop((dt) => controller.updatePlayer(dt), controller.player, controller.playerSprite);
+    controller.renderer.startGameLoop((dt) => controller.gameLoop(dt), controller.player, controller.playerSprite);
 
-    //Test
-    console.log(window.innerHeight +","+ window.innerWidth);
-    console.log(controller.collision.collision({x:0,y:0,width:50,height:50},{x:25,y:25,width:50,height:50})); //Collision Funktion funktioniert
-    console.log("Player Position:", controller.player.x, controller.player.y);
-    console.log(controller.player.vertical); 
-    console.log("Colliders:", controller.collision.getAllColliders());
-    console.log("Before move:", controller.player.x, controller.player.y);
-    controller.player.move(3, controller.player.vertical * 3);
-    console.log("After move:", controller.player.x, controller.player.y);
+    // //Test
+    // console.log(window.innerHeight +","+ window.innerWidth);
+    // console.log(controller.collision.collision({x:0,y:0,width:50,height:50},{x:25,y:25,width:50,height:50})); //Collision Funktion funktioniert
+    // console.log("Player Position:", controller.player.x, controller.player.y);
+
+    // console.log("Colliders:", controller.collision.getAllColliders());
+    // console.log("Before move:", controller.player.x, controller.player.y);
+ 
+    // console.log("After move:", controller.player.x, controller.player.y);
+    console.log(controller.playerSprite.height);
+    console.log(controller.playerSprite.width);
 };
 
 

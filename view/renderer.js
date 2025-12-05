@@ -5,7 +5,7 @@ export class Renderer {
     //Instanzvariablen für den Hintergrund 
     backgroundX = 0;
     backgroundSpeed = -10; //nach links bewegen
-
+    
     //Initialisierung der Canvas
     async initRenderer() {
         //hier einmalig eine Pixi-App erzeugen.
@@ -139,6 +139,33 @@ export class Renderer {
         return sprite;
     }
 
+    //Methode, um eine Plattform zu erzeugen.
+    createPlatform(x, y, width, height, color = 0x8b4513) {
+        const gfx = new PIXI.Graphics();
+        gfx.beginFill(color);
+        gfx.drawRect(0, 0, width, height);
+        gfx.endFill();
+        gfx.x = x;
+        gfx.y = y;
+        // ensure platforms render above background layers
+        try { gfx.zIndex = 500; } catch (e) {}
+        this.app.stage.addChild(gfx);
+        return { x, y, width, height }; //Rückgabe als Collider für die Kollisionserkennung
+    }
+
+    //Methode, um die Grenzen des Spielfeldes zu erzeugen.
+    createBound(x, y, width, height, color = 0x000000) {
+        const gfx = new PIXI.Graphics();
+        //gfx.beginFill(color);
+        //gfx.drawRect(0, 0, width, height);
+        //gfx.endFill();
+        gfx.x = x;
+        gfx.y = y;
+        try { gfx.zIndex = 500; } catch(e) {}
+        this.app.stage.addChild(gfx);
+        return { x, y, width, height };
+    }
+
 
     //Methode, die die Szene initialisiert
     createBackground() {
@@ -171,6 +198,15 @@ export class Renderer {
         this.trees.tilePosition.x = this.backgroundX / 4;
         this.bushes.tilePosition.x = this.backgroundX / 2;
         this.ground.tilePosition.x = this.backgroundX;
+    }
+
+    startGameLoop(updateFunction, player, playerSprite) {
+        this.app.ticker.add(() => {
+            const dt = this.app.ticker.deltaTime / 60;  // deltaTime ≈ 1 pro Frame bei 60FPS
+            console.log("dt:", dt);
+            updateFunction(dt);          
+            this.renderPlayer(playerSprite, player.x, player.y); //player rendern
+        });               
     }
 
 } //end class renderer

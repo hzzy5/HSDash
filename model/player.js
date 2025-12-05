@@ -6,11 +6,14 @@ export class Player {
     this.x = _x;
     this.y = _y;
 
-    this.width = 50;  
-    this.height = 80; //Nur zum Testen. Später richtige Werte setzen.
+    // Default Größe (responsive relativ zur Fensterhöhe)
+    const refH = (typeof window !== 'undefined' && window.innerHeight) ? window.innerHeight : 800;
+    const scale = refH / 800; // Basis-Referenzhöhe 800px
+    this.height = Math.max(24, Math.round(80 * scale));
+    this.width = Math.max(12, Math.round(40 * scale));
 
-    // Default Geschwindigkeit (px/s) — kann vom Controller verwendet werden
-    this.speed = 220; 
+    // Default Geschwindigkeit (px/s) — skaliert mit Fenstergröße
+    this.speed = Math.max(80, Math.round(220 * scale));
     // Sprint-Geschwindigkeit (px/s) — Standard: 1.8x normale Geschwindigkeit
     this.sprintSpeed = Math.round(this.speed * 1.8);
 
@@ -21,8 +24,10 @@ export class Player {
     
     // Geschwindigkeit beim Sprung
     // Vertikale Geschwindigkeit und Sprung-Parameter
-    this.vertical = 0; // px/s  vertical -> positiv = nach unten, negativ = nach oben
-    this.jumpVelocity = 0;
+    this.vy = 0; // px/s  vy= velocity 
+    //this.vertical = 0; // px/s  vertical -> positiv = nach unten, negativ = nach oben
+    this.onGround = false;
+    this.jumpVelocity = Math.round(-480 * scale); // px/s (negativ = nach oben)
     this.jumpCount = 0; //Flag. Zählt die Sprünge.
 
     // Das sind "private" Variablen. Sie werden einmal initialsiiert und nicht mehr geändert.
@@ -30,13 +35,16 @@ export class Player {
     this._gravitation = 0.5; //je höher, desto schneller unten. Die Kraft zieht stärker nach unten.
   
     // Dash Eigenschaften
-    this.dashSpeed = 800; // px/s -> normal 220 
+    this.dashSpeed = Math.max(200, Math.round(800 * scale)); // px/s
     this.dashDuration = 0.12; // Sekunden wie lange der Dash dauert
     this.dashCooldown = 0.6; // Sekunden zwischen Dashes 
     this.dashTimeRemaining = 0; // wird am anfang von dash auf dashDuration gesetzt und dann runtergezählt
     this.dashCooldownRemaining = 0; // wird am anfang von dash auf dashCooldown gesetzt und dann runtergezählt
     this.dashDir = 0; // -1 oder 1 (links oder rechts)
     this.facing = 1; // zuletzt bekannte Blickrichtung
+
+    // Ob noch ein In-Air-Dash verfügbar ist (wird beim Landen zurückgesetzt)
+    this.airDashAvailable = true;
 
     // Hilfskoordinaten für Kollisionen (linke/obere Ecke = x,y)
     this.x1 = this.x;
@@ -93,5 +101,12 @@ export class Player {
   getPositionX() {
     return this.x;
   }
+
+  //Methode, die die Breite und Höhe setzt
+  setWidthAndHeight(width, height) {
+    this.width = width;
+    this.height = height;
+  }
+
 
 } //end class player
