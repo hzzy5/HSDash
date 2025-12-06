@@ -2,6 +2,7 @@ import { Player } from "../model/player.js";
 import { Enemy } from "../model/enemy.js";
 import { Renderer } from "../view/renderer.js"; 
 import { Collision } from "../model/collision.js";
+import { Coin } from "../model/coin.js";
 //import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs";
 
 // Einfache Input-Verfolgung und zentralisierte Update-Funktion
@@ -28,6 +29,9 @@ export class Controller {
 
     // Collider-Liste (vierecke mit x,y,width,height)
     colliders = []; //Für kollisionen
+    coins = [];  // Liste aller Münzen im Level
+
+    
 
      
 
@@ -63,7 +67,12 @@ export class Controller {
         this.collision.addCollider(this.rightBound);
         this.rightBound = this.renderer.createBound(0, 0, 1, window.innerHeight);
 
+        //Münzen erstellen
+        const coin1 = new Coin(300, window.innerHeight - 450, 32, 32);
+        coin1.sprite = this.renderer.createCoinSprite(coin1.x, coin1.y);
+        this.coins.push(coin1);
 
+        
         // Beispiel-Plattform hinzufügen (sichtbar und kollisionsfähig)
         const plat = { x: 40, y: window.innerHeight - 100, width: window.innerWidth - 700, height: 10 };
         this.collision.addCollider(plat);
@@ -88,6 +97,7 @@ export class Controller {
     gameLoop(dt) {
       //Spieler updaten (Sprung, Dash, Bewegung)
       this.updatePlayer(dt);
+      this.checkCoinCollection();//Münzeneinsammlung prüfen
       
       //Hintergrund scrollen
       this.scrollBackground(dt);
@@ -264,6 +274,19 @@ export class Controller {
         //--> gehen wir nach rechts, d.h. vorne, dann muss sich der Hintergrund nach links bewegen.
       }
     }
+
+    checkCoinCollection() {
+        for (const coin of this.coins) {
+           if (coin.collected) continue;
+
+          // Kollision prüfen
+          if (this.collision.collision(this.player, coin)) {
+            console.log("Coin eingesammelt!");
+            coin.collect();
+          }
+        }
+    }
+
     
 
 } //end class
