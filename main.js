@@ -1,6 +1,7 @@
-import { initRenderer, createPlayerSprite, startGameLoop, createPlatform } from "./view/renderer.js";
+import { initRenderer, createPlayerSprite, startGameLoop, renderPlatforms } from "./view/renderer.js";
 import { Player } from "./model/player.js";
-import { initController, updatePlayer, addCollider } from "./controller/controller.js";
+import { PlatformManager } from "./model/platform.js";
+import { initController, updatePlayer } from "./controller/controller.js";
 
 // Funktion aus renderer.js aufrufen, um die PixiJS-Anwendung zu initialisieren
 initRenderer();
@@ -9,21 +10,21 @@ initRenderer();
 const startY = window.innerHeight - 180; // 20px ist die Spielerhöhe
 const player = new Player(50, startY);
 
+// PlatformManager erstellen und Plattformen hinzufügen
+const platformManager = new PlatformManager();
+platformManager.addPlatform(220, window.innerHeight - 150, 160, 10);
+platformManager.addPlatform(600, window.innerHeight - 150, 160, 10);
+platformManager.addPlatform(1195, window.innerHeight - 150, 160, 10);
+platformManager.addPlatform(1800, window.innerHeight - 150, 160, 10);
+
 //Funktion aus renderer.js aufrufen, um die Spieler-Graphik zu erstellen (Hier nur Quadrat als Platzhalter)
 createPlayerSprite(player);
+
+// Plattformen rendern
+renderPlatforms(platformManager);
+
 // Controller initialisieren (Input etc.)
-initController(player);
-// Beispiel-Plattformen hinzufügen (sichtbar und kollisionsfähig)
-const plat = { x: 220, y: window.innerHeight - 150, width: 160, height: 10 };
-addCollider(plat);
-createPlatform(plat.x, plat.y, plat.width, plat.height);
+initController(player, platformManager);
 
-const plat2 = { x: 600, y: window.innerHeight - 150, width: 160, height: 10 };
-addCollider(plat2);
-createPlatform(plat2.x, plat2.y, plat2.width, plat2.height);
-
-const plat3 = { x: 1195, y: window.innerHeight - 150, width: 160, height: 10 };
-addCollider(plat3);
-createPlatform(plat3.x, plat3.y, plat3.width, plat3.height);
-// Game-Loop starten: übergebe die Controller-Update-Funktion an den Renderer
-startGameLoop(updatePlayer);
+// Game-Loop starten: übergebe die Controller-Update-Funktion und PlatformManager an den Renderer
+startGameLoop(updatePlayer, platformManager);
