@@ -10,6 +10,7 @@ export class Renderer {
     async initRenderer() {
         //hier einmalig eine Pixi-App erzeugen.
         this.app = new PIXI.Application();  //this.app als property und nicht als lokale Variable 
+        this.app.stage.sortableChildren = true;  //zIndex aktivieren
         await this.app.init({
             width: window.innerWidth,
             height: window.innerHeight,
@@ -82,6 +83,12 @@ export class Renderer {
             src: "assets/barrier.png",
         });
 
+        // Neue Asset für Münze
+        PIXI.Assets.add({
+            alias: "coin",
+            src: "assets/coin.png",
+        });
+
         //ggf weitere Assets
 
         /*-----------------------------------------------------------------
@@ -105,7 +112,7 @@ export class Renderer {
         await PIXI.Assets.load(Object.keys(assets));
         ---------------------------------------------------------------------*/
         
-        await PIXI.Assets.load(["background", "clouds", "hill2", "hill1", "trees", "bushes", "ground", "player", "enemy"]);
+        await PIXI.Assets.load(["background", "clouds", "hill2", "hill1", "trees", "bushes", "ground", "player", "enemy", "coin"]);
     }
 
 
@@ -118,6 +125,22 @@ export class Renderer {
 
         return sprite;
     }
+    // Methode, um das Münz-Sprite zu erstellen
+    createCoinSprite(x, y) {
+    const sprite = PIXI.Sprite.from("coin");
+
+      // Position
+      sprite.x = x;
+      sprite.y = y;
+
+      // Wichtig für korrekte Darstellung
+      sprite.anchor.set(0.5);      // Zentriert die Münze
+      sprite.scale.set(0.15);      // Macht die Münze kleiner 
+      sprite.zIndex = 900;         // Münze über Player und über Plattform
+
+      this.app.stage.addChild(sprite);
+      return sprite;
+ }
 
 
     //Metehode, um das Sprite zu positioniert
