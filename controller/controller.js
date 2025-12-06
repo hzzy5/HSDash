@@ -94,6 +94,12 @@ export function updatePlayer(dt) {
   // Horizontal bewegen
   player.move(dx, 0);
 
+  // Begrenzung: Spieler kann nicht links aus dem Bildschirm
+  if (player.x < 0) {
+    player.x = 0;
+    player.x1 = player.x;
+    player.x2 = player.x + player.width;
+  }
 
   // KOLLISIONEN 
   // Guckt erst ob keine Kollision vorliegt und negiert das Ergebnis dann

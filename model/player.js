@@ -3,8 +3,8 @@ class Player {
     this.x = x;
     this.y = y;
     // Default Größe in Pixel
-    this.width = 40;
-    this.height = 80;
+    this.width = 50;
+    this.height = 100;
 
     // Default Geschwindigkeit (px/s) — kann vom Controller verwendet werden
     this.speed = 220;

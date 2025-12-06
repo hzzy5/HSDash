@@ -35,11 +35,14 @@ function initRenderer() {
 
 
 function createPlayerSprite(player) {
-  // Einfaches rotes Quadrat als Platzhalter -> Figur wird später eingefügt
-  playerGraphic = new PIXI.Graphics();
-  playerGraphic.beginFill(0xff0000);
-  playerGraphic.drawRect(0, 0, player.width, player.height);
-  playerGraphic.endFill();
+  // Spieler-Sprite aus Bild erstellen
+  const texture = PIXI.Texture.from('./assets/player.png');
+  playerGraphic = new PIXI.Sprite(texture);
+  
+  // Größe an Player-Model anpassen
+  playerGraphic.width = player.width;
+  playerGraphic.height = player.height;
+  
   app.stage.addChild(playerGraphic);
 }
 
