@@ -42,4 +42,25 @@ class PlatformManager {
     }
 }
 
-export { Platform, PlatformManager };
+// Ground-Klasse für den Boden
+class Ground {
+    constructor(x, y, width, height, color = 0x2d5a27) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.color = color;
+    }
+
+    // Ground als Collider zurückgeben
+    getCollider() {
+        return {
+            x: this.x,
+            y: this.y,
+            width: this.width,
+            height: this.height
+        };
+    }
+}
+
+export { Platform, PlatformManager, Ground };

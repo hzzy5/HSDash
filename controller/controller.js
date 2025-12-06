@@ -4,8 +4,7 @@ let player = null;
 let jumpRequested = false;
 let dashRequested = false;
 let platformManager = null; // Referenz zum PlatformManager
-// Collider-Liste (vierecke mit x,y,width,height)
-let colliders = []; //Für kollisionen (z.B. Ground)
+let ground = null; // Referenz zum Ground-Model
 
 // Weil man mit shift sprintet werden Eingaben nicht auf Großschreibung überprüft
 document.addEventListener("keydown", (e) => { //Immer wenn eine Taste gedrückt wurde
@@ -26,24 +25,25 @@ document.addEventListener("keyup", (e) => { //Wenn taste nicht mehr gedrückt da
   keys[k] = false;
 });
 
-// Initialisiert den Controller mit der Spielerinstanz und dem PlatformManager
-export function initController(playerInstance, platformManagerInstance) {
+// Initialisiert den Controller mit der Spielerinstanz, PlatformManager und Ground
+export function initController(playerInstance, platformManagerInstance, groundInstance) {
   player = playerInstance;
   platformManager = platformManagerInstance;
-  // Default Ground-Collider (entspricht Renderer ground) -> Später wieder wegmachen wenn wir keinen ground mehr machen
-  colliders = [
-    { x: 0, y: window.innerHeight - 100, width: 10000, height: 100 }
-  ];
-  // Bei Resize Ground anpassen (nur Y-Position, Breite bleibt 10000)
+  ground = groundInstance;
+  
+  // Bei Resize Ground Y-Position anpassen
   window.addEventListener('resize', () => {
-    colliders[0] = { x: 0, y: window.innerHeight - 100, width: 10000, height: 100 };
+    if (ground) {
+      ground.y = window.innerHeight - 100;
+    }
   });
 }
 
 // Gibt alle Collider zurück (Ground + Plattformen)
 function getAllColliders() {
   const platformColliders = platformManager ? platformManager.getColliders() : [];
-  return [...colliders, ...platformColliders];
+  const groundCollider = ground ? [ground.getCollider()] : [];
+  return [...groundCollider, ...platformColliders];
 }
 
 export function getColliders() { //Getter für Kollisionsblöcke -> Zum debuggen und spätere änderungen der Kollisionsboxen
