@@ -19,6 +19,7 @@ export class Player {
 
     //Zustände für die Spritesheet-Animationen
     this.isJumping = false;
+    this.isMoving = false;
     this.isRunning = false; // nach rechts oder nach links? 
     this.isFalling = false;
     

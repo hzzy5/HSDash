@@ -119,6 +119,9 @@ export class Controller {
       //Wenn taste nicht mehr gedrückt dann muss das im array auch wieder zurückgesetzt werden
       const k = (typeof e.key === 'string') ? e.key.toLowerCase() : e.key;
       this.keys[k] = false;
+      //Player-Variablen zurücksetzen
+      this.player.isMoving = false;
+      this.player.isRunning = false;
     }
 
     
@@ -132,8 +135,14 @@ export class Controller {
 
       //HORIZONTALE BEWEGUNG
       let dir = 0; //Richtung: -1 = links, 1 = rechts, 0 = keine Bewegung -> wird nach jedem frame neu berechnet
-      if (this.keys['a'] || this.keys['arrowleft']) dir -= 1; // -= weil es nach jedem frame neu berechnet wird und so es möglich ist dass beide tasten gedrückt werden
-      if (this.keys['d'] || this.keys['arrowright']) dir += 1; //bei += genauso ( 0 += 1 = 1 -= 1 = 0)
+      if (this.keys['a'] || this.keys['arrowleft']) {
+        dir -= 1; // -= weil es nach jedem frame neu berechnet wird und so es möglich ist dass beide tasten gedrückt werden
+        this.player.isMoving = true;
+      }
+      if (this.keys['d'] || this.keys['arrowright']) {
+        dir += 1; //bei += genauso ( 0 += 1 = 1 -= 1 = 0)
+        this.player.isMoving = true;
+      }
 
       // Sprint (Shift) erkennen
       // Shift normalized is 'shift'
@@ -144,7 +153,10 @@ export class Controller {
       const currentSpeed = sprintHeld ? sprintSpeed : baseSpeed; 
 
       // Updated facing variable für den dash damit dash nicht 0 sein kann (sonst dash in die richtung in die man vorher sich bewegt hat)
-      if (dir !== 0) this.player.facing = dir;
+      if (dir !== 0) {
+        this.player.facing = dir;
+        this.player.isRunning = sprintHeld; //Wenn der Spieler sprintet, d.h. Shift drückt, dann true.
+      }
 
       //DASH
       // Update dash timers
@@ -259,10 +271,11 @@ export class Controller {
 
     //=== UPDATE PLAYER ============================================================================================
     scrollBackground(dt) {
-      //Nach rechts scrollen, wenn der Player die Hälfte des rechten Bildschirms erreicht
-      if(this.player.x > window.innerWidth / 2) {
-        this.renderer.scrollBackground(dt);
+      //Scrollen, wenn der Player die Hälfte des rechten Bildschirms erreicht
+      if((this.player.isMoving || this.player.isRunning) && this.player.x > window.innerWidth / 2) {
+        this.renderer.scrollBackground();
       }
+
 
     
     }
