@@ -200,9 +200,11 @@ export class Renderer {
         this.ground.tilePosition.x = this.backgroundX;
     }
 
+    //Methode, den PixiJS Ticker startet. Pro Frame wird die Update-Funktion aufgerufen.
+    //dt ist die vergangene Zeit in Sekunden seit dem letzen Frame.
     startGameLoop(updateFunction, player, playerSprite) {
         this.app.ticker.add(() => {
-            const dt = this.app.ticker.deltaTime / 60;  // deltaTime ≈ 1 pro Frame bei 60FPS
+            const dt = this.app.ticker.deltaTime / 60;  // deltaTime = 1 pro Frame bei 60FPS
             console.log("dt:", dt);
             updateFunction(dt);          
             this.renderPlayer(playerSprite, player.x, player.y); //player rendern

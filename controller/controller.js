@@ -65,18 +65,17 @@ export class Controller {
 
 
         // Beispiel-Plattform hinzufügen (sichtbar und kollisionsfähig)
-        const plat = { x: 40, y: window.innerHeight - 100, width: window.innerWidth, height: 10 };
+        const plat = { x: 40, y: window.innerHeight - 100, width: window.innerWidth - 700, height: 10 };
         this.collision.addCollider(plat);
         this.renderer.createPlatform(plat.x, plat.y, plat.width, plat.height);
 
-        // const plat2 = { x: 400, y: window.innerHeight - 150, width: 160, height: 10 };
-        // this.collision.addCollider(plat2);
-        // this.renderer.createPlatform(plat2.x, plat2.y, plat2.width, plat2.height);
+        const plat2 = { x: 1000, y: window.innerHeight - 150, width: 160, height: 10 };
+        this.collision.addCollider(plat2);
+        this.renderer.createPlatform(plat2.x, plat2.y, plat2.width, plat2.height);
 
         // const plat3 = { x: 1195, y: window.innerHeight - 150, width: 160, height: 10 };
         // this.collision.addCollider(plat3);
         // this.renderer.createPlatform(plat3.x, plat3.y, plat3.width, plat3.height);
-
 
         //ABFRAGEN
         document.addEventListener("keydown", (e) => this.keyIsDown(e));
@@ -85,7 +84,7 @@ export class Controller {
     /*vllt iwie optimieren: nur zeichnen, wenn etwas geändert wurde.*/
     
     //=== GAMELOOP ============================================================================================
-    //gameloop starten
+    //Methode, die alle Update-Funktionen pro Frame aufurft. 
     gameLoop(dt) {
       //Spieler updaten (Sprung, Dash, Bewegung)
       this.updatePlayer(dt);
@@ -94,6 +93,7 @@ export class Controller {
       this.scrollBackground(dt);
     }
 
+    
     //=== KEY DOWN ============================================================================================
     keyIsDown(e) {  
         // Normalize key names to lower-case to avoid issues when Shift is held ("A" vs "a")
@@ -108,9 +108,8 @@ export class Controller {
           }
         }
         // Space oder ArrowUp immer als Sprung-Request
-        if (k === ' ') {
-          if (k === ' ' || k === 'arrowup')
-            this.jumpRequested = true; // Man kann nur springen wenn es einen player gibt und dieser auf dem boden ist
+        if (k === ' ' || k === 'arrowup') {
+          this.jumpRequested = true; // Man kann nur springen wenn es einen player gibt und dieser auf dem boden ist
         } 
     }
 
@@ -122,10 +121,11 @@ export class Controller {
       //Player-Variablen zurücksetzen
       this.player.isMoving = false;
       this.player.isRunning = false;
+      this.player.turningLeft = true;
+      this.player.turningRight = true;
     }
 
     
-
     //=== UPDATE PLAYER ============================================================================================
     // Wird vom Renderer-Ticker mit dt (Sekunden) aufgerufen
     updatePlayer(dt) {
@@ -133,24 +133,26 @@ export class Controller {
       //Wenn es keinen Spieler zum updaten gibt
       if (!this.player) return null; 
 
-      //HORIZONTALE BEWEGUNG
+      //=== HORIZONTALE BEWEGUNG ===
       let dir = 0; //Richtung: -1 = links, 1 = rechts, 0 = keine Bewegung -> wird nach jedem frame neu berechnet
       if (this.keys['a'] || this.keys['arrowleft']) {
         dir -= 1; // -= weil es nach jedem frame neu berechnet wird und so es möglich ist dass beide tasten gedrückt werden
         this.player.isMoving = true;
+        this.player.turningLeft = true;
       }
       if (this.keys['d'] || this.keys['arrowright']) {
         dir += 1; //bei += genauso ( 0 += 1 = 1 -= 1 = 0)
         this.player.isMoving = true;
+        this.player.turningRight = true;
       }
 
-      // Sprint (Shift) erkennen
-      // Shift normalized is 'shift'
+      //=== SPRINT (Shift) ===
       const sprintHeld = !!this.keys['shift'];
       // Bestimme effektive Geschwindigkeit
       const baseSpeed = (this.player.speed !== undefined) ? this.player.speed : 220;
       const sprintSpeed = (this.player.sprintSpeed !== undefined) ? this.player.sprintSpeed : Math.round(baseSpeed * 1.8);
       const currentSpeed = sprintHeld ? sprintSpeed : baseSpeed; 
+
 
       // Updated facing variable für den dash damit dash nicht 0 sein kann (sonst dash in die richtung in die man vorher sich bewegt hat)
       if (dir !== 0) {
@@ -158,26 +160,13 @@ export class Controller {
         this.player.isRunning = sprintHeld; //Wenn der Spieler sprintet, d.h. Shift drückt, dann true.
       }
 
-      //DASH
+      //=== DASH ===
       // Update dash timers
-      if (this.player.dashTimeRemaining > 0) this.player.dashTimeRemaining = Math.max(0, this.player.dashTimeRemaining - dt);
-      if (this.player.dashCooldownRemaining > 0) this.player.dashCooldownRemaining = Math.max(0, this.player.dashCooldownRemaining - dt);
+      this.player.updateDashTime(dt);
 
       // Wenn Dash angefordert wurde und wir in der Luft sind, starte den Dash (sofern verfügbar)
       if (this.dashRequested) {
-        if (!this.player.onGround && this.player.dashCooldownRemaining <= 0 && this.player.dashTimeRemaining <= 0) {
-          // Allow a single in-air dash per airborne period (falling or rising).
-          if (this.player.airDashAvailable) {
-            this.player.dashTimeRemaining = (this.player.dashDuration !== undefined) ? this.player.dashDuration : 0.12;
-            this.player.dashCooldownRemaining = (this.player.dashCooldown !== undefined) ? this.player.dashCooldown : 0.6;
-            this.player.dashDir = (dir !== 0) ? dir : this.player.facing || 1;
-            // consume the in-air dash for this airborne period
-            this.player.airDashAvailable = false;
-            //if (this.DEBUG) console.log('[controller] dash started (in-air)', { dashDir: player.dashDir, vy: player.vy });
-          } else {
-            //if (this.DEBUG) console.log('[controller] dash denied (in-air already used)', { airDashAvailable: player.airDashAvailable, vy: player.vy });
-          }
-        }
+        this.player.dash(dir);
         this.dashRequested = false;
       }
 
@@ -186,12 +175,12 @@ export class Controller {
       if (this.player.dashTimeRemaining > 0) {
         const dashSpeed = (this.player.dashSpeed !== undefined) ? this.player.dashSpeed : 800;
         dx = this.player.dashDir * dashSpeed * dt;
-        if (this.DEBUG) {
-          //console.log('[controller] dashing', { dx, dashSpeed, dt, dashDir: player.dashDir, y: player.y, lastJumpY });
-          if (this.lastJumpY !== null && this.player.y > this.lastJumpY + 1) {
-            //console.log('[controller] player is below jump-start Y', { y: player.y, lastJumpY });
-          }
-        }
+        // if (this.DEBUG) {
+        //   //console.log('[controller] dashing', { dx, dashSpeed, dt, dashDir: player.dashDir, y: player.y, lastJumpY });
+        //   if (this.lastJumpY !== null && this.player.y > this.lastJumpY + 1) {
+        //     //console.log('[controller] player is below jump-start Y', { y: player.y, lastJumpY });
+        //   }
+        // }
       } else {
         // Normale Bewegung
         dx = dir * currentSpeed * dt;
@@ -201,7 +190,7 @@ export class Controller {
       console.log("dir:", dir, "currentSpeed:", currentSpeed, "dt:", dt, "dx:", dx);
       this.player.move(dx, 0); 
 
-      // KOLLISIONEN 
+      //=== KOLLISIONSAUFLÖSUNG === 
       // Kollisionen nach horizontaler Bewegung lösen
       if (dx !== 0) {
         for (const c of this.collision.colliders) { // jeden collider durchgehen
@@ -221,30 +210,26 @@ export class Controller {
         }
       }
 
-      // VERTIKALE BEWEGUNG
-
-      // SPRINGEN: wenn eine Sprunganforderung vorliegt und wir auf dem Boden sind
+      //=== VERTIKALE BEWEGUNG ===
+      //SPRINGEN: wenn eine Sprunganforderung vorliegt und wir auf dem Boden sind
       if (this.jumpRequested && this.player.onGround) {
+        this.player.jump();
+
         // Merke Start-Y des Sprungs für Debugging
-      this.lastJumpY = this.player.y;
-      this.lastJumpTime = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
-      this.player.vy = (this.player.jumpVelocity !== undefined) ? this.player.jumpVelocity : -480;
-      this.player.onGround = false;
-      //if (this.DEBUG) console.log('[controller] jump triggered, startY=', this.lastJumpY, 'jumpVelocity=', this.player.vy);
-          //hier einfach jump aufrufen??
+        // this.lastJumpY = this.player.y;
+        // this.lastJumpTime = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+        //if (this.DEBUG) console.log('[controller] jump triggered, startY=', this.lastJumpY, 'jumpVelocity=', this.player.vy);
       }
-      // Springanforderung wurde verarbeitet (einmaliges Trigger)
+      //Sprung wurde verarbeitet
       this.jumpRequested = false;
+      //Gravitation. Der Spieler fällt immer nach unten
+      this.player.applyGravity(dt);
 
-      // GRAVITY + VERTICAL
-      const GRAVITY = 1200; // px/s^2
-      this.player.vy += GRAVITY * dt;
-      this.player.move(0, this.player.vy * dt);
-
+      //=== KOLLISIONSAUFLÖSUNG ===
       // Kollisionen nach vertikaler Bewegung lösen
       if (this.player.vy !== 0) { //eiegentlich fast immer nicht 0 wegen gravity
         for (const c of this.collision.colliders) { // jeden collider durchgehen
-          if (this.collision.collision(this.player, c)) { //Kollision?
+          if (this.collision.collision(this.player, c)) { //Hat eine Kollision stattgefunden?
             // einfache Auflösung: je nach Bewegungsrichtung an die Kante setzen
             if (this.player.vy > 0) {
               // landet auf Collider
@@ -274,10 +259,10 @@ export class Controller {
       //Scrollen, wenn der Player die Hälfte des rechten Bildschirms erreicht
       if((this.player.isMoving || this.player.isRunning) && this.player.x > window.innerWidth / 2) {
         this.renderer.scrollBackground();
+        //Hier noch unterscheiden: Wenn der Hintergrund sich bewegt: 
+        //--> gehen wir nach links, d.h. zurück, dann muss sich der Hintergrund wieder nach rechts bewegen.
+        //--> gehen wir nach rechts, d.h. vorne, dann muss sich der Hintergrund nach links bewegen.
       }
-
-
-    
     }
     
 

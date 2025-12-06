@@ -17,6 +17,10 @@ export class Player {
     // Sprint-Geschwindigkeit (px/s) — Standard: 1.8x normale Geschwindigkeit
     this.sprintSpeed = Math.round(this.speed * 1.8);
 
+    //Richtung, in die sich der Spieler dreht
+    this.turningLeft = false;
+    this.turningRight = false
+
     //Zustände für die Spritesheet-Animationen
     this.isJumping = false;
     this.isMoving = false;
@@ -25,15 +29,10 @@ export class Player {
     
     // Geschwindigkeit beim Sprung
     // Vertikale Geschwindigkeit und Sprung-Parameter
-    this.vy = 0; // px/s  vy= velocity 
-    //this.vertical = 0; // px/s  vertical -> positiv = nach unten, negativ = nach oben
+    this.vy = 0; // px/s positiv = nach unten, negativ = nach oben. Wird durch Gravitation und Velocity verändert
     this.onGround = false;
-    this.jumpVelocity = Math.round(-480 * scale); // px/s (negativ = nach oben)
+    this.jumpVelocity = Math.round(-480 * scale); // px/s (negativ = nach oben). Einmalig beim Absprung gesetzt
     this.jumpCount = 0; //Flag. Zählt die Sprünge.
-
-    // Das sind "private" Variablen. Sie werden einmal initialsiiert und nicht mehr geändert.
-    this._ground = _y;
-    this._gravitation = 0.5; //je höher, desto schneller unten. Die Kraft zieht stärker nach unten.
   
     // Dash Eigenschaften
     this.dashSpeed = Math.max(200, Math.round(800 * scale)); // px/s
@@ -47,11 +46,11 @@ export class Player {
     // Ob noch ein In-Air-Dash verfügbar ist (wird beim Landen zurückgesetzt)
     this.airDashAvailable = true;
 
-    // Hilfskoordinaten für Kollisionen (linke/obere Ecke = x,y)
+    // Hilfskoordinaten für Kollisionen (linke/obere Ecke = x1,y1), (rechte/untere Ecke = x2,y2)
     this.x1 = this.x;
     this.y1 = this.y;
-    this.x2 = this.x + this.width; // rechte Kante
-    this.y2 = this.y + this.height; // untere Kante
+    this.x2 = this.x + this.width; 
+    this.y2 = this.y + this.height; 
   }
 
   //Methode, um sich horizontal zu bewegen. Wird ein negativer Wert übergeben, bewegt sich der Spieler nach links. Bei einem positiven Wert nach rechts. 
@@ -63,33 +62,47 @@ export class Player {
 
   //Methode, um zu springen.
   jump() {
-    if (this.jumpCount < 2) { // Prüfen, ob Doppelsprung bereits ausgeführt worden ist.
-          this.jumpVelocity = -15; // Sprungkraft nach oben. Je größer, desto höher springt der Player. 
-          this.isJumping = true;
-          this.jumpCount++;
+    if (!this.onGround) return;
+    //Absprung
+    this.vy = (this.jumpVelocity !== undefined) ? this.jumpVelocity : -480;
+    this.onGround = false;
+    this.isJumping = true;
+  }
+
+  //Methode, die die Gravitation simuliert. Der Spieler fällt nach unten.
+  applyGravity(dt) {
+    const GRAVITY = 1200; // px/s^2
+    this.vy += GRAVITY * dt;
+    this.move(0, this.vy * dt);
+  }
+
+  //Methode, um zu dashen.
+  dash(direction) {
+    if (!this.onGround && this.dashCooldownRemaining <= 0 && this.dashTimeRemaining <= 0) {
+      // Allow a single in-air dash per airborne period (falling or rising).
+      if (this.airDashAvailable) {
+        this.dashTimeRemaining = (this.dashDuration !== undefined) ? this.dashDuration : 0.12;
+        this.dashCooldownRemaining = (this.dashCooldown !== undefined) ? this.dashCooldown : 0.6;
+        this.dashDir = (direction !== 0) ? direction : this.facing || 1;
+        // consume the in-air dash for this airborne period
+        this.airDashAvailable = false;
+        //if (this.DEBUG) console.log('[controller] dash started (in-air)', { dashDir: player.dashDir, vy: player.vy });
+      } else {
+        //if (this.DEBUG) console.log('[controller] dash denied (in-air already used)', { airDashAvailable: player.airDashAvailable, vy: player.vy });
+      }
     }
   }
 
 
-  //Methode, die in jedem Frame der GameLoop aufgerufen wird, um die Position des Spielers ändern.
-  update() {
-    //Wenn der Spieler gerade springt
-      if (this.isJumping) {                            
-        this.y += this.jumpVelocity;
-        this.jumpVelocity += this._gravitation;     //Gravitation. Spieler fällt langsam nach unten
-        
-        //Wenn der Spieler den Boden erreicht hat, steht er wieder auf dem Boden und springt nicht weiter.
-        if (this.y >= this._ground) {
-          this.y = this._ground;
-          this.jumpVelocity = 0;
-          this.jumpCount = 0; // Reset
-          this.isJumping = false;
-        }
-      }
-      this.updateHitbox();
+  //Methode, die die DashTimer aktualisiert. 
+  updateDashTime(dt) {
+    //Wenn ein Dash noch aktiv ist
+    if (this.dashTimeRemaining > 0) this.dashTimeRemaining = Math.max(0, this.dashTimeRemaining - dt);
+    //Abklingzeit nach einem Dash
+    if (this.dashCooldownRemaining > 0) this.dashCooldownRemaining = Math.max(0, this.dashCooldownRemaining - dt);
   }
-  
 
+  
   //Methode, die die Koordinaten des Players updaten (Hilfe für die Kollisionserkennung) 
   updateHitbox () {
     this.x1 = this.x;
