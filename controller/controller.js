@@ -18,6 +18,7 @@ export class Controller {
     playerSprite;
     enemy;
     enemySprite;
+    
 
     //Für den Hintergrund 
     backgroundX = 0;
@@ -60,6 +61,21 @@ export class Controller {
         this.enemySprite = this.renderer.createSprite("enemy");
         this.renderer.positionSprite(this.enemySprite, this.enemy.x, this.enemy.y);
 
+        
+        // TEST: eine Coin erzeugen
+        // Coin erzeugen 
+        this.coinSprite = this.renderer.createCoinSprite("coin");
+
+        // Coin skalieren (nur hier)
+        this.coinSprite.scale.set(0.15);
+
+        // Coin genau über dem Spieler
+        this.renderer.positionSprite(
+        this.coinSprite,
+        this.player.x + 60,        // leicht rechts vom Kopf
+        this.player.y - 80         // deutlich über dem Kopf
+        );
+
         //Abfrage
         window.addEventListener("keydown", (e) => this.keyIsDown(e));
 
@@ -75,7 +91,28 @@ export class Controller {
         //Es muss pro Frame geprüft werden, ob der z.B. Spieler gesprungen ist
         this.player.updatePosition(); 
         this.renderer.positionSprite(this.playerSprite, this.player.x, this.player.y);
+
+        // --- Coin-Kollision prüfen ---
+        if (this.coinSprite && this.coinSprite.visible) {
+
+            const playerBox = this.playerSprite.getBounds();
+            const coinBox = this.coinSprite.getBounds();
+
+            const collided =
+            playerBox.x < coinBox.x + coinBox.width &&
+            playerBox.x + playerBox.width > coinBox.x &&
+            playerBox.y < coinBox.y + coinBox.height &&
+            playerBox.y + playerBox.height > coinBox.y;
+
+            if (collided) {
+            console.log("Coin eingesammelt!");
+            this.coinSprite.visible = false;  // Coin ausblenden
+            }
+        }
     }
+
+   
+
 
 
     //Methode, die den Hintergrund bewegt. Durch die verschiedenen Geschwindigkeiten wird ein Tiefeneffekt erzeugt.

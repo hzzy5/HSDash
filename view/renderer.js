@@ -1,76 +1,145 @@
-let app;
-let playerGraphic;
-let ground;
-let coinGraphics = []; // NEU: Grafiken für Münzen
+import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs"; //mjs für Moduldateien
 
-function initRenderer() {
-    // Pixi-App erstellen
-    app = new PIXI.Application({
-        width: window.innerWidth,
-        height: window.innerHeight,
-        backgroundColor: 0x87ceeb, // Hellblau
-        antialias: true,
-        resizeTo: window
+export class Renderer {
+
+    //Konstruktor: Canvas erzeugen
+    // constructor() {
+    //     this.app = new PIXI.Application();
+    // }
+
+    //Initialisierung der Canvas
+    async init() {
+        //hier einmalig eine Canvas erzeugen.
+        this.app = new PIXI.Application();  //this.app als property und nicht als lokale Variable 
+        await this.app.init({
+            width: window.innerWidth,
+            height: window.innerHeight,
+            backgroundAlpha: 0.9,
+            backgroundColor: 0xD3D3D3,
+        }); 
+        //Um die weißen Ränder zu entfernen
+        this.app.canvas.style.position = 'absolute';
+
+        //Ins DOM hinzufügen
+        document.body.appendChild(this.app.canvas);
+    }
+
+    //Methode, um die Assets preloaden
+    async loadAssets() {
+        //Background
+        PIXI.Assets.add({
+            alias: "background", //name
+            src: "assets/11_background.png", //pfad
+        });
+
+        PIXI.Assets.add({
+            alias: "clouds", //name
+            src: "assets/10_distant_clouds.png", //pfad
+        });
+
+        PIXI.Assets.add({
+            alias: "hill2", //name
+            src: "assets/06_hill2.png", //pfad
+        });
+
+        PIXI.Assets.add({
+            alias: "hill1", //name
+            src: "assets/05_hill1.png", //pfad
+        });
+
+        PIXI.Assets.add({
+            alias: "trees", //name
+            src: "assets/03_distant_trees.png", //pfad
+        });
+
+        PIXI.Assets.add({
+            alias: "bushes", //name
+            src: "assets/04_bushes.png", //pfad
+        });
+
+        PIXI.Assets.add({
+            alias: "ground", //name
+            src: "assets/01_ground.png", //pfad
+        });
+
+
+        //Character
+        PIXI.Assets.add({
+            alias: "player", //name
+            src: "assets/player3.png", //pfad
+        });
+
+        PIXI.Assets.add({
+           alias: "coin",
+           src: "assets/coin.png",
+       });
+
         
-    });
+        PIXI.Assets.add({
+            alias: "enemy",
+            src: "assets/barrier.png",
+        });
 
-    // Canvas in die Seite einfügen
-    document.body.appendChild(app.view);
+        //ggf weitere Assets
+        
+        await PIXI.Assets.load([
+            "background", 
+            "clouds",
+            "hill2",
+            "hill1", 
+            "trees", 
+            "bushes", 
+            "ground", 
+            "player", 
+            "enemy", 
+            "coin"
+        ]);
+        }
 
-    // Grünen Boden erstellen
-    ground = new PIXI.Graphics();
-    ground.beginFill(0x2d5a27);
-    ground.drawRect(0, app.screen.height - 100, app.screen.width, 100);
-    ground.endFill();
-    app.stage.addChild(ground);
+    //Methode um Sprites zu erstellen 
+    createSprite(alias) {
+        //Sprite erstellen
+        let sprite = PIXI.Sprite.from(alias);
+        
+        //Sprite anzeigen lassen
+        this.app.stage.addChild(sprite); 
+        //^^ this ist hier das app-Objekt
 
-    // Boden neu zeichnen bei Resize
-    window.addEventListener('resize', () => {
-        ground.clear();
-        ground.beginFill(0x2d5a27);
-        ground.drawRect(0, app.screen.height - 100, app.screen.width, 100);
-        ground.endFill();
-    });
-} 
+        return sprite;
+    }
 
-function createPlayerSprite(player) {
-    playerGraphic = new PIXI.Graphics();
-    playerGraphic.beginFill(0xff0000);
-    playerGraphic.drawRect(0, 0, 20, 20);
-    playerGraphic.endFill();
-    app.stage.addChild(playerGraphic);
-}
+    createCoinSprite(alias = "coin") {
+    const sprite = PIXI.Sprite.from(alias);
+     // Standardgröße 
+    sprite.anchor.set(0.5); // Mitte des Coins
 
-function renderPlayer(player) {
-    playerGraphic.x = player.x;s
-    playerGraphic.y = player.y;
-}
+    this.app.stage.addChild(sprite);
+    return sprite;
+   }
 
 
-//  ab hier neu für coins
+    //Metehode, die das Sprite positioniert
+    //Diese Methode ist etwas umständlich, da man sicherstellen muss, dass die Koordinaten vom Model-Objekt kommen. D.h., dass davor muss noch ein Objekt erstellt werden.
+    //z.B. (playerSprite, Player.x, Player.y) 
+    positionSprite(sprite, _x, _y) {
+        //Sprite positionieren
+        sprite.x = _x ;
+        sprite.y = _y;
+    }
 
-function createCoinSprite(coin) {
-    const g = new PIXI.Graphics();
-    g.lineStyle(2, 0xffd700);  // goldener Rand
-    g.beginFill(0xd4af37);    // gold
-    g.drawCircle(0, 0, coin.size);
-    g.endFill();
 
-    // 2. Innenkreis
-    g.beginFill(0xffe066); // helleres Gold
-    g.drawCircle(0, 0, coin.size * 0.75);
-    g.endFill();
+    //Methode, um aus Tiling Sprites den Hintergrund zusammenzubauen. 
+    createTilingSprite(alias, width, height) {
+        let sprite = PIXI.TilingSprite.from(alias, width, height);
+        sprite.position.set(0,0);
+        this.app.stage.addChild(sprite); 
+        return sprite;
+    }
 
-    g.x = coin.x;
-    g.y = coin.y;
+    
+    // updatePosition(sprite, _x, _y) {
+    //     sprite.x = _x;
+    //     sprite.y = _y;
+    // }
 
-    app.stage.addChild(g);
-}
-
-function startGameLoop(player) {
-    app.ticker.add(() => {
-        renderPlayer(player);
-    });
-}
-
-export { initRenderer, createPlayerSprite, startGameLoop, createCoinSprite };
+} //end class renderer

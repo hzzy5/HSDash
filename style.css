@@ -1,17 +1,4 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box; /*Damit Gesamtbgröße gleich bleibt trotz Padding und Border*/
-}
-
 body {
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-}
-
-canvas {
-    display: block;
-    width: 100vw;
-    height: 100vh;
+    margin: 0;   /*Weiße Ränder entfernen*/
+    image-rendering: pixelated;
 }
