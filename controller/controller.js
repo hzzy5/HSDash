@@ -1,6 +1,7 @@
 import { Player } from "../model/player.js";
 import { Enemy } from "../model/enemy.js";
 import { Renderer } from "../view/renderer.js"; 
+import { SoundController } from "./soundcontroller.js";
 //import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs";
 
 export class Controller {
@@ -18,6 +19,7 @@ export class Controller {
     playerSprite;
     enemy;
     enemySprite;
+    sound;
 
 
     //Für den Hintergrund 
@@ -32,6 +34,10 @@ export class Controller {
 
         //Spiel-Elemente laden
         await this.renderer.loadAssets();
+
+        //SoundController initialisieren  
+        this.sound = new SoundController();
+        await this.sound.init();
 
         //Hintergrund aufbauen
         this.background = this.renderer.createTilingSprite("background", window.innerWidth, 300);
@@ -107,6 +113,7 @@ export class Controller {
     keyIsDown(e) {
         if(e.keyCode === 32 || e.code === 'Space' && this.player.y >= this.player.ground) {
             console.log("Leertaste ("+ e.keyCode +", " + e.code + ") ist gedrückt.");
+            this.sound.jump();
             this.player.jump(); 
             this.renderer.positionSprite(this.playerSprite, this.player.x, this.player.y);  
         }

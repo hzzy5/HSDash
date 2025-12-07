@@ -2,14 +2,6 @@ import { Howl } from "https://cdn.skypack.dev/howler";
 
 export class Player {
 
-  //jumpsound
-  jumpsound;
-
-  //hintergrundmusik
-  backroundmusicLevel;
-
-  //wird die hintergrundmusik gerade abgespielt?
-  musicplaying = false;
 
   //Konstruktor
   constructor (_name, _x, _y, _speed) {
@@ -22,18 +14,6 @@ export class Player {
     this.isJumping = false;
     this._ground = _y //Das soll der Startwert sein. Er wird einmal initialsiiert und nicht mehr geändert
 
-    //sound
-    this.jumpsound = new Howl({
-      src: ["../assets/audio/jump.mp3"],
-      volume: 0.5
-    });
-
-    //hintergrundmusik
-    this.backroundmusicLevel = new Howl({
-      src: ["../assets/audio/hintergrundmusik-level.mp3"],
-      volume: 0.5,
-      loop: true
-    });
   }
 
   //Methode, die aufgerufen wird, wenn Space gedrückt wird.
@@ -42,11 +22,6 @@ export class Player {
           this.jumpForce = -12;
           console.log("gesprungen");
           this.isJumping = true;
-          this.jumpsound.play();
-          if(!this.musicplaying){
-              this.backroundmusicLevel.play();
-              this.musicplaying = true;
-          }
       }
   }
 
