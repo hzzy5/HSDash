@@ -61,11 +61,11 @@ export class Controller {
         //Spielgrenzen erstellen
         this.leftBound = { x: -10, y: 0, width: 10, height: window.innerHeight };
         this.collision.addCollider(this.leftBound);
-        this.leftBound = this.renderer.createBound(0, 0, 1, window.innerHeight);
+        this.leftBound = this.renderer.createBound(this.leftBound.x, this.leftBound.y, this.leftBound.width, this.leftBound.height);
 
         this.rightBound = { x: window.innerWidth, y: 0, width: 10, height: window.innerHeight };
         this.collision.addCollider(this.rightBound);
-        this.rightBound = this.renderer.createBound(0, 0, 1, window.innerHeight);
+        this.rightBound = this.renderer.createBound(this.rightBound.x, this.rightBound.y, this.rightBound.width, this.rightBound.height);
 
         //Münzen erstellen
         const coin1 = new Coin(300, window.innerHeight - 450, 32, 32);
@@ -74,7 +74,7 @@ export class Controller {
 
         
         // Beispiel-Plattform hinzufügen (sichtbar und kollisionsfähig)
-        const plat = { x: 40, y: window.innerHeight - 100, width: window.innerWidth - 700, height: 10 };
+        const plat = { x: 40, y: window.innerHeight - 125, width: window.innerWidth - 100, height: 10 };
         this.collision.addCollider(plat);
         this.renderer.createPlatform(plat.x, plat.y, plat.width, plat.height);
 
@@ -197,7 +197,7 @@ export class Controller {
       }
 
       // Horizontal bewegen
-      console.log("dir:", dir, "currentSpeed:", currentSpeed, "dt:", dt, "dx:", dx);
+      //console.log("dir:", dir, "currentSpeed:", currentSpeed, "dt:", dt, "dx:", dx);
       this.player.move(dx, 0); 
 
       //=== KOLLISIONSAUFLÖSUNG === 
@@ -222,7 +222,7 @@ export class Controller {
 
       //=== VERTIKALE BEWEGUNG ===
       //SPRINGEN: wenn eine Sprunganforderung vorliegt und wir auf dem Boden sind
-      if (this.jumpRequested && this.player.onGround) {
+      if (this.jumpRequested) {
         this.player.jump();
 
         // Merke Start-Y des Sprungs für Debugging
@@ -246,6 +246,7 @@ export class Controller {
               this.player.y = c.y - this.player.height;
               this.player.vy = 0;
               this.player.onGround = true;
+              this.player.jumpCount = 0; // JumpCount zurücksetzen
               // beim Landen wieder In-Air-Dash verfügbar machen
               this.player.airDashAvailable = true;
             } else if (this.player.vy < 0) {
@@ -264,12 +265,19 @@ export class Controller {
     }
 
 
-    //=== UPDATE PLAYER ============================================================================================
+    //=== UPDATE BACKGROUND ============================================================================================
     scrollBackground(dt) {
+      //Der Spieler erreicht die Grenzen des Spielfeldes
+      // if(this.collision.collision(this.player, this.collision.colliders[0])) {
+      //   console.log("collide");
+      //   this.renderer.scrollBackground(this.player.facing, dt);
+      // }
+      //==> Scrollt nicht
+
       //Scrollen, wenn der Player die Hälfte des rechten Bildschirms erreicht
       if((this.player.isMoving || this.player.isRunning) && this.player.x > window.innerWidth / 2) {
-        this.renderer.scrollBackground();
-        //Hier noch unterscheiden: Wenn der Hintergrund sich bewegt: 
+        this.renderer.scrollBackground(this.player.facing, dt);
+        //Hier wird unterschieden: 
         //--> gehen wir nach links, d.h. zurück, dann muss sich der Hintergrund wieder nach rechts bewegen.
         //--> gehen wir nach rechts, d.h. vorne, dann muss sich der Hintergrund nach links bewegen.
       }

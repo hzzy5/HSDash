@@ -18,6 +18,7 @@ window.onload = async function() {
     // console.log("After move:", controller.player.x, controller.player.y);
     console.log(controller.playerSprite.height);
     console.log(controller.playerSprite.width);
+    console.log(controller.collision.getAllColliders());
 };
 
 

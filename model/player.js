@@ -62,11 +62,13 @@ export class Player {
 
   //Methode, um zu springen.
   jump() {
-    if (!this.onGround) return;
-    //Absprung
-    this.vy = (this.jumpVelocity !== undefined) ? this.jumpVelocity : -480;
-    this.onGround = false;
-    this.isJumping = true;
+    if (this.jumpCount<2) { //maximal ein Doppelsprung. Keine onGround-Abfrage, da sonst der zweite Sprung verhindert wird.
+      //Absprung
+      this.vy = (this.jumpVelocity !== undefined) ? this.jumpVelocity : -480;
+      this.jumpCount++;
+      this.onGround = false;
+      this.isJumping = true;
+    }
   }
 
   //Methode, die die Gravitation simuliert. Der Spieler fällt nach unten.
