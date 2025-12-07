@@ -24,19 +24,4 @@ export class Collision {
       return this.colliders;
     }
 
-    // //STATISCHE FUNKTIONEN
-    // //Methode, die prüft, ob eine Kollision stattgefunden hat
-    // //Collision Detection player vs enemy 
-    // static collision(a, b) {
-    //     let aBox = a.getBounds();
-    //     let bBox = b.getBounds();
-
-    //     return aBox.x-45 + aBox.width > bBox.x &&   //hier ungenau: -35, da es noch transparente Ränder gibt. 
-    //         aBox.x-45 < bBox.x + bBox.width &&
-    //         aBox.y + aBox.height > bBox.y &&
-    //         aBox.y < bBox.y + bBox.height;
-    // }
-
-
-
 }

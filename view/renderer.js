@@ -4,7 +4,7 @@ export class Renderer {
 
     //Instanzvariablen für den Hintergrund 
     backgroundX = 0;
-    backgroundSpeed = -10; //nach links bewegen
+    backgroundSpeed = -100; //nach links bewegen
     
     //Initialisierung der Canvas
     async initRenderer() {
@@ -33,86 +33,30 @@ export class Renderer {
         // });
     }
 
-    //Methode, um die Assets preloaden
+    //Methode, um die Assets zu preloaden
     async loadAssets() {
-        //Background
-        PIXI.Assets.add({
-            alias: "background", //name
-            src: "assets/11_background.png", //pfad
-        });
-
-        PIXI.Assets.add({
-            alias: "clouds", //name
-            src: "assets/10_distant_clouds.png", //pfad
-        });
-
-        PIXI.Assets.add({
-            alias: "hill2", //name
-            src: "assets/06_hill2.png", //pfad
-        });
-
-        PIXI.Assets.add({
-            alias: "hill1", //name
-            src: "assets/05_hill1.png", //pfad
-        });
-
-        PIXI.Assets.add({
-            alias: "trees", //name
-            src: "assets/03_distant_trees.png", //pfad
-        });
-
-        PIXI.Assets.add({
-            alias: "bushes", //name
-            src: "assets/04_bushes.png", //pfad
-        });
-
-        PIXI.Assets.add({
-            alias: "ground", //name
-            src: "assets/01_ground.png", //pfad
-        });
-
-
-        //Character
-        PIXI.Assets.add({
-            alias: "player", //name
-            src: "assets/player3.png", //pfad
-        });
-        
-        PIXI.Assets.add({
-            alias: "enemy",
-            src: "assets/barrier.png",
-        });
-
-        // Neue Asset für Münze
-        PIXI.Assets.add({
-            alias: "coin",
-            src: "assets/coin.png",
-        });
-
-        //ggf weitere Assets
-
-        /*-----------------------------------------------------------------
-          hier besser eine Schleife ausprobieren
-          const assets = {
-            background: "assets/11_background.png",
-            clouds: "assets/10_distant_clouds.png",
-            hill2: "assets/06_hill2.png",
-            hill1: "assets/05_hill1.png",
-            trees: "assets/03_distant_trees.png",
-            bushes: "assets/04_bushes.png",
-            ground: "assets/01_ground.png",
-            player: "assets/player3.png",
-            enemy: "assets/barrier.png"
+        //Array mit alias: src
+        const assets = {
+            background: "assets/bilder/11_background.png",
+            clouds: "assets/bilder/10_distant_clouds.png",
+            hill2: "assets/bilder/06_hill2.png",
+            hill1: "assets/bilder/05_hill1.png",
+            trees: "assets/bilder/03_distant_trees.png",
+            bushes: "assets/bilder/04_bushes.png",
+            ground: "assets/bilder/01_ground.png",
+            player: "assets/bilder/player4.png",
+            enemy: "assets/bilder/barrier.png",
+            coin: "assets/bilder/coin.png"
+            //ggf weitere Assets
         };
 
+        //The Object.entries() method returns an array of the key/value pairs of an object.
         for (const [alias, src] of Object.entries(assets)) {
             PIXI.Assets.add({ alias, src });
         }
-
-        await PIXI.Assets.load(Object.keys(assets));
-        ---------------------------------------------------------------------*/
         
-        await PIXI.Assets.load(["background", "clouds", "hill2", "hill1", "trees", "bushes", "ground", "player", "enemy", "coin"]);
+        //The Object.keys() method returns an array with the keys of an object.
+        await PIXI.Assets.load(Object.keys(assets));
     }
 
 
@@ -179,9 +123,9 @@ export class Renderer {
     //Methode, um die Grenzen des Spielfeldes zu erzeugen.
     createBound(x, y, width, height, color = 0x000000) {
         const gfx = new PIXI.Graphics();
-        //gfx.beginFill(color);
-        //gfx.drawRect(0, 0, width, height);
-        //gfx.endFill();
+        // gfx.beginFill(color);
+        // gfx.drawRect(0, 0, width, height);
+        // gfx.endFill();
         gfx.x = x;
         gfx.y = y;
         try { gfx.zIndex = 500; } catch(e) {}
@@ -210,23 +154,27 @@ export class Renderer {
     }
 
     //Methode, die den Hintergrund bewegt. Durch die verschiedenen Geschwindigkeiten wird ein Tiefeneffekt erzeugt.
-    scrollBackground() {
-        //Die x-Position wird immer um -10 (speed) nach links verschoben
-        this.backgroundX += this.backgroundSpeed;
+    scrollBackground(direction, dt) {
+        //Die x-Position wird immer pro Frame mit einer Geschwidigkeit verschoben
+        //Je nachdem, in welche Richtung sich der Spieler bewegt, wird der Hintergrund entsprechend verschoben.
+        // direction = -1 nach rechts
+        this.backgroundX += this.backgroundSpeed * dt * direction;
 
-        this.background.tilePosition.x = this.backgroundX / 9;
-        this.clouds.tilePosition.x = this.backgroundX / 9;
-        this.hill2.tilePosition.x = this.backgroundX / 7;
-        this.hill1.tilePosition.x = this.backgroundX / 6;
-        this.trees.tilePosition.x = this.backgroundX / 4;
-        this.bushes.tilePosition.x = this.backgroundX / 2;
-        this.ground.tilePosition.x = this.backgroundX;
+        this.background.tilePosition.x = this.backgroundX *0.5;
+        this.clouds.tilePosition.x = this.backgroundX *0.5;
+        this.hill2.tilePosition.x = this.backgroundX *1;
+        this.hill1.tilePosition.x = this.backgroundX *1.5;
+        this.trees.tilePosition.x = this.backgroundX *2;
+        this.bushes.tilePosition.x = this.backgroundX *2.5;
+        this.ground.tilePosition.x = this.backgroundX *3;
     }
 
+    //Methode, den PixiJS Ticker startet. Pro Frame wird die Update-Funktion aufgerufen.
+    //dt ist die vergangene Zeit in Sekunden seit dem letzen Frame.
     startGameLoop(updateFunction, player, playerSprite) {
         this.app.ticker.add(() => {
-            const dt = this.app.ticker.deltaTime / 60;  // deltaTime ≈ 1 pro Frame bei 60FPS
-            console.log("dt:", dt);
+            const dt = this.app.ticker.deltaTime / 60;  // deltaTime = 1 pro Frame bei 60FPS
+            //console.log("dt:", dt);
             updateFunction(dt);          
             this.renderPlayer(playerSprite, player.x, player.y); //player rendern
         });               

@@ -2,15 +2,9 @@ import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs
 //weitere Importe aus den Moduldateien
 import { Controller } from "./controller/controller.js";
 
-let app;
-let player;
-let barrier;
-let speed = 10;
-
 window.onload = async function() {
     let controller = new Controller();
     await controller.initController(); //warten bis alles initialisiert ist, bevor man die app startet.
-    //controller.renderer.startGameLoop((dt) => controller.updatePlayer(dt), controller.player, controller.playerSprite);
     controller.renderer.startGameLoop((dt) => controller.gameLoop(dt), controller.player, controller.playerSprite);
 
     // //Test
@@ -24,6 +18,7 @@ window.onload = async function() {
     // console.log("After move:", controller.player.x, controller.player.y);
     console.log(controller.playerSprite.height);
     console.log(controller.playerSprite.width);
+    console.log(controller.collision.getAllColliders());
 };
 
 
