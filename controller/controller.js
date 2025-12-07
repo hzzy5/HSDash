@@ -72,6 +72,15 @@ export class Controller {
         coin1.sprite = this.renderer.createCoinSprite(coin1.x, coin1.y);
         this.coins.push(coin1);
 
+        const coin2 = new Coin(600, window.innerHeight - 450, 32, 32);
+        coin2.sprite = this.renderer.createCoinSprite(coin2.x, coin2.y);
+        this.coins.push(coin2);
+
+        const coin3 = new Coin(900, window.innerHeight - 450, 32, 32);
+        coin3.sprite = this.renderer.createCoinSprite(coin3.x, coin3.y);
+        this.coins.push(coin3);
+
+
         
         // Beispiel-Plattform hinzufügen (sichtbar und kollisionsfähig)
         const plat = { x: 40, y: window.innerHeight - 100, width: window.innerWidth, height: 10 };
