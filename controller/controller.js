@@ -20,6 +20,7 @@ export class Controller {
     enemy;
     enemySprite;
     sound;
+    buttonMusikAus;
 
 
     //Für den Hintergrund 
@@ -66,6 +67,22 @@ export class Controller {
 
         this.enemySprite = this.renderer.createSprite("enemy");
         this.renderer.positionSprite(this.enemySprite, this.enemy.x, this.enemy.y);
+
+        //SoundButton
+        this.buttonMusikAus = this.renderer.createSprite("soundAus");
+        this.renderer.positionSprite(this.buttonMusikAus, 20, 10);
+        this.buttonMusikAus.width = window.innerWidth / 8;
+        this.buttonMusikAus.height = window.innerHeight / 10;
+        //damit den Sprite wie einen Button nutzten kann
+        //interaktivität sicherstellen
+        this.buttonMusikAus.eventMode = "static";
+        //für Cursor als Button anzeigen 
+        this.buttonMusikAus.cursor = "pointer";
+        //EventListener hinzufügen
+        this.buttonMusikAus.on("pointertap", () => {
+            console.log("Button wurde angeklickt");
+            this.sound.switchOnOff();
+        });
 
         //Abfrage
         window.addEventListener("keydown", (e) => this.keyIsDown(e))

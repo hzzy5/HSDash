@@ -2,7 +2,7 @@ import { Howl } from "https://cdn.skypack.dev/howler";
 
 export class SoundController{
     //soll Musik gespielt werden?
-    sollSoundAn = true; 
+    shouldSoundBeOn = true; 
 
     //jumpsound
     jumpsound;
@@ -26,13 +26,29 @@ export class SoundController{
             volume: 0.5,
             loop: true
         });
+
+        if(this.shouldSoundBeOn){
+            this.backroundmusicLevel.play();
+        }
     }
 
     jump(){
-        this.jumpsound.play();
-        if(!this.musicplaying){
+        if(this.shouldSoundBeOn){
+            this.jumpsound.play();
+            if(!this.musicplaying){
+                this.backroundmusicLevel.play();
+                this.musicplaying = true;
+            }
+        }
+    }
+
+    switchOnOff(){
+        this.shouldSoundBeOn = !this.shouldSoundBeOn;
+        if(this.shouldSoundBeOn){
             this.backroundmusicLevel.play();
-            this.musicplaying = true;
+        }else{
+            this.jumpsound.pause();
+            this.backroundmusicLevel.pause();
         }
     }
 }

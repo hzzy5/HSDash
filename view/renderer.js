@@ -74,9 +74,15 @@ export class Renderer {
             src: "assets/barrier.png",
         });
 
+        //soundButton
+        PIXI.Assets.add({
+            alias: "soundAus", //name
+            src: "assets/MusikAusButton.png", //pfad
+        });
+
         //ggf weitere Assets
         
-        await PIXI.Assets.load([,"background", "clouds", "hill2", "hill1", "trees", "bushes", "ground", "player", "enemy"]);
+        await PIXI.Assets.load([,"background", "clouds", "hill2", "hill1", "trees", "bushes", "ground", "player", "enemy", "soundAus"]);
     }
 
     //Methode um Sprites zu erstellen 
