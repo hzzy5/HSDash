@@ -77,18 +77,18 @@ function updateCamera(player) {
   }
 }
 
-// Aktualisiert die Positionen aller Plattformen basierend auf dem Kamera-Offset
+// Aktualisiert die Platform-Positionen nach Kamera-bewegung
 function updatePlatformPositions(platformManager) {
   const platforms = platformManager.getAllPlatforms();
   platformGraphics.forEach((gfx, index) => {
     const platform = platforms[index];
-    gfx.x = platform.x - cameraX;
+    gfx.x = platform.x - cameraX; //Für jede platform wird der kamera offset aufgerechnet
   });
 }
 
 // Aktualisiert die Boden-Position basierend auf dem Kamera-Offset
 function updateGroundPosition() {
-  ground.x = -cameraX;
+  ground.x = -cameraX; // Boden wird mit Kamera mitbewegt
 }
 
 function renderPlayer(player) {
