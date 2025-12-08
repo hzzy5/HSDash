@@ -11,6 +11,7 @@ export class Controller {
     //Instanzvariablen
     renderer;
     collision;
+    
 
     player;
     playerSprite;
@@ -30,6 +31,8 @@ export class Controller {
     // Collider-Liste (vierecke mit x,y,width,height)
     colliders = []; //Für kollisionen
     coins = [];  // Liste aller Münzen im Level
+    
+
 
     
 
@@ -68,7 +71,7 @@ export class Controller {
         this.rightBound = this.renderer.createBound(this.rightBound.x, this.rightBound.y, this.rightBound.width, this.rightBound.height);
 
         //Münzen erstellen
-        const coin1 = new Coin(300, window.innerHeight - 450, 32, 32);
+        const coin1 = new Coin(300, window.innerHeight - 350, 32, 32);
         coin1.sprite = this.renderer.createCoinSprite(coin1.x, coin1.y);
         this.coins.push(coin1);
 
@@ -76,9 +79,16 @@ export class Controller {
         coin2.sprite = this.renderer.createCoinSprite(coin2.x, coin2.y);
         this.coins.push(coin2);
 
-        const coin3 = new Coin(900, window.innerHeight - 450, 32, 32);
+        const coin3 = new Coin(900, window.innerHeight - 350, 32, 32);
         coin3.sprite = this.renderer.createCoinSprite(coin3.x, coin3.y);
         this.coins.push(coin3);
+
+        
+        this.totalCoins = this.coins.length;  
+        this.collectedCoins = 0;
+        this.renderer.createCoinHud(this.totalCoins);
+
+
 
 
         
@@ -300,6 +310,13 @@ export class Controller {
           if (this.collision.collision(this.player, coin)) {
             console.log("Coin eingesammelt!");
             coin.collect();
+        
+            this.renderer.showFloatingText("+1", coin.x, coin.y - 20);
+            this.collectedCoins++;
+            this.renderer.updateCoinHud(this.collectedCoins, this.totalCoins);
+            
+
+
           }
         }
     }
