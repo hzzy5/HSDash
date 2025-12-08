@@ -67,22 +67,22 @@ export class Controller {
         this.rightBound = this.renderer.createBound(this.rightBound.x, this.rightBound.y, this.rightBound.width, this.rightBound.height);
 
         //Münzen erstellen
-        const coin1 = new Coin(300, window.innerHeight - 350, 32, 32);
-        coin1.sprite = this.renderer.createCoinSprite(coin1.x, coin1.y);
-        this.coins.push(coin1);
+        //const coin1 = new Coin(300, window.innerHeight - 350, 32, 32);
+        //coin1.sprite = this.renderer.createCoinSprite(coin1.x, coin1.y);
+        //this.coins.push(coin1);
 
-        const coin2 = new Coin(600, window.innerHeight - 450, 32, 32);
-        coin2.sprite = this.renderer.createCoinSprite(coin2.x, coin2.y);
-        this.coins.push(coin2);
+        //const coin2 = new Coin(600, window.innerHeight - 450, 32, 32);
+        //coin2.sprite = this.renderer.createCoinSprite(coin2.x, coin2.y);
+        //this.coins.push(coin2);
 
-        const coin3 = new Coin(900, window.innerHeight - 450, 32, 32);
-        coin3.sprite = this.renderer.createCoinSprite(coin3.x, coin3.y);
-        this.coins.push(coin3);
+        //const coin3 = new Coin(900, window.innerHeight - 450, 32, 32);
+       // coin3.sprite = this.renderer.createCoinSprite(coin3.x, coin3.y);
+        //this.coins.push(coin3);
 
         
-        this.totalCoins = this.coins.length;  
-        this.collectedCoins = 0;
-        this.renderer.createCoinHud(this.totalCoins);
+        //this.totalCoins = this.coins.length;  
+        //this.collectedCoins = 0;
+        //this.renderer.createCoinHud(this.totalCoins);
 
 
 
