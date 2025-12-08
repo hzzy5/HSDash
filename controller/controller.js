@@ -1,114 +1,385 @@
 import { Player } from "../model/player.js";
-import { Enemy } from "../model/enemy.js";
 import { Renderer } from "../view/renderer.js"; 
+import { Collision } from "../model/collision.js";
+import { Coin } from "../model/coin.js";
+import { SoundController } from "./soundcontroller.js";
 //import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs";
 
+// Einfache Input-Verfolgung und zentralisierte Update-Funktion
 export class Controller {
 
     //Instanzvariablen
     renderer;
-    background;
-    clouds;
-    hill2;
-    hill1;
-    trees;
-    bushes;
-    ground;
+    collision;
+    
+
     player;
     playerSprite;
     enemy;
     enemySprite;
 
-    //Für den Hintergrund 
-    backgroundX = 0;
-    backgroundSpeed = -10; //nach links bewegen
+    leftBound;
+    rightBound;
+
+    keys = {};
+    jumpRequested = false;
+    dashRequested = false;
+    DEBUG = true;
+    lastJumpY = null;
+    lastJumpTime = 0;
+
+    // Collider-Liste (vierecke mit x,y,width,height)
+    colliders = []; //Für kollisionen
+    coins = [];  // Liste aller Münzen im Level
+
+    //sound
+    sound;
+    buttonMusikAus;
+
+     
+
 
     //methode um das ganze Spiel zu initialisieren. Hier werden die Methoden aus der View usw aufgerufen. 
-    async init() {
-        //
-        this.renderer = new Renderer();
-        await this.renderer.init();
+    async initController() {
+        //MODEL:
+        this.player = new Player("Spieler1", 50, 50);
+        this.collision = new Collision();
 
+        //VIEW:
+        this.renderer = new Renderer();
+        await this.renderer.initRenderer();
         //Spiel-Elemente laden
         await this.renderer.loadAssets();
+        //Szene erstellen
+        await this.renderer.createBackground();
 
-        //Hintergrund aufbauen
-        this.background = this.renderer.createTilingSprite("background", window.innerWidth, 300);
-        this.background.y = 0;
-        this.clouds = this.renderer.createTilingSprite("clouds", window.innerWidth, 300);
-        this.clouds.y = -150;
-        this.hill2 = this.renderer.createTilingSprite("hill2", window.innerWidth, 280);
-        this.hill2.y = -450;
-        this.hill1 = this.renderer.createTilingSprite("hill1", window.innerWidth, 180);
-        this.hill1.y = -400;
-        this.trees = this.renderer.createTilingSprite("trees", window.innerWidth, 100);
-        this.trees.y = -450;
-        this.bushes = this.renderer.createTilingSprite("bushes", window.innerWidth, 100);
-        this.bushes.y = -410;
-        this.ground = this.renderer.createTilingSprite("ground", window.innerWidth, 100);
-        this.ground.y = -500;
+        
+        
         
 
-        //Spiel-Elemente erzeugen
-        this.player = new Player("Spieler1", 50, 450, 20, 12);
-        this.enemy = new Enemy("Gegner1", 1500 ,640, 10, 0)
-
+        //Player als Sprite erstellen
         this.playerSprite = this.renderer.createSprite("player");
-        this.renderer.positionSprite(this.playerSprite, this.player.x, this.player.y);
-        // player.anchor.set(0.5); //Mittelpunkt im Bild
+        this.renderer.renderPlayer(this.playerSprite, this.player.x, this.player.y);
 
-        this.enemySprite = this.renderer.createSprite("enemy");
-        this.renderer.positionSprite(this.enemySprite, this.enemy.x, this.enemy.y);
+        //Größen synchronisieren
+        this.player.setWidthAndHeight(this.playerSprite.width, this.playerSprite.height)
 
-        //Abfrage
-        window.addEventListener("keydown", (e) => this.keyIsDown(e));
+        //Spielgrenzen erstellen
+        this.leftBound = { x: -10, y: 0, width: 10, height: window.innerHeight };
+        this.collision.addCollider(this.leftBound);
+        this.leftBound = this.renderer.createBound(this.leftBound.x, this.leftBound.y, this.leftBound.width, this.leftBound.height);
 
-        //Gameloop starten
-        this.renderer.app.ticker.add((delta) => this.gameLoop(delta));
+        this.rightBound = { x: window.innerWidth, y: 0, width: 10, height: window.innerHeight };
+        this.collision.addCollider(this.rightBound);
+        this.rightBound = this.renderer.createBound(this.rightBound.x, this.rightBound.y, this.rightBound.width, this.rightBound.height);
+
+        //Münzen erstellen
+        //const coin1 = new Coin(300, window.innerHeight - 350, 32, 32);
+        //coin1.sprite = this.renderer.createCoinSprite(coin1.x, coin1.y);
+        //this.coins.push(coin1);
+
+        //const coin2 = new Coin(600, window.innerHeight - 450, 32, 32);
+        //coin2.sprite = this.renderer.createCoinSprite(coin2.x, coin2.y);
+        //this.coins.push(coin2);
+
+        //const coin3 = new Coin(900, window.innerHeight - 450, 32, 32);
+       // coin3.sprite = this.renderer.createCoinSprite(coin3.x, coin3.y);
+        //this.coins.push(coin3);
+
+        
+        //this.totalCoins = this.coins.length;  
+        //this.collectedCoins = 0;
+        //this.renderer.createCoinHud(this.totalCoins);
+
+
+
+
+        
+        // //Beispiel-Plattform hinzufügen (sichtbar und kollisionsfähig)
+        // const plat = { x: 100, y: window.innerHeight - 125, width: window.innerWidth - 1000, height: 10 };
+        // this.collision.addCollider(plat);
+        // this.renderer.createPlatform(plat.x, plat.y, plat.width, plat.height);
+
+        // const plat2 = { x: 1000, y: window.innerHeight - 450, width: 160, height: 10 };
+        // this.collision.addCollider(plat2);
+        // this.renderer.createPlatform(plat2.x, plat2.y, plat2.width, plat2.height);
+
+        // const plat3 = { x: 1195, y: window.innerHeight - 150, width: 160, height: 10 };
+        // this.collision.addCollider(plat3);
+        // this.renderer.createPlatform(plat3.x, plat3.y, plat3.width, plat3.height);
+        
+        //SoundController initialisieren  
+        this.sound = new SoundController();
+        await this.sound.init();
+        
+        //SoundButton
+        this.buttonMusikAus = this.renderer.createSprite("soundAus");
+        this.renderer.renderPlayer(this.buttonMusikAus, 20, 10);
+        this.buttonMusikAus.width = window.innerWidth / 8;
+        this.buttonMusikAus.height = window.innerHeight / 10;
+        //damit den Sprite wie einen Button nutzten kann
+        //interaktivität sicherstellen
+        this.buttonMusikAus.eventMode = "static";
+        //für Cursor als Button anzeigen 
+        this.buttonMusikAus.cursor = "pointer";
+        //EventListener hinzufügen
+        this.buttonMusikAus.on("pointertap", () => {
+            console.log("Button wurde angeklickt");
+            this.sound.switchOnOff();
+        });
+
+        //ABFRAGEN
+        document.addEventListener("keydown", (e) => this.keyIsDown(e));
+        document.addEventListener("keyup", (e) => this.keyIsUp(e));        
     }
     /*vllt iwie optimieren: nur zeichnen, wenn etwas geändert wurde.*/
     
-    //gameloop starten
-    gameLoop(delta) {
-        this.updateBackground();
-
-        //Es muss pro Frame geprüft werden, ob der z.B. Spieler gesprungen ist
-        this.player.updatePosition(); 
-        this.renderer.positionSprite(this.playerSprite, this.player.x, this.player.y);
+    //=== GAMELOOP ============================================================================================
+    //Methode, die alle Update-Funktionen pro Frame aufurft. 
+    gameLoop(dt) {
+      //Spieler updaten (Sprung, Dash, Bewegung)
+      this.updatePlayer(dt);
+      this.checkCoinCollection();//Münzeneinsammlung prüfen
+      
+      //Hintergrund scrollen
+      this.scrollBackground(dt);
     }
 
-
-    //Methode, die den Hintergrund bewegt. Durch die verschiedenen Geschwindigkeiten wird ein Tiefeneffekt erzeugt.
-    updateBackground() {
-        this.backgroundX = (this.backgroundX + this.backgroundSpeed);
-        this.background.tilePosition.x = this.backgroundX / 9;
-        this.clouds.tilePosition.x = this.backgroundX / 9;
-        this.hill2.tilePosition.x = this.backgroundX / 7;
-        this.hill1.tilePosition.x = this.backgroundX / 6;
-        this.trees.tilePosition.x = this.backgroundX / 4;
-        this.bushes.tilePosition.x = this.backgroundX / 2;
-        this.ground.tilePosition.x = this.backgroundX;
-    }
     
-    //STATISCHE FUNKTIONEN
-    //Methode, die prüft, ob eine Kollision stattgefunden hat
-    //Collision Detection player vs enemy 
-    static collision(a, b) {
-        let aBox = a.getBounds();
-        let bBox = b.getBounds();
-
-        return aBox.x-45 + aBox.width > bBox.x &&   //hier ungenau: -35, da es noch transparente Ränder gibt. 
-            aBox.x-45 < bBox.x + bBox.width &&
-            aBox.y + aBox.height > bBox.y &&
-            aBox.y < bBox.y + bBox.height;
+    //=== KEY DOWN ============================================================================================
+    keyIsDown(e) {  
+        // Normalize key names to lower-case to avoid issues when Shift is held ("A" vs "a")
+        const k = (typeof e.key === 'string') ? e.key.toLowerCase() : e.key;
+        this.keys[k] = true;
+        console.log("Key down:", k, this.keys);
+        // Wenn 'w' gedrückt wird: dash in der Luft; auf dem Boden macht 'w' nichts
+        if (k === 'w') {
+          if (this.player && !this.player.onGround) {
+            this.dashRequested = true; //Man kann nur dashen wenn es einen player gibt und dieser nicht auf dem boden ist
+            if(this.DEBUG) console.log('[controller] dashRequested set (w pressed) y=', this.player ? this.player.y : null);
+          }
+        }
+        // Space oder ArrowUp immer als Sprung-Request
+        if (k === ' ' || k === 'arrowup') {
+          this.jumpRequested = true; // Man kann nur springen wenn es einen player gibt und dieser auf dem boden ist
+        } 
     }
 
-    keyIsDown(e) {
-        if(e.keyCode === 32 || e.code === 'Space') {
-            console.log("Leertaste ("+ e.keyCode +", " + e.code + ") ist gedrückt.");
-            this.player.jump(); 
-            this.renderer.positionSprite(this.playerSprite, this.player.x, this.player.y);  
+    //=== KEY UP ============================================================================================
+    keyIsUp(e) {
+      //Wenn taste nicht mehr gedrückt dann muss das im array auch wieder zurückgesetzt werden
+      const k = (typeof e.key === 'string') ? e.key.toLowerCase() : e.key;
+      this.keys[k] = false;
+      //Player-Variablen zurücksetzen
+      this.player.isMoving = false;
+      this.player.isRunning = false;
+      this.player.turningLeft = true;
+      this.player.turningRight = true;
+    }
+
+    
+    //=== UPDATE PLAYER ============================================================================================
+    // Wird vom Renderer-Ticker mit dt (Sekunden) aufgerufen
+    updatePlayer(dt) {
+
+      //Wenn es keinen Spieler zum updaten gibt
+      if (!this.player) return null; 
+
+      //=== HORIZONTALE BEWEGUNG ===
+      let dir = 0; //Richtung: -1 = links, 1 = rechts, 0 = keine Bewegung -> wird nach jedem frame neu berechnet
+      if (this.keys['a'] || this.keys['arrowleft']) {
+        dir -= 1; // -= weil es nach jedem frame neu berechnet wird und so es möglich ist dass beide tasten gedrückt werden
+        this.player.isMoving = true;
+        this.player.turningLeft = true;
+      }
+      if (this.keys['d'] || this.keys['arrowright']) {
+        dir += 1; //bei += genauso ( 0 += 1 = 1 -= 1 = 0)
+        this.player.isMoving = true;
+        this.player.turningRight = true;
+      }
+
+      //=== SPRINT (Shift) ===
+      const sprintHeld = !!this.keys['shift'];
+      // Bestimme effektive Geschwindigkeit
+      const baseSpeed = (this.player.speed !== undefined) ? this.player.speed : 220;
+      const sprintSpeed = (this.player.sprintSpeed !== undefined) ? this.player.sprintSpeed : Math.round(baseSpeed * 1.8);
+      const currentSpeed = sprintHeld ? sprintSpeed : baseSpeed; 
+
+
+      // Updated facing variable für den dash damit dash nicht 0 sein kann (sonst dash in die richtung in die man vorher sich bewegt hat)
+      if (dir !== 0) {
+        this.player.facing = dir;
+        this.player.isRunning = sprintHeld; //Wenn der Spieler sprintet, d.h. Shift drückt, dann true.
+      }
+
+      //=== DASH ===
+      // Update dash timers
+      this.player.updateDashTime(dt);
+
+      // Wenn Dash angefordert wurde und wir in der Luft sind, starte den Dash (sofern verfügbar)
+      if (this.dashRequested) {
+        this.player.dash(dir);
+        this.dashRequested = false;
+      }
+
+      // Bestimme horizontale Bewegung: wenn gerade gedasht wird, verwende Dash-Geschwindigkeit
+      let dx = 0; // horizontale veränderung
+      if (this.player.dashTimeRemaining > 0) {
+        const dashSpeed = (this.player.dashSpeed !== undefined) ? this.player.dashSpeed : 800;
+        dx = this.player.dashDir * dashSpeed * dt;
+        // if (this.DEBUG) {
+        //   //console.log('[controller] dashing', { dx, dashSpeed, dt, dashDir: player.dashDir, y: player.y, lastJumpY });
+        //   if (this.lastJumpY !== null && this.player.y > this.lastJumpY + 1) {
+        //     //console.log('[controller] player is below jump-start Y', { y: player.y, lastJumpY });
+        //   }
+        // }
+      } else {
+        // Normale Bewegung
+        dx = dir * currentSpeed * dt;
+      }
+
+      // Horizontal bewegen
+      //console.log("dir:", dir, "currentSpeed:", currentSpeed, "dt:", dt, "dx:", dx);
+      this.player.move(dx, 0); 
+
+      //=== KOLLISIONSAUFLÖSUNG === 
+      // Kollisionen nach horizontaler Bewegung lösen
+      if (dx !== 0) {
+        for (const c of this.collision.colliders) { // jeden collider durchgehen
+          if (this.collision.collision(this.player, c)) { //Kollision?
+            // einfache Auflösung: je nach Bewegungsrichtung an die Kante setzen
+            if (dx > 0) { // bewegt sich nach rechts
+              this.player.x = c.x - this.player.width; // Position wird einfach an kante gesetzt
+            } else if (dx < 0) { // bewegt sich nach links
+              this.player.x = c.x + c.width; // Position wird einfach an kante gesetzt
+            }
+            // Falls wir gerade dashen, abbrechen
+            this.player.dashTimeRemaining = 0;
+            // sync helper coords
+            this.player.x1 = this.player.x;
+            this.player.x2 = this.player.x + this.player.width;
+          }
+        }
+      }
+
+      //=== VERTIKALE BEWEGUNG ===
+      //SPRINGEN: wenn eine Sprunganforderung vorliegt und wir auf dem Boden sind
+      if (this.jumpRequested) {
+        this.sound.jump();
+        this.player.jump();
+
+        // Merke Start-Y des Sprungs für Debugging
+        // this.lastJumpY = this.player.y;
+        // this.lastJumpTime = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+        //if (this.DEBUG) console.log('[controller] jump triggered, startY=', this.lastJumpY, 'jumpVelocity=', this.player.vy);
+      }
+      //Sprung wurde verarbeitet
+      this.jumpRequested = false;
+      //Gravitation. Der Spieler fällt immer nach unten
+      this.player.applyGravity(dt);
+
+      //=== KOLLISIONSAUFLÖSUNG ===
+      // Kollisionen nach vertikaler Bewegung lösen
+      if (this.player.vy !== 0) { //eiegentlich fast immer nicht 0 wegen gravity
+        for (const c of this.collision.colliders) { // jeden collider durchgehen
+          if (this.collision.collision(this.player, c)) { //Hat eine Kollision stattgefunden?
+            // einfache Auflösung: je nach Bewegungsrichtung an die Kante setzen
+            if (this.player.vy > 0) {
+              // landet auf Collider
+              this.player.y = c.y - this.player.height;
+              this.player.vy = 0;
+              this.player.onGround = true;
+              this.player.jumpCount = 0; // JumpCount zurücksetzen
+              // beim Landen wieder In-Air-Dash verfügbar machen
+              this.player.airDashAvailable = true;
+            } else if (this.player.vy < 0) {
+              // trifft Decke
+              this.player.y = c.y + c.height;
+              this.player.vy = 0;
+            }
+            // Hilfe Koordinaten syncen
+            this.player.y1 = this.player.y;
+            this.player.y2 = this.player.y + this.player.height;
+          }
+        }
+      }
+
+      //return this.player;
+    }
+
+
+    //=== UPDATE BACKGROUND ============================================================================================
+    scrollBackground(dt) {
+      //Der Spieler erreicht die Grenzen des Spielfeldes
+      // if(this.collision.collision(this.player, this.collision.colliders[0])) {
+      //   console.log("collide");
+      //   this.renderer.scrollBackground(this.player.facing, dt);
+      // }
+      //==> Scrollt nicht
+
+      //Scrollen, wenn der Player die Hälfte des rechten Bildschirms erreicht
+      if((this.player.isMoving || this.player.isRunning) && this.player.x > window.innerWidth / 2) {
+        this.renderer.scrollBackground(this.player.facing, dt);
+        //Hier wird unterschieden: 
+        //--> gehen wir nach links, d.h. zurück, dann muss sich der Hintergrund wieder nach rechts bewegen.
+        //--> gehen wir nach rechts, d.h. vorne, dann muss sich der Hintergrund nach links bewegen.
+      }
+    }
+
+    checkCoinCollection() {
+        for (const coin of this.coins) {
+           if (coin.collected) continue;
+
+          // Kollision prüfen
+          if (this.collision.collision(this.player, coin)) {
+            console.log("Coin eingesammelt!");
+            coin.collect();
+        
+            this.renderer.showFloatingText("+1", coin.x, coin.y - 20);
+            this.collectedCoins++;
+            this.renderer.updateCoinHud(this.collectedCoins, this.totalCoins);
+            
+
+
+          }
         }
     }
 
+    
+
 } //end class
+
+
+//______________________________________________________________________________________________________________
+/*
+  if (this.colliders.check(player, somePlatform)) {
+    // Spieler steht auf Plattform: Y Koordinate = Plattform
+}
+*/
+
+// // Initialisiert den Controller mit der Spielerinstanz (keine eigene Loop mehr)
+// export function initController(playerInstance) {
+//   player = playerInstance;
+//   // Default Ground-Collider (entspricht Renderer ground)
+//   const computeGround = () => {
+//     // If renderer created a groundTile, use its position/height so visual and collider match
+//     try {
+//       if (window.app && window.app.parallaxLayers && window.app.parallaxLayers.groundTile) {
+//         const gt = window.app.parallaxLayers.groundTile;
+//         const gh = gt.height || Math.max(32, Math.round(window.innerHeight * 0.12));
+//         const gy = (typeof gt.y === 'number') ? gt.y : (window.innerHeight - gh);
+//         return { x: 0, y: gy, width: window.innerWidth, height: gh };
+//       }
+//     } catch (e) {
+//       // fallthrough to default
+//     }
+//     const gh = Math.max(32, Math.round(window.innerHeight * 0.12));
+//     return { x: 0, y: window.innerHeight - gh, width: window.innerWidth, height: gh };
+//   };
+//   colliders = [ computeGround() ];
+//   // Bei Resize Ground anpassen
+//   window.addEventListener('resize', () => {
+//     colliders[0] = computeGround();
+//   });
+// }
+
