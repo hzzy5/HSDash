@@ -73,7 +73,7 @@ export class Controller {
         coin2.sprite = this.renderer.createCoinSprite(coin2.x, coin2.y);
         this.coins.push(coin2);
 
-        const coin3 = new Coin(900, window.innerHeight - 450, 32, 32);
+        const coin3 = new Coin(900, window.innerHeight - 550, 32, 32);
         coin3.sprite = this.renderer.createCoinSprite(coin3.x, coin3.y);
         this.coins.push(coin3);
 
