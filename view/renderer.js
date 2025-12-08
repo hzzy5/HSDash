@@ -86,13 +86,13 @@ function updatePlatformPositions(platformManager) {
   });
 }
 
-// Aktualisiert die Boden-Position basierend auf dem Kamera-Offset
+// Aktualisiert die Boden-Position nach Kamera-bewegung 
 function updateGroundPosition() {
   ground.x = -cameraX; // Boden wird mit Kamera mitbewegt
 }
 
 function renderPlayer(player) {
-  // Spielerposition aktualisieren (mit Kamera-Offset)
+  // Spielerposition aktualisieren (mit Kamera-bewegung)
   playerGraphic.x = player.x - cameraX;
   playerGraphic.y = player.y;
 }
