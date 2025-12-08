@@ -46,7 +46,8 @@ export class Renderer {
             ground: "assets/bilder/01_ground.png",
             player: "assets/bilder/player4.png",
             enemy: "assets/bilder/barrier.png",
-            coin: "assets/bilder/coin.png"
+            coin: "assets/bilder/coin.png",
+            soundAus: "assets/bilder/MusikAusButton.png"
             //ggf weitere Assets
         };
 

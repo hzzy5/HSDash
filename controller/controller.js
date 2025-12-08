@@ -2,6 +2,7 @@ import { Player } from "../model/player.js";
 import { Renderer } from "../view/renderer.js"; 
 import { Collision } from "../model/collision.js";
 import { Coin } from "../model/coin.js";
+import { SoundController } from "./soundcontroller.js";
 //import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs";
 
 // Einfache Input-Verfolgung und zentralisierte Update-Funktion
@@ -31,7 +32,9 @@ export class Controller {
     colliders = []; //Für kollisionen
     coins = [];  // Liste aller Münzen im Level
 
-    
+    //sound
+    sound;
+    buttonMusikAus;
 
      
 
@@ -49,7 +52,11 @@ export class Controller {
         await this.renderer.loadAssets();
         //Szene erstellen
         await this.renderer.createBackground();
+
         
+        
+        
+
         //Player als Sprite erstellen
         this.playerSprite = this.renderer.createSprite("player");
         this.renderer.renderPlayer(this.playerSprite, this.player.x, this.player.y);
@@ -100,6 +107,26 @@ export class Controller {
         // const plat3 = { x: 1195, y: window.innerHeight - 150, width: 160, height: 10 };
         // this.collision.addCollider(plat3);
         // this.renderer.createPlatform(plat3.x, plat3.y, plat3.width, plat3.height);
+        
+        //SoundController initialisieren  
+        this.sound = new SoundController();
+        await this.sound.init();
+        
+        //SoundButton
+        this.buttonMusikAus = this.renderer.createSprite("soundAus");
+        this.renderer.renderPlayer(this.buttonMusikAus, 20, 10);
+        this.buttonMusikAus.width = window.innerWidth / 8;
+        this.buttonMusikAus.height = window.innerHeight / 10;
+        //damit den Sprite wie einen Button nutzten kann
+        //interaktivität sicherstellen
+        this.buttonMusikAus.eventMode = "static";
+        //für Cursor als Button anzeigen 
+        this.buttonMusikAus.cursor = "pointer";
+        //EventListener hinzufügen
+        this.buttonMusikAus.on("pointertap", () => {
+            console.log("Button wurde angeklickt");
+            this.sound.switchOnOff();
+        });
 
         //ABFRAGEN
         document.addEventListener("keydown", (e) => this.keyIsDown(e));
@@ -238,6 +265,7 @@ export class Controller {
       //=== VERTIKALE BEWEGUNG ===
       //SPRINGEN: wenn eine Sprunganforderung vorliegt und wir auf dem Boden sind
       if (this.jumpRequested) {
+        this.sound.jump();
         this.player.jump();
 
         // Merke Start-Y des Sprungs für Debugging
