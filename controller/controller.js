@@ -1,5 +1,4 @@
 import { Player } from "../model/player.js";
-import { Enemy } from "../model/enemy.js";
 import { Renderer } from "../view/renderer.js"; 
 import { Collision } from "../model/collision.js";
 import { Coin } from "../model/coin.js";
@@ -31,8 +30,6 @@ export class Controller {
     // Collider-Liste (vierecke mit x,y,width,height)
     colliders = []; //Für kollisionen
     coins = [];  // Liste aller Münzen im Level
-    
-
 
     
 
@@ -43,7 +40,6 @@ export class Controller {
     async initController() {
         //MODEL:
         this.player = new Player("Spieler1", 50, 50);
-        // this.enemy = new Enemy("Gegner1", 1500, window.innerHeight - 100)
         this.collision = new Collision();
 
         //VIEW:
@@ -79,7 +75,7 @@ export class Controller {
         coin2.sprite = this.renderer.createCoinSprite(coin2.x, coin2.y);
         this.coins.push(coin2);
 
-        const coin3 = new Coin(900, window.innerHeight - 350, 32, 32);
+        const coin3 = new Coin(900, window.innerHeight - 450, 32, 32);
         coin3.sprite = this.renderer.createCoinSprite(coin3.x, coin3.y);
         this.coins.push(coin3);
 
@@ -92,14 +88,14 @@ export class Controller {
 
 
         
-        // Beispiel-Plattform hinzufügen (sichtbar und kollisionsfähig)
-        const plat = { x: 40, y: window.innerHeight - 125, width: window.innerWidth - 100, height: 10 };
-        this.collision.addCollider(plat);
-        this.renderer.createPlatform(plat.x, plat.y, plat.width, plat.height);
+        // //Beispiel-Plattform hinzufügen (sichtbar und kollisionsfähig)
+        // const plat = { x: 100, y: window.innerHeight - 125, width: window.innerWidth - 1000, height: 10 };
+        // this.collision.addCollider(plat);
+        // this.renderer.createPlatform(plat.x, plat.y, plat.width, plat.height);
 
-        const plat2 = { x: 1000, y: window.innerHeight - 150, width: 160, height: 10 };
-        this.collision.addCollider(plat2);
-        this.renderer.createPlatform(plat2.x, plat2.y, plat2.width, plat2.height);
+        // const plat2 = { x: 1000, y: window.innerHeight - 450, width: 160, height: 10 };
+        // this.collision.addCollider(plat2);
+        // this.renderer.createPlatform(plat2.x, plat2.y, plat2.width, plat2.height);
 
         // const plat3 = { x: 1195, y: window.innerHeight - 150, width: 160, height: 10 };
         // this.collision.addCollider(plat3);
