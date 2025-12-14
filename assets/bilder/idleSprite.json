@@ -1,0 +1,69 @@
+{"frames": {
+
+"sonic_sprite_sheet_idleRight_01.png":
+{
+	"frame": {"x":0,"y":0,"w":87,"h":122},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":87,"h":122},
+	"sourceSize": {"w":87,"h":122},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"sonic_sprite_sheet_idleRight_02.png":
+{
+	"frame": {"x":87,"y":0,"w":87,"h":122},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":87,"h":122},
+	"sourceSize": {"w":87,"h":122},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"sonic_sprite_sheet_idleRight_03.png":
+{
+	"frame": {"x":174,"y":0,"w":87,"h":122},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":87,"h":122},
+	"sourceSize": {"w":87,"h":122},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"sonic_sprite_sheet_idleRight_04.png":
+{
+	"frame": {"x":261,"y":0,"w":87,"h":122},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":87,"h":122},
+	"sourceSize": {"w":87,"h":122},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"sonic_sprite_sheet_idleRight_05.png":
+{
+	"frame": {"x":348,"y":0,"w":87,"h":122},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":87,"h":122},
+	"sourceSize": {"w":87,"h":122},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"sonic_sprite_sheet_idleRight_06.png":
+{
+	"frame": {"x":435,"y":0,"w":87,"h":122},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":87,"h":122},
+	"sourceSize": {"w":87,"h":122},
+	"anchor": {"x":0.5,"y":0.5}
+}},
+"animations": {
+	"sonic_sprite_sheet_idleRight": ["sonic_sprite_sheet_idleRight_01.png","sonic_sprite_sheet_idleRight_02.png","sonic_sprite_sheet_idleRight_03.png","sonic_sprite_sheet_idleRight_04.png","sonic_sprite_sheet_idleRight_05.png","sonic_sprite_sheet_idleRight_06.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "idleSprite.png",
+	"format": "RGBA8888",
+	"size": {"w":522,"h":122},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:38f5d4c7e0b519a1f3dfe7075cb65e2f:da387b396a9b0fc9dc574b201afe4b85:08b2902d7eb32273671b90a1209a54a6$"
+}
+}

@@ -1,0 +1,39 @@
+{"frames": {
+
+"sonic_sprite_sheet_fallRight_01.png":
+{
+	"frame": {"x":0,"y":0,"w":105,"h":122},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":105,"h":122},
+	"sourceSize": {"w":105,"h":122}
+},
+"sonic_sprite_sheet_fallRight_02.png":
+{
+	"frame": {"x":105,"y":0,"w":95,"h":122},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":95,"h":122},
+	"sourceSize": {"w":95,"h":122}
+},
+"sonic_sprite_sheet_idleRight_01.png":
+{
+	"frame": {"x":200,"y":0,"w":87,"h":122},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":87,"h":122},
+	"sourceSize": {"w":87,"h":122}
+}},
+"animations": {
+	"sonic_sprite_sheet_fallRight": ["sonic_sprite_sheet_fallRight_01.png","sonic_sprite_sheet_fallRight_02.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "fallSprite.png",
+	"format": "RGBA8888",
+	"size": {"w":287,"h":122},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:d8f4475e3d01e11be7df2f0e2ed75be8:42cf5e721b414aaa886eb529d60e5985:ca4ef5e3cd42819646e537ae0ecb9698$"
+}
+}

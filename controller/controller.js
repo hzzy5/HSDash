@@ -1,7 +1,15 @@
+//MODEL
 import { Player } from "../model/player.js";
-import { Renderer } from "../view/renderer.js"; 
-import { Collision } from "../model/collision.js";
 import { Coin } from "../model/coin.js";
+import { Collision } from "../model/collision.js";
+
+//VIEW
+import { Renderer } from "../view/renderer.js"; 
+import { PlayerRenderer } from "../view/playerRenderer.js";
+import { CoinRenderer } from "../view/coinRenderer.js";
+import { SceneRenderer } from "../view/sceneRenderer.js";
+
+//CONTROLLER
 import { SoundController } from "./soundcontroller.js";
 //import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs";
 
@@ -10,9 +18,12 @@ export class Controller {
 
     //Instanzvariablen
     renderer;
+    playerRenderer;
+    coinRenderer;
+    sceneRenderer;
+
     collision;
     
-
     player;
     playerSprite;
     enemy;
@@ -42,79 +53,78 @@ export class Controller {
     //methode um das ganze Spiel zu initialisieren. Hier werden die Methoden aus der View usw aufgerufen. 
     async initController() {
         //MODEL:
-        this.player = new Player("Spieler1", 50, 50);
+        this.player = new Player("Spieler1", 100, 100);
         this.collision = new Collision();
 
         //VIEW:
         this.renderer = new Renderer();
-        await this.renderer.initRenderer();
+        await this.renderer.initRenderer(); //hier wird die PIXI.app erzeugt
         //Spiel-Elemente laden
         await this.renderer.loadAssets();
-        //Szene erstellen
-        await this.renderer.createBackground();
 
+        this.playerRenderer = new PlayerRenderer(this.renderer); //alle Renderer arbeiten mit derselben PIXI.app
+        await this.playerRenderer.initAnimations();
+        this.coinRenderer = new CoinRenderer(this.renderer);
+        this.sceneRenderer = new SceneRenderer(this.renderer);
         
-        
-        
+        //Szene erstellen
+        await this.sceneRenderer.createBackground();
 
         //Player als Sprite erstellen
-        this.playerSprite = this.renderer.createSprite("player");
-        this.renderer.renderPlayer(this.playerSprite, this.player.x, this.player.y);
+        // this.playerSprite = this.playerRenderer.createSprite("playerJumpJSON");
+        // this.playerRenderer.renderPlayer(this.playerSprite, this.player.x, this.player.y);
 
         //Größen synchronisieren
-        this.player.setWidthAndHeight(this.playerSprite.width, this.playerSprite.height)
+        // this.player.setWidthAndHeight(this.playerSprite.width, this.playerSprite.height);
 
         //Spielgrenzen erstellen
         this.leftBound = { x: -10, y: 0, width: 10, height: window.innerHeight };
         this.collision.addCollider(this.leftBound);
-        this.leftBound = this.renderer.createBound(this.leftBound.x, this.leftBound.y, this.leftBound.width, this.leftBound.height);
+        this.leftBound = this.sceneRenderer.createBound(this.leftBound.x, this.leftBound.y, this.leftBound.width, this.leftBound.height);
 
         this.rightBound = { x: window.innerWidth, y: 0, width: 10, height: window.innerHeight };
         this.collision.addCollider(this.rightBound);
-        this.rightBound = this.renderer.createBound(this.rightBound.x, this.rightBound.y, this.rightBound.width, this.rightBound.height);
+        this.rightBound = this.sceneRenderer.createBound(this.rightBound.x, this.rightBound.y, this.rightBound.width, this.rightBound.height);
 
         //Münzen erstellen
-        //const coin1 = new Coin(300, window.innerHeight - 350, 32, 32);
-        //coin1.sprite = this.renderer.createCoinSprite(coin1.x, coin1.y);
-        //this.coins.push(coin1);
+        const coin1 = new Coin(300, window.innerHeight - 350, 32, 32);
+        coin1.sprite = this.coinRenderer.createCoinSprite(coin1.x, coin1.y);
+        this.coins.push(coin1);
 
-        //const coin2 = new Coin(600, window.innerHeight - 450, 32, 32);
-        //coin2.sprite = this.renderer.createCoinSprite(coin2.x, coin2.y);
-        //this.coins.push(coin2);
+        const coin2 = new Coin(600, window.innerHeight - 450, 32, 32);
+        coin2.sprite = this.coinRenderer.createCoinSprite(coin2.x, coin2.y);
+        this.coins.push(coin2);
 
-        //const coin3 = new Coin(900, window.innerHeight - 450, 32, 32);
-       // coin3.sprite = this.renderer.createCoinSprite(coin3.x, coin3.y);
-        //this.coins.push(coin3);
+        const coin3 = new Coin(900, window.innerHeight - 450, 32, 32);
+        coin3.sprite = this.coinRenderer.createCoinSprite(coin3.x, coin3.y);
+        this.coins.push(coin3);
 
         
-        //this.totalCoins = this.coins.length;  
-        //this.collectedCoins = 0;
-        //this.renderer.createCoinHud(this.totalCoins);
-
-
-
-
+        this.totalCoins = this.coins.length;  
+        this.collectedCoins = 0;
+        this.coinRenderer.createCoinHud(this.totalCoins);
         
         // //Beispiel-Plattform hinzufügen (sichtbar und kollisionsfähig)
         // const plat = { x: 100, y: window.innerHeight - 125, width: window.innerWidth - 1000, height: 10 };
         // this.collision.addCollider(plat);
-        // this.renderer.createPlatform(plat.x, plat.y, plat.width, plat.height);
+        // this.scenereRenderer.createPlatform(plat.x, plat.y, plat.width, plat.height);
 
         // const plat2 = { x: 1000, y: window.innerHeight - 450, width: 160, height: 10 };
         // this.collision.addCollider(plat2);
-        // this.renderer.createPlatform(plat2.x, plat2.y, plat2.width, plat2.height);
+        // this.scenereRenderer.createPlatform(plat2.x, plat2.y, plat2.width, plat2.height);
 
         // const plat3 = { x: 1195, y: window.innerHeight - 150, width: 160, height: 10 };
         // this.collision.addCollider(plat3);
-        // this.renderer.createPlatform(plat3.x, plat3.y, plat3.width, plat3.height);
+        // this.scenereRenderer.createPlatform(plat3.x, plat3.y, plat3.width, plat3.height);
         
+
         //SoundController initialisieren  
         this.sound = new SoundController();
         await this.sound.init();
         
         //SoundButton
         this.buttonMusikAus = this.renderer.createSprite("soundAus");
-        this.renderer.renderPlayer(this.buttonMusikAus, 20, 10);
+        this.renderer.renderSprite(this.buttonMusikAus, 20, 10);
         this.buttonMusikAus.width = window.innerWidth / 8;
         this.buttonMusikAus.height = window.innerHeight / 10;
         //damit den Sprite wie einen Button nutzten kann
@@ -134,6 +144,7 @@ export class Controller {
     }
     /*vllt iwie optimieren: nur zeichnen, wenn etwas geändert wurde.*/
     
+
     //=== GAMELOOP ============================================================================================
     //Methode, die alle Update-Funktionen pro Frame aufurft. 
     gameLoop(dt) {
@@ -171,8 +182,6 @@ export class Controller {
       const k = (typeof e.key === 'string') ? e.key.toLowerCase() : e.key;
       this.keys[k] = false;
       //Player-Variablen zurücksetzen
-      this.player.isMoving = false;
-      this.player.isRunning = false;
       this.player.turningLeft = true;
       this.player.turningRight = true;
     }
@@ -189,12 +198,10 @@ export class Controller {
       let dir = 0; //Richtung: -1 = links, 1 = rechts, 0 = keine Bewegung -> wird nach jedem frame neu berechnet
       if (this.keys['a'] || this.keys['arrowleft']) {
         dir -= 1; // -= weil es nach jedem frame neu berechnet wird und so es möglich ist dass beide tasten gedrückt werden
-        this.player.isMoving = true;
         this.player.turningLeft = true;
       }
       if (this.keys['d'] || this.keys['arrowright']) {
         dir += 1; //bei += genauso ( 0 += 1 = 1 -= 1 = 0)
-        this.player.isMoving = true;
         this.player.turningRight = true;
       }
 
@@ -204,12 +211,12 @@ export class Controller {
       const baseSpeed = (this.player.speed !== undefined) ? this.player.speed : 220;
       const sprintSpeed = (this.player.sprintSpeed !== undefined) ? this.player.sprintSpeed : Math.round(baseSpeed * 1.8);
       const currentSpeed = sprintHeld ? sprintSpeed : baseSpeed; 
+     
 
 
       // Updated facing variable für den dash damit dash nicht 0 sein kann (sonst dash in die richtung in die man vorher sich bewegt hat)
       if (dir !== 0) {
         this.player.facing = dir;
-        this.player.isRunning = sprintHeld; //Wenn der Spieler sprintet, d.h. Shift drückt, dann true.
       }
 
       //=== DASH ===
@@ -255,9 +262,10 @@ export class Controller {
             }
             // Falls wir gerade dashen, abbrechen
             this.player.dashTimeRemaining = 0;
-            // sync helper coords
-            this.player.x1 = this.player.x;
-            this.player.x2 = this.player.x + this.player.width;
+            // sync helper coords#
+            this.player.updateHitbox();
+            // this.player.x1 = this.player.x;
+            // this.player.x2 = this.player.x + this.player.width;
           }
         }
       }
@@ -298,34 +306,62 @@ export class Controller {
               this.player.vy = 0;
             }
             // Hilfe Koordinaten syncen
-            this.player.y1 = this.player.y;
-            this.player.y2 = this.player.y + this.player.height;
+            this.player.updateHitbox();
+            // this.player.y1 = this.player.y;
+            // this.player.y2 = this.player.y + this.player.height;
           }
         }
       }
+      
+      //=== PLAYER STATE ===
+      //Wenn der Player gerade dasht:
+      if (this.player.dashTimeRemaining > 0) {
+        this.player.setState("dash");
+      } 
+      //Wenn der Player nicht auf dem Boden ist
+      else if (!this.player.onGround) {
+        //und springt
+        if (this.player.vy < 0) {
+          this.player.setState("jump");
+        //vy > 0, d.h. fällt
+        } else {
+          this.player.setState("fall"); //funktioniert leider nur nach jump. DEBUG
+        }
+      } else {
+        //Wenn der Player sich bewegt
+        if (dir !== 0) {
+          //Sprint hat die höchste Priorität, d.h. egal ob walk gesetzt ist, run wird immer ausgeführt, sobald shift gedrückt ist.
+          if (sprintHeld) {
+            this.player.setState("run");
+          } else {
+            this.player.setState("walk");
+          }
+        } else {
+          //dir == 0, d.h. keine Bewegung
+          this.player.setState("idle");
+        }
+      }
 
-      //return this.player;
+      this.playerRenderer.renderPlayer(this.player.x, this.player.y, this.player.x1, this.player.y1, this.player.width, this.player.height); //player rendern
+      this.playerRenderer.updatePlayerAnimation(this.player.getState(), this.player.facing); //Player-animation abspielen
+      console.log(this.player.x, this.player.y, this.player.getState(), this.player.facing);
     }
 
 
     //=== UPDATE BACKGROUND ============================================================================================
     scrollBackground(dt) {
-      //Der Spieler erreicht die Grenzen des Spielfeldes
-      // if(this.collision.collision(this.player, this.collision.colliders[0])) {
-      //   console.log("collide");
-      //   this.renderer.scrollBackground(this.player.facing, dt);
-      // }
-      //==> Scrollt nicht
-
       //Scrollen, wenn der Player die Hälfte des rechten Bildschirms erreicht
-      if((this.player.isMoving || this.player.isRunning) && this.player.x > window.innerWidth / 2) {
-        this.renderer.scrollBackground(this.player.facing, dt);
+      const SCROLL_THRESHOLD = window.innerWidth / 2;
+
+      if((this.player.getState() == "walk" || this.player.getState() == "run") && this.player.x > SCROLL_THRESHOLD) {
+        this.sceneRenderer.scrollBackground(this.player.facing, dt);
         //Hier wird unterschieden: 
         //--> gehen wir nach links, d.h. zurück, dann muss sich der Hintergrund wieder nach rechts bewegen.
         //--> gehen wir nach rechts, d.h. vorne, dann muss sich der Hintergrund nach links bewegen.
       }
     }
 
+    //=== UPDATE COINS ============================================================================================
     checkCoinCollection() {
         for (const coin of this.coins) {
            if (coin.collected) continue;
@@ -335,9 +371,9 @@ export class Controller {
             console.log("Coin eingesammelt!");
             coin.collect();
         
-            this.renderer.showFloatingText("+1", coin.x, coin.y - 20);
+            this.coinRenderer.showFloatingText("+1", coin.x, coin.y - 20);
             this.collectedCoins++;
-            this.renderer.updateCoinHud(this.collectedCoins, this.totalCoins);
+            this.coinRenderer.updateCoinHud(this.collectedCoins, this.totalCoins);
             
 
 
