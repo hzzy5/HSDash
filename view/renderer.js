@@ -2,9 +2,11 @@ import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs
 
 export class Renderer {
 
+
     //Instanzvariablen für den Hintergrund 
     backgroundX = 0;
     backgroundSpeed = -100; //nach links bewegen
+    cameraX = 0; // Kamera-Offset für horizontales Scrolling
     
     //Initialisierung der Canvas
     async initRenderer() {
