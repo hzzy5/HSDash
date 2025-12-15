@@ -371,6 +371,9 @@ export class Controller {
             console.log("Coin eingesammelt!");
             coin.collect();
         
+            //Soundeffect
+            this.sound.coinCollected();
+            
             this.coinRenderer.showFloatingText("+1", coin.x, coin.y - 20);
             this.collectedCoins++;
             this.coinRenderer.updateCoinHud(this.collectedCoins, this.totalCoins);
