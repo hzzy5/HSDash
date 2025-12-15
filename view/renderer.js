@@ -161,6 +161,8 @@ export class Renderer {
         return sprite;
     }
 
+    
+
     //Methode, um eine Plattform zu erzeugen.
     createPlatform(x, y, width, height, color = 0x8b4513) {
         const gfx = new PIXI.Graphics();
