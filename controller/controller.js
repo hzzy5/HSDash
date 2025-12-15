@@ -8,6 +8,7 @@ import { Renderer } from "../view/renderer.js";
 import { PlayerRenderer } from "../view/playerRenderer.js";
 import { CoinRenderer } from "../view/coinRenderer.js";
 import { SceneRenderer } from "../view/sceneRenderer.js";
+import { CameraRenderer } from "../view/cameraRenderer.js";
 
 //CONTROLLER
 import { SoundController } from "./soundcontroller.js";
@@ -21,6 +22,7 @@ export class Controller {
     playerRenderer;
     coinRenderer;
     sceneRenderer;
+    cameraRenderer;
 
     collision;
     
@@ -66,6 +68,7 @@ export class Controller {
         await this.playerRenderer.initAnimations();
         this.coinRenderer = new CoinRenderer(this.renderer);
         this.sceneRenderer = new SceneRenderer(this.renderer);
+        this.cameraRenderer = new CameraRenderer(this.renderer);
         
         //Szene erstellen
         await this.sceneRenderer.createBackground();
@@ -82,9 +85,9 @@ export class Controller {
         this.collision.addCollider(this.leftBound);
         this.leftBound = this.sceneRenderer.createBound(this.leftBound.x, this.leftBound.y, this.leftBound.width, this.leftBound.height);
 
-        this.rightBound = { x: window.innerWidth, y: 0, width: 10, height: window.innerHeight };
-        this.collision.addCollider(this.rightBound);
-        this.rightBound = this.sceneRenderer.createBound(this.rightBound.x, this.rightBound.y, this.rightBound.width, this.rightBound.height);
+        // this.rightBound = { x: window.innerWidth, y: 0, width: 10, height: window.innerHeight };
+        // this.collision.addCollider(this.rightBound);
+        // this.rightBound = this.sceneRenderer.createBound(this.rightBound.x, this.rightBound.y, this.rightBound.width, this.rightBound.height);
 
         //Münzen erstellen
         const coin1 = new Coin(300, window.innerHeight - 350, 32, 32);
@@ -154,6 +157,11 @@ export class Controller {
       
       //Hintergrund scrollen
       this.scrollBackground(dt);
+
+      //Camera
+      // updatePlatformPositions(platformManager); // Plattformen mit Kamera mitbewegen
+      // updateGroundPosition(); // Boden mit Kamera mitbewegen
+      this.cameraRenderer.updateCamera(this.player);
     }
 
     

@@ -51,23 +51,24 @@ export class SceneRenderer {
     //Methode, die die Szene initialisiert
     createBackground() {
         //Hintergrund aufbauen
-        this.background = this.createTilingSprite("background", window.innerWidth, 300);
+        this.background = this.createTilingSprite("background", this.view.app.screen.width, 300);
         this.background.y = 0;
-        this.clouds = this.createTilingSprite("clouds", window.innerWidth, 300);
+        this.clouds = this.createTilingSprite("clouds", this.view.app.screen.width, 300);
         this.clouds.y = -150;
-        this.hill2 = this.createTilingSprite("hill2", window.innerWidth, 280);
+        this.hill2 = this.createTilingSprite("hill2", this.view.app.screen.width, 280);
         this.hill2.y = -250;
-        this.hill1 = this.createTilingSprite("hill1", window.innerWidth, 180);
+        this.hill1 = this.createTilingSprite("hill1", this.view.app.screen.width, 180);
         this.hill1.y = -400;
-        this.trees = this.createTilingSprite("trees", window.innerWidth, 100);
+        this.trees = this.createTilingSprite("trees", this.view.app.screen.width, 100);
         this.trees.y = -450;
         //this.bushes = this.createTilingSprite("bushes", window.innerWidth, 100);
         //this.bushes.y = -410;
-        this.ground = this.createTilingSprite("ground", window.innerWidth, 100);
+        this.ground = this.createTilingSprite("ground", this.view.app.screen.width, 100);
         this.ground.y = -450;
     }
 
     //Methode, die den Hintergrund bewegt. Durch die verschiedenen Geschwindigkeiten wird ein Tiefeneffekt erzeugt.
+    //!!!!Hier CameraX übergeben und cameraX * 0.5 usw machen. Abhängig von der Kamera scrollen
     scrollBackground(direction, dt) {
         //Die x-Position wird immer pro Frame mit einer Geschwidigkeit verschoben
         //Je nachdem, in welche Richtung sich der Spieler bewegt, wird der Hintergrund entsprechend verschoben.
