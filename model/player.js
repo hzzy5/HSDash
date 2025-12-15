@@ -11,23 +11,21 @@ export class Player {
     // Default Größe (responsive relativ zur Fensterhöhe)
     const refH = (typeof window !== 'undefined' && window.innerHeight) ? window.innerHeight : 800;
     const scale = refH / 800; // Basis-Referenzhöhe 800px
-    this.height = Math.max(24, Math.round(80 * scale));
-    this.width = Math.max(12, Math.round(40 * scale));
+
+    //Etwas kleiner setzen. Besser für das Spielgefühl 
+    this.height = 120;
+    this.width = 60;
 
     // Default Geschwindigkeit (px/s) — skaliert mit Fenstergröße
     this.speed = Math.max(80, Math.round(220 * scale));
     // Sprint-Geschwindigkeit (px/s) — Standard: 1.8x normale Geschwindigkeit
     this.sprintSpeed = Math.round(this.speed * 1.8);
 
+    //Zustände für die Spritesheet-Animationen: idle, walk, run, jump, fall, dash.
+    this.state = "idle" 
     //Richtung, in die sich der Spieler dreht
     this.turningLeft = false;
-    this.turningRight = false
-
-    //Zustände für die Spritesheet-Animationen
-    this.isJumping = false;
-    this.isMoving = false;
-    this.isRunning = false; // nach rechts oder nach links? 
-    this.isFalling = false;
+    this.turningRight = false;
     
     // Geschwindigkeit beim Sprung
     // Vertikale Geschwindigkeit und Sprung-Parameter
@@ -48,11 +46,11 @@ export class Player {
     // Ob noch ein In-Air-Dash verfügbar ist (wird beim Landen zurückgesetzt)
     this.airDashAvailable = true;
 
-    // Hilfskoordinaten für Kollisionen (linke/obere Ecke = x1,y1), (rechte/untere Ecke = x2,y2)
-    this.x1 = this.x;
-    this.y1 = this.y;
-    this.x2 = this.x + this.width; 
-    this.y2 = this.y + this.height; 
+    // Hilfskoordinaten für Kollisionen 
+    this.x1 = this.x - this.width / 2;
+    this.x2 = this.x + this.width / 2;
+    this.y1 = this.y - this.height;
+    this.y2 = this.y;
   }
 
   //Methode, um sich horizontal zu bewegen. Wird ein negativer Wert übergeben, bewegt sich der Spieler nach links. Bei einem positiven Wert nach rechts. 
@@ -69,7 +67,8 @@ export class Player {
       this.vy = (this.jumpVelocity !== undefined) ? this.jumpVelocity : -480;
       this.jumpCount++;
       this.onGround = false;
-      this.isJumping = true;
+      this.setState("jump");
+      this.updateHitbox();
     }
   }
 
@@ -78,6 +77,7 @@ export class Player {
     const GRAVITY = 1200; // px/s^2
     this.vy += GRAVITY * dt;
     this.move(0, this.vy * dt);
+    //State fall?? iwo bei vy > 0  
   }
 
   //Methode, um zu dashen.
@@ -85,11 +85,13 @@ export class Player {
     if (!this.onGround && this.dashCooldownRemaining <= 0 && this.dashTimeRemaining <= 0) {
       // Allow a single in-air dash per airborne period (falling or rising).
       if (this.airDashAvailable) {
+        this.setState("dash");
         this.dashTimeRemaining = (this.dashDuration !== undefined) ? this.dashDuration : 0.12;
         this.dashCooldownRemaining = (this.dashCooldown !== undefined) ? this.dashCooldown : 0.6;
         this.dashDir = (direction !== 0) ? direction : this.facing || 1;
         // consume the in-air dash for this airborne period
         this.airDashAvailable = false;
+        this.updateHitbox();
         //if (this.DEBUG) console.log('[controller] dash started (in-air)', { dashDir: player.dashDir, vy: player.vy });
       } else {
         //if (this.DEBUG) console.log('[controller] dash denied (in-air already used)', { airDashAvailable: player.airDashAvailable, vy: player.vy });
@@ -108,16 +110,30 @@ export class Player {
 
   
   //Methode, die die Koordinaten des Players updaten (Hilfe für die Kollisionserkennung) 
+  //Anpassen an das Spritesheet: Pivot Point unten in der Mitte
   updateHitbox () {
-    this.x1 = this.x;
-    this.x2 = this.x + this.width;
-    this.y1 = this.y;
-    this.y2 = this.y + this.height;
+    //D.h. auf die Schuhe des Players fokussieren
+    this.x1 = this.x - this.width / 2;
+    this.x2 = this.x + this.width / 2;
+    this.y1 = this.y - this.height;
+    this.y2 = this.y;
   } 
 
   //Methode, die die x-Position zurückgibt. Unnötig??
   getPositionX() {
     return this.x;
+  }
+
+  //Methode, die den Zustand eines Spielers setzt, z.B. idle, run, jump, ...
+  setState(newState) {
+    if( this.state !== newState ) {
+      this.state = newState;
+    }
+  }
+
+  //Methode, die den Zustand des Spielers zurückgibt
+  getState() {
+    return this.state;
   }
 
   //Methode, die die Breite und Höhe setzt

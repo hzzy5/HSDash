@@ -1,13 +1,25 @@
+
+//MODEL
 // import { Player } from "../model/player.js";
+import { Collision } from "../model/collision.js";
 import { Coin } from "../model/coin.js";
 import { levels } from "../model/levels.js";
+
+//VIEW
 import { Renderer } from "../view/renderer.js"; 
-import { Collision } from "../model/collision.js";
+import { PlayerRenderer } from "../view/playerRenderer.js";
+import { CoinRenderer } from "../view/coinRenderer.js";
+import { SceneRenderer } from "../view/sceneRenderer.js";
 
 export class LevelLoader {
 
-    constructor(renderer, collision, coins) {
+    constructor(renderer, playerRenderer, coinRenderer, sceneRenderer, collision, coins) {
         this.renderer = renderer;
+        this.playerRenderer = playerRenderer;
+        this.coinRenderer = coinRenderer;
+        this.sceneRenderer = sceneRenderer;
+
+
         this.collision = collision;
         this.player;
         this.coins = coins;
@@ -53,7 +65,7 @@ export class LevelLoader {
 
                 if (char === 'o') {
                     let coin = new Coin(posX, posY);
-                    coin.sprite = this.renderer.createCoinSprite(posX, posY);
+                    coin.sprite = this.coinRenderer.createCoinSprite(posX, posY);
                     this.coins.push(coin);
                 }
 

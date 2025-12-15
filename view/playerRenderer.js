@@ -1,0 +1,212 @@
+/*Spezifische View-Klasse, die für die Darstellung des Players zuständig ist.*/
+import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs"; 
+
+export class PlayerRenderer {
+
+    constructor(mainView) {
+        //Regerenz auf die mainView, damit dieselbe PIXI.app genutzt wird.
+        this.view = mainView;
+
+        //Animationen
+        this.idleAnimation = null;
+        this.walkAnimation = null;
+        this.runAnimation = null;
+        this.jumpAnimation = null;
+        this.fallAnimation = null;
+        this.dashAnimation = null;
+        //Array mit allen möglichen Animationen
+        this.animations = null;
+        //Aktuelle Animation
+        this.currentAnimation = null;
+
+         this.hitboxDebug = new PIXI.Graphics();
+         this.hitboxDebug.zIndex = 9999;
+         this.view.app.stage.sortableChildren = true;
+         this.view.app.stage.addChild(this.hitboxDebug);
+    }
+
+    //Metehode, um das Sprite zu positioniert
+    renderPlayer(x, y, x1, y1, w, h) {
+        if(this.currentAnimation) {
+            this.currentAnimation.position.set(x,y);
+        }
+        
+        //Sicherheitshalber die anderen Animationen auch positionieren, damit man keine doppelten Sprites sieht
+        this.animations.forEach(a => {
+            if (a) a.position.set(x, y);
+        });
+        this.drawHitbox(x1, y1, w, h);
+    }
+
+    //Methode, um den Player zu erstellen 
+    createSprite(alias) {
+        let sprite = PIXI.Sprite.from(alias);
+        //Sprite anzeigen lassen
+        this.view.app.stage.addChild(sprite); 
+        //^^ this ist hier das app-Objekt
+
+        return sprite;
+    }
+
+    //Methode, die alle Animationen lädt
+    async initAnimations() {
+        //IDLE
+        //Wenn es noch keine idle-animation gibt
+            const sheet1 = PIXI.Assets.get('idleAnimation').data.animations;
+            // create an animated sprite
+            this.idleAnimation = PIXI.AnimatedSprite.fromFrames(sheet1["sonic_sprite_sheet_idleRight"]);
+            this.idleAnimation.animationSpeed = 1 / 6; //6 fps
+            this.idleAnimation.anchor.set(0.5, 0); //pivot point ist mittig (0.5) unten (1)
+            this.idleAnimation.loop = true;
+            //this.view.app.stage.addChild(this.idleAnimation);
+        
+
+        //WALK
+            const sheet2 = PIXI.Assets.get('walkAnimation').data.animations;
+            // create an animated sprite
+            this.walkAnimation = PIXI.AnimatedSprite.fromFrames(sheet2["sonic_sprite_sheet_walkRight"]);
+            this.walkAnimation.animationSpeed = 1 / 6; 
+            this.walkAnimation.anchor.set(0.5, 0);
+            this.walkAnimation.loop = true;
+            //this.view.app.stage.addChild(this.walkAnimation);
+        
+
+        //RUN
+            const sheet3 = PIXI.Assets.get('runAnimation').data.animations;
+            // create an animated sprite
+            this.runAnimation = PIXI.AnimatedSprite.fromFrames(sheet3["sonic_sprite_sheet_RunRight"]);
+            this.runAnimation.animationSpeed = 1 / 6; 
+            this.runAnimation.anchor.set(0.5, 0);
+            this.runAnimation.loop = true; 
+            //this.view.app.stage.addChild(this.runAnimation);
+        
+        
+        //JUMP
+        //Wenn es noch keine jump-animation gibt
+            const sheet4 = PIXI.Assets.get('jumpAnimation').data.animations;
+            // create an animated sprite
+            this.jumpAnimation = PIXI.AnimatedSprite.fromFrames(sheet4["sonic_sprite_sheet_jumpRight"]);
+            this.jumpAnimation.animationSpeed = 1 / 6; 
+            this.jumpAnimation.anchor.set(0.5, 0);
+            this.jumpAnimation.loop = false;
+            //this.view.app.stage.addChild(this.jumpAnimation);
+        
+        
+        //FALL
+            const sheet5 = PIXI.Assets.get('fallAnimation').data.animations;
+            // create an animated sprite
+            this.fallAnimation = PIXI.AnimatedSprite.fromFrames(sheet5["sonic_sprite_sheet_fallRight"]);
+            this.fallAnimation.animationSpeed = 1 / 6; 
+            this.fallAnimation.anchor.set(0.5, 0);
+            this.fallAnimation.loop = false; 
+            //this.view.app.stage.addChild(this.fallAnimation);
+        
+
+        //DASH
+            const sheet6 = PIXI.Assets.get('dashAnimation').data.animations;
+            // create an animated sprite
+            this.dashAnimation = PIXI.AnimatedSprite.fromFrames(sheet6["sonic_sprite_sheet_dashRight"]);
+            this.dashAnimation.animationSpeed = 1 / 6; 
+            this.dashAnimation.anchor.set(0.5, 0);
+            this.dashAnimation.loop = false;
+            //this.view.app.stage.addChild(this.dashAnimation);
+        
+
+        //Alle möglichen Animationen
+        this.animations = [this.idleAnimation, this.walkAnimation, this.runAnimation, this.jumpAnimation, this.fallAnimation, this.dashAnimation];
+    }
+
+    //Methode, die anhand des Player-States und der Richtung entscheidet, welche Animation abgespielt wird.
+    updatePlayerAnimation(playerState, facing) {
+        //Nächste Animation auswählen
+        const nextAnimation = this.getNextAnimation(playerState);
+        if (!nextAnimation) return;
+
+        //Falls die vorherige Animation eine lockedAnimation ist und noch läuft, laufen lassen
+        if (this.currentAnimation && this.isLockedAnimation (this.currentAnimation) && this.currentAnimation.playing) return;
+
+        //Falls es keine Änderungen gab, muss auch nichts neu gezeichnet werden.
+        if (this.currentAnimation === nextAnimation) {
+            // ggf Richtung updaten
+            this.updateFacing(facing);
+            return;
+        }
+        
+        // Alte Animation entfernen
+        if(this.currentAnimation && this.currentAnimation.parent) {
+            this.currentAnimation.stop();
+            this.currentAnimation.parent.removeChild(this.currentAnimation);
+        }
+
+        //Neue Animation starten
+        this.currentAnimation = nextAnimation;
+        this.updateFacing(facing);
+        this.view.app.stage.addChild(this.currentAnimation);
+        this.currentAnimation.play();
+            // //Beim Sprung und Dash muss die Animation beim ersten Frame starten - auch bei Unterbrechungen 
+            // if (this.currentAnimation === this.jumpAnimation || this.currentAnimation === this.dashAnimation) {
+            //     this.currentAnimation.gotoAndPlay(0);
+            // }   
+            // //Beim Laufen soll sie weiterlaufen. Sonst würden sie nie über den ersten Frame hinaus kommen. 
+            //  else {
+            //     this.currentAnimation.play();
+            // }
+             
+            //Die Position müsste direkt hier gesetzt werden. Überlegen, wie man das am besten löst
+        
+    }
+
+    //Methode, die die Animation anhand des Player-Zustandes auswählt.
+    getNextAnimation(playerState) {
+        //Aktuelle Animation auswählen
+        switch (playerState) {
+            case "idle":
+                console.log("idle");
+                return this.idleAnimation; 
+            case "walk":
+                console.log("walk");
+                return this.walkAnimation;
+            case "run":
+                console.log("run");
+                return this.runAnimation;
+            case "jump":
+                console.log("jump");
+                return this.jumpAnimation;
+            case "fall":
+                console.log("fall");
+                return this.fallAnimation;
+            case "dash":
+                console.log("dash");
+                return this.dashAnimation;
+
+            default: return null;
+        }
+    }
+
+    //Methode, die die Animation ggf. spiegelt, falls der Spieler nach links (-1) gedreht ist.
+    updateFacing(facing) {
+        if(this.currentAnimation) {
+            this.currentAnimation.scale.x = Math.abs(this.currentAnimation.scale.x) * facing;
+        }
+    }
+
+    //Methode, die schaut, ob es sich um eine lockedAnimation handelt. LockedAnimations sollten immer bis zum Ende laufen, sonst "flackern" sie.
+    isLockedAnimation(a) {
+        return (
+            a === this.jumpAnimation ||
+            a === this.dashAnimation
+        );
+    }
+ 
+
+    //DEBUG
+    drawHitbox(x, y, w, h) {
+        this.hitboxDebug.clear();
+        this.hitboxDebug
+        .rect(x, y, w, h)
+        .fill({ color: 0xff0000, alpha: 0.25 })
+        .stroke({ width: 2, color: 0xff0000 });
+    }
+
+
+} //end class
