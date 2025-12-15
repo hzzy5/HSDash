@@ -370,6 +370,9 @@ export class Controller {
           if (this.collision.collision(this.player, coin)) {
             console.log("Coin eingesammelt!");
             coin.collect();
+
+            //Soundeffect
+            this.sound.coinCollected(); 
         
             this.coinRenderer.showFloatingText("+1", coin.x, coin.y - 20);
             this.collectedCoins++;
