@@ -3,9 +3,9 @@ import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs
 
 export class PlayerRenderer {
 
-    constructor(mainView) {
-        //Regerenz auf die mainView, damit dieselbe PIXI.app genutzt wird.
-        this.view = mainView;
+    constructor(container) {
+        //Refrenz auf den Conatainer, der in der PIXI.app liegt.
+        this.world = container;
 
         //Animationen
         this.idleAnimation = null;
@@ -21,8 +21,8 @@ export class PlayerRenderer {
 
          this.hitboxDebug = new PIXI.Graphics();
          this.hitboxDebug.zIndex = 9999;
-         this.view.app.stage.sortableChildren = true;
-         this.view.app.stage.addChild(this.hitboxDebug);
+         this.world.sortableChildren = true;
+         this.world.addChild(this.hitboxDebug);
     }
 
     //Metehode, um das Sprite zu positioniert
@@ -35,14 +35,16 @@ export class PlayerRenderer {
         this.animations.forEach(a => {
             if (a) a.position.set(x, y);
         });
-        this.drawHitbox(x1, y1, w, h);
+        
+        //DEBUG
+        //this.drawHitbox(x1, y1, w, h);
     }
 
     //Methode, um den Player zu erstellen 
     createSprite(alias) {
         let sprite = PIXI.Sprite.from(alias);
         //Sprite anzeigen lassen
-        this.view.app.stage.addChild(sprite); 
+        this.world.addChild(sprite); 
         //^^ this ist hier das app-Objekt
 
         return sprite;
@@ -141,19 +143,12 @@ export class PlayerRenderer {
         //Neue Animation starten
         this.currentAnimation = nextAnimation;
         this.updateFacing(facing);
-        this.view.app.stage.addChild(this.currentAnimation);
+        this.world.addChild(this.currentAnimation);
         this.currentAnimation.play();
-            // //Beim Sprung und Dash muss die Animation beim ersten Frame starten - auch bei Unterbrechungen 
-            // if (this.currentAnimation === this.jumpAnimation || this.currentAnimation === this.dashAnimation) {
-            //     this.currentAnimation.gotoAndPlay(0);
-            // }   
-            // //Beim Laufen soll sie weiterlaufen. Sonst würden sie nie über den ersten Frame hinaus kommen. 
-            //  else {
-            //     this.currentAnimation.play();
-            // }
-             
-            //Die Position müsste direkt hier gesetzt werden. Überlegen, wie man das am besten löst
-        
+        // //Beim Sprung und Dash muss die Animation beim ersten Frame starten - auch bei Unterbrechungen 
+        // if (this.currentAnimation === this.jumpAnimation || this.currentAnimation === this.dashAnimation) {
+        //     this.currentAnimation.gotoAndPlay(0);
+        // }   
     }
 
     //Methode, die die Animation anhand des Player-Zustandes auswählt.
@@ -198,7 +193,6 @@ export class PlayerRenderer {
         );
     }
  
-
     //DEBUG
     drawHitbox(x, y, w, h) {
         this.hitboxDebug.clear();

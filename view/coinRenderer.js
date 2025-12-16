@@ -4,9 +4,10 @@ import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs
 
 export class CoinRenderer {
 
-    constructor(mainView) {
-        //Regerenz auf die view, damit dieselbe PIXI.app genutzt wird.
-        this.view = mainView;
+    constructor(container, ticker) {
+        //Refrenz auf den Conatainer und Ticker, der in der PIXI.app liegt.
+        this.world = container;
+        this.ticker = ticker;
     }
 
     // Methode, um das Münz-Sprite zu erstellen
@@ -21,7 +22,7 @@ export class CoinRenderer {
       sprite.scale.set(0.15);      // Macht die Münze kleiner 
       sprite.zIndex = 900;         // Münze über Player und über Plattform
 
-      this.view.app.stage.addChild(sprite);
+      this.world.addChild(sprite);
       return sprite;
     }
 
@@ -38,10 +39,9 @@ export class CoinRenderer {
         t.x = x;
         t.y = y;
         t.zIndex = 1000;
-        this.view.app.stage.addChild(t);
+        this.world.addChild(t);
 
         let life = 30; // ca. 30 Frames
-        const ticker = this.view.app.ticker;
 
         const update = () => {
             t.y -= 1;        // nach oben fliegen
@@ -49,38 +49,14 @@ export class CoinRenderer {
             life--;
 
             if (life <= 0) {
-                ticker.remove(update);    // aus dem Ticker entfernen
-                this.view.app.stage.removeChild(t);
+                this.ticker.remove(update);    // aus dem Ticker entfernen
+                this.world.removeChild(t);
                 t.destroy();
             }
         };
 
-        ticker.add(update);
+        this.ticker.add(update);
     }
-
-    // HUD: Coin-Anzeige oben rechts
-    createCoinHud(totalCoins) {
-        this.coinHud = new PIXI.Text(`Coins: 0 / ${totalCoins}`, {
-            fontFamily: "Press Start 2P",
-            fontSize: 22,
-            fill: 0xffffff,
-            stroke: 0x000000,
-            strokeThickness: 4
-        });
-
-        this.coinHud.x = window.innerWidth - 300;
-        this.coinHud.y = 20;
-        this.coinHud.zIndex = 9999;
-
-        this.view.app.stage.addChild(this.coinHud);
-    }
-
-    updateCoinHud(collected, total) {
-        if (this.coinHud) {
-            this.coinHud.text = `Coins: ${collected} / ${total}`;
-        }
-    }
-    
 
 
 } //end class

@@ -26,6 +26,17 @@ export class Renderer {
         //Ins DOM hinzufügen
         document.body.appendChild(this.app.canvas);
 
+        //Container
+        this.background = new PIXI.Container();
+        this.world = new PIXI.Container();
+        this.hud = new PIXI.Container();
+        this.ui = new PIXI.Container();
+
+        this.app.stage.addChild(this.background, this.world, this.hud, this.ui);
+
+        //Ein Ticker für die ganze View 
+        this.ticker = this.app.ticker;
+
         //Event Listener für Fenstergrößenänderungen
         window.addEventListener('resize', () => {
             // ground.drawRect(0, app.screen.height - 100, app.screen.width, 100);
@@ -107,14 +118,18 @@ export class Renderer {
         
         //The Object.keys() method returns an array with the keys of an object.
         await PIXI.Assets.load(Object.keys(assets));
+        
+        //SCHRIFT 
+        await document.fonts.load('16px "Press Start 2P"');
+        await document.fonts.ready;
     }
 
 
     //Methode, den PixiJS Ticker startet. Pro Frame wird die Update-Funktion aufgerufen.
     //dt ist die vergangene Zeit in Sekunden seit dem letzen Frame.
     startGameLoop(updateFunction) {
-        this.app.ticker.add(() => {
-            const dt = this.app.ticker.deltaTime / 60;  // deltaTime = 1 pro Frame bei 60FPS
+        this.ticker.add(() => {
+            const dt = this.ticker.deltaTime / 60;  // deltaTime = 1 pro Frame bei 60FPS
             //console.log("dt:", dt);
             updateFunction(dt);          
         });               

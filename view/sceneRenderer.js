@@ -4,9 +4,9 @@ import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs
 
 export class SceneRenderer {
 
-    constructor(mainView) {
-        //Regerenz auf die view, damit dieselbe PIXI.app genutzt wird.
-        this.view = mainView;
+    constructor(container) {
+        //Referenz auf den background view, damit dieselbe PIXI.app genutzt wird.
+        this.background = container;
 
         //Instanzvariablen für den Hintergrund 
         this.backgroundX = 0;
@@ -17,7 +17,7 @@ export class SceneRenderer {
     createTilingSprite(alias, width, height) {
         let sprite = PIXI.TilingSprite.from(alias, width, height);
         sprite.position.set(0,0);
-        this.view.app.stage.addChild(sprite); 
+        this.background.addChild(sprite); 
         return sprite;
     }
 
@@ -31,7 +31,7 @@ export class SceneRenderer {
         gfx.y = y;
         // ensure platforms render above background layers
         try { gfx.zIndex = 500; } catch (e) {}
-        this.view.app.stage.addChild(gfx);
+        this.background.addChild(gfx);
         return { x, y, width, height }; //Rückgabe als Collider für die Kollisionserkennung
     }
 
@@ -44,7 +44,7 @@ export class SceneRenderer {
         gfx.x = x;
         gfx.y = y;
         try { gfx.zIndex = 500; } catch(e) {}
-        this.view.app.stage.addChild(gfx);
+        this.background.addChild(gfx);
         return { x, y, width, height };
     }
 

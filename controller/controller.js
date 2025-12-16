@@ -8,26 +8,26 @@ import { Renderer } from "../view/renderer.js";
 import { PlayerRenderer } from "../view/playerRenderer.js";
 import { CoinRenderer } from "../view/coinRenderer.js";
 import { SceneRenderer } from "../view/sceneRenderer.js";
+import { HudRenderer } from "../view/hudRenderer.js";
 
 //CONTROLLER
 import { SoundController } from "./soundcontroller.js";
-//import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs";
 
 // Einfache Input-Verfolgung und zentralisierte Update-Funktion
 export class Controller {
 
-    //Instanzvariablen
+    //RENDERER
     renderer;
     playerRenderer;
     coinRenderer;
     sceneRenderer;
+    hudRenderer;
 
-    collision;
-    
+    //MODEL
     player;
-    playerSprite;
     enemy;
     enemySprite;
+    collision;
 
     leftBound;
     rightBound;
@@ -43,7 +43,7 @@ export class Controller {
     colliders = []; //Für kollisionen
     coins = [];  // Liste aller Münzen im Level
 
-    //sound
+    //SOUND
     sound;
     buttonMusikAus;
 
@@ -59,67 +59,19 @@ export class Controller {
         //VIEW:
         this.renderer = new Renderer();
         await this.renderer.initRenderer(); //hier wird die PIXI.app erzeugt
-        //Spiel-Elemente laden
-        await this.renderer.loadAssets();
+        await this.renderer.loadAssets(); //Spiel-Elemente laden
 
-        this.playerRenderer = new PlayerRenderer(this.renderer); //alle Renderer arbeiten mit derselben PIXI.app
-        await this.playerRenderer.initAnimations();
-        this.coinRenderer = new CoinRenderer(this.renderer);
-        this.sceneRenderer = new SceneRenderer(this.renderer);
+        this.playerRenderer = new PlayerRenderer(this.renderer.world); //alle Renderer arbeiten mit derselben PIXI.app
+        await this.playerRenderer.initAnimations(); //Player-Animation laden
         
-        //Szene erstellen
-        await this.sceneRenderer.createBackground();
+        this.sceneRenderer = new SceneRenderer(this.renderer.background);
+        await this.sceneRenderer.createBackground(); //Szene erstellen
+                
+        this.coinRenderer = new CoinRenderer(this.renderer.world, this.renderer.ticker);
+        this.hudRenderer = new HudRenderer(this.renderer.hud);
 
-        //Player als Sprite erstellen
-        // this.playerSprite = this.playerRenderer.createSprite("playerJumpJSON");
-        // this.playerRenderer.renderPlayer(this.playerSprite, this.player.x, this.player.y);
-
-        //Größen synchronisieren
-        // this.player.setWidthAndHeight(this.playerSprite.width, this.playerSprite.height);
-
-        //Spielgrenzen erstellen
-        this.leftBound = { x: -10, y: 0, width: 10, height: window.innerHeight };
-        this.collision.addCollider(this.leftBound);
-        this.leftBound = this.sceneRenderer.createBound(this.leftBound.x, this.leftBound.y, this.leftBound.width, this.leftBound.height);
-
-        this.rightBound = { x: window.innerWidth, y: 0, width: 10, height: window.innerHeight };
-        this.collision.addCollider(this.rightBound);
-        this.rightBound = this.sceneRenderer.createBound(this.rightBound.x, this.rightBound.y, this.rightBound.width, this.rightBound.height);
-
-        //Münzen erstellen
-        const coin1 = new Coin(300, window.innerHeight - 350, 32, 32);
-        coin1.sprite = this.coinRenderer.createCoinSprite(coin1.x, coin1.y);
-        this.coins.push(coin1);
-
-        const coin2 = new Coin(600, window.innerHeight - 450, 32, 32);
-        coin2.sprite = this.coinRenderer.createCoinSprite(coin2.x, coin2.y);
-        this.coins.push(coin2);
-
-        const coin3 = new Coin(900, window.innerHeight - 450, 32, 32);
-        coin3.sprite = this.coinRenderer.createCoinSprite(coin3.x, coin3.y);
-        this.coins.push(coin3);
-
-        
-        this.totalCoins = this.coins.length;  
-        this.collectedCoins = 0;
-        this.coinRenderer.createCoinHud(this.totalCoins);
-        
-        // //Beispiel-Plattform hinzufügen (sichtbar und kollisionsfähig)
-        // const plat = { x: 100, y: window.innerHeight - 125, width: window.innerWidth - 1000, height: 10 };
-        // this.collision.addCollider(plat);
-        // this.scenereRenderer.createPlatform(plat.x, plat.y, plat.width, plat.height);
-
-        // const plat2 = { x: 1000, y: window.innerHeight - 450, width: 160, height: 10 };
-        // this.collision.addCollider(plat2);
-        // this.scenereRenderer.createPlatform(plat2.x, plat2.y, plat2.width, plat2.height);
-
-        // const plat3 = { x: 1195, y: window.innerHeight - 150, width: 160, height: 10 };
-        // this.collision.addCollider(plat3);
-        // this.scenereRenderer.createPlatform(plat3.x, plat3.y, plat3.width, plat3.height);
-        
-
-        //SoundController initialisieren  
-        this.sound = new SoundController();
+        //SOUND:
+        this.sound = new SoundController(); //SoundController initialisieren 
         await this.sound.init();
         
         //SoundButton
@@ -137,8 +89,43 @@ export class Controller {
             console.log("Button wurde angeklickt");
             this.sound.switchOnOff();
         });
+        
+      
+        // === SPIELELEMENTE ===
+        //Player als Sprite erstellen
+        // this.playerSprite = this.playerRenderer.createSprite("playerJumpJSON");
+        // this.playerRenderer.renderPlayer(this.playerSprite, this.player.x, this.player.y);
 
-        //ABFRAGEN
+        //Größen synchronisieren
+        // this.player.setWidthAndHeight(this.playerSprite.width, this.playerSprite.height);
+
+        //=== SPIELGRENZEN ===
+        this.leftBound = { x: -10, y: 0, width: 10, height: window.innerHeight };
+        this.collision.addCollider(this.leftBound);
+        this.leftBound = this.sceneRenderer.createBound(this.leftBound.x, this.leftBound.y, this.leftBound.width, this.leftBound.height);
+
+        // this.rightBound = { x: window.innerWidth, y: 0, width: 10, height: window.innerHeight };
+        // this.collision.addCollider(this.rightBound);
+        // this.rightBound = this.sceneRenderer.createBound(this.rightBound.x, this.rightBound.y, this.rightBound.width, this.rightBound.height);
+
+        //=== MÜNZEN ===
+        const coin1 = new Coin(300, window.innerHeight - 350, 32, 32);
+        coin1.sprite = this.coinRenderer.createCoinSprite(coin1.x, coin1.y);
+        this.coins.push(coin1);
+
+        const coin2 = new Coin(600, window.innerHeight - 450, 32, 32);
+        coin2.sprite = this.coinRenderer.createCoinSprite(coin2.x, coin2.y);
+        this.coins.push(coin2);
+
+        const coin3 = new Coin(900, window.innerHeight - 450, 32, 32);
+        coin3.sprite = this.coinRenderer.createCoinSprite(coin3.x, coin3.y);
+        this.coins.push(coin3);
+        
+        this.totalCoins = this.coins.length;  
+        this.collectedCoins = 0;
+        this.hudRenderer.createCoinHud(this.totalCoins);
+
+        //=== ABFRAGEN ===
         document.addEventListener("keydown", (e) => this.keyIsDown(e));
         document.addEventListener("keyup", (e) => this.keyIsUp(e));        
     }
@@ -211,8 +198,6 @@ export class Controller {
       const baseSpeed = (this.player.speed !== undefined) ? this.player.speed : 220;
       const sprintSpeed = (this.player.sprintSpeed !== undefined) ? this.player.sprintSpeed : Math.round(baseSpeed * 1.8);
       const currentSpeed = sprintHeld ? sprintSpeed : baseSpeed; 
-     
-
 
       // Updated facing variable für den dash damit dash nicht 0 sein kann (sonst dash in die richtung in die man vorher sich bewegt hat)
       if (dir !== 0) {
@@ -344,7 +329,6 @@ export class Controller {
 
       this.playerRenderer.renderPlayer(this.player.x, this.player.y, this.player.x1, this.player.y1, this.player.width, this.player.height); //player rendern
       this.playerRenderer.updatePlayerAnimation(this.player.getState(), this.player.facing); //Player-animation abspielen
-      console.log(this.player.x, this.player.y, this.player.getState(), this.player.facing);
     }
 
 
@@ -376,9 +360,7 @@ export class Controller {
         
             this.coinRenderer.showFloatingText("+1", coin.x, coin.y - 20);
             this.collectedCoins++;
-            this.coinRenderer.updateCoinHud(this.collectedCoins, this.totalCoins);
-            
-
+            this.hudRenderer.updateCoinHud(this.collectedCoins, this.totalCoins);
 
           }
         }
@@ -387,38 +369,3 @@ export class Controller {
     
 
 } //end class
-
-
-//______________________________________________________________________________________________________________
-/*
-  if (this.colliders.check(player, somePlatform)) {
-    // Spieler steht auf Plattform: Y Koordinate = Plattform
-}
-*/
-
-// // Initialisiert den Controller mit der Spielerinstanz (keine eigene Loop mehr)
-// export function initController(playerInstance) {
-//   player = playerInstance;
-//   // Default Ground-Collider (entspricht Renderer ground)
-//   const computeGround = () => {
-//     // If renderer created a groundTile, use its position/height so visual and collider match
-//     try {
-//       if (window.app && window.app.parallaxLayers && window.app.parallaxLayers.groundTile) {
-//         const gt = window.app.parallaxLayers.groundTile;
-//         const gh = gt.height || Math.max(32, Math.round(window.innerHeight * 0.12));
-//         const gy = (typeof gt.y === 'number') ? gt.y : (window.innerHeight - gh);
-//         return { x: 0, y: gy, width: window.innerWidth, height: gh };
-//       }
-//     } catch (e) {
-//       // fallthrough to default
-//     }
-//     const gh = Math.max(32, Math.round(window.innerHeight * 0.12));
-//     return { x: 0, y: window.innerHeight - gh, width: window.innerWidth, height: gh };
-//   };
-//   colliders = [ computeGround() ];
-//   // Bei Resize Ground anpassen
-//   window.addEventListener('resize', () => {
-//     colliders[0] = computeGround();
-//   });
-// }
-

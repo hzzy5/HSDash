@@ -1,5 +1,3 @@
-import { Howl } from "https://cdn.skypack.dev/howler";
-
 export class Player {
 
   // Konstruktor
@@ -52,6 +50,7 @@ export class Player {
     this.y1 = this.y - this.height;
     this.y2 = this.y;
   }
+  
 
   //Methode, um sich horizontal zu bewegen. Wird ein negativer Wert übergeben, bewegt sich der Spieler nach links. Bei einem positiven Wert nach rechts. 
   move(dx, dy) {
