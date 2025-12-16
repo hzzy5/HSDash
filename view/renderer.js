@@ -37,6 +37,9 @@ export class Renderer {
         //Ein Ticker für die ganze View 
         this.ticker = this.app.ticker;
 
+        //Screen der View
+        this.screen = this.app.screen;
+
         //Event Listener für Fenstergrößenänderungen
         window.addEventListener('resize', () => {
             // ground.drawRect(0, app.screen.height - 100, app.screen.width, 100);
@@ -74,7 +77,7 @@ export class Renderer {
         gfx.x = x;
         gfx.y = y;
         
-        this.app.stage.addChild(gfx);
+        this.world.addChild(gfx);
         
         return { x, y, width: 32, height: 32};
     }

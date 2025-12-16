@@ -7,10 +7,6 @@ export class SceneRenderer {
     constructor(container) {
         //Referenz auf den background view, damit dieselbe PIXI.app genutzt wird.
         this.background = container;
-
-        //Instanzvariablen für den Hintergrund 
-        this.backgroundX = 0;
-        this.backgroundSpeed = -100; //nach links bewegen
     }
 
     //Methode, um aus Tiling Sprites (= sich wiederholende Bilder) den Hintergrund zusammenzubauen. 
@@ -68,19 +64,16 @@ export class SceneRenderer {
     }
 
     //Methode, die den Hintergrund bewegt. Durch die verschiedenen Geschwindigkeiten wird ein Tiefeneffekt erzeugt.
-    scrollBackground(direction, dt) {
-        //Die x-Position wird immer pro Frame mit einer Geschwidigkeit verschoben
-        //Je nachdem, in welche Richtung sich der Spieler bewegt, wird der Hintergrund entsprechend verschoben.
-        // direction = -1 nach rechts
-        this.backgroundX += this.backgroundSpeed * dt * direction;
+    scrollBackground(camera) {
+        //Die x-Position wird immer dorthin gesetzt, wo die Kamera ist und mit einer Geschwidigkeit multipliziert.  
 
-        this.background.tilePosition.x = this.backgroundX *0.5;
-        this.clouds.tilePosition.x = this.backgroundX *0.5;
-        this.hill2.tilePosition.x = this.backgroundX *1;
-        this.hill1.tilePosition.x = this.backgroundX *1.5;
-        this.trees.tilePosition.x = this.backgroundX *2;
+        this.background.tilePosition.x = camera *-0.1;
+        this.clouds.tilePosition.x = camera *-0.2;
+        this.hill2.tilePosition.x = camera *-0.3;
+        this.hill1.tilePosition.x = camera *-0.5;
+        this.trees.tilePosition.x = camera *-0.7;
         //this.bushes.tilePosition.x = this.backgroundX *2.5;
-        this.ground.tilePosition.x = this.backgroundX *3;
+        this.ground.tilePosition.x = camera *-1;
     }
 
 

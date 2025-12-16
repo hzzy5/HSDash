@@ -9,6 +9,7 @@ import { PlayerRenderer } from "../view/playerRenderer.js";
 import { CoinRenderer } from "../view/coinRenderer.js";
 import { SceneRenderer } from "../view/sceneRenderer.js";
 import { HudRenderer } from "../view/hudRenderer.js";
+import { CameraRenderer } from "../view/cameraRenderer.js";
 
 //CONTROLLER
 import { SoundController } from "./soundcontroller.js";
@@ -22,6 +23,7 @@ export class Controller {
     coinRenderer;
     sceneRenderer;
     hudRenderer;
+    cameraRenderer;
 
     //MODEL
     player;
@@ -69,6 +71,7 @@ export class Controller {
                 
         this.coinRenderer = new CoinRenderer(this.renderer.world, this.renderer.ticker);
         this.hudRenderer = new HudRenderer(this.renderer.hud);
+        this.cameraRenderer = new CameraRenderer(this.renderer.world, this.renderer.screen)
 
         //SOUND:
         this.sound = new SoundController(); //SoundController initialisieren 
@@ -141,6 +144,9 @@ export class Controller {
       
       //Hintergrund scrollen
       this.scrollBackground(dt);
+
+      //Camera bewegen
+      this.cameraRenderer.updateCamera(this.player);
     }
 
     
@@ -335,10 +341,13 @@ export class Controller {
     //=== UPDATE BACKGROUND ============================================================================================
     scrollBackground(dt) {
       //Scrollen, wenn der Player die Hälfte des rechten Bildschirms erreicht
+      const screenCenterX = this.renderer.screen.width / 2;
+      const playerCenterX = this.player.x + this.player.width / 2;
       const SCROLL_THRESHOLD = window.innerWidth / 2;
+      //this.player.getState() == "walk" || this.player.getState() == "run" && ^^&& this.player.x > SCROLL_THRESHOLD
 
-      if((this.player.getState() == "walk" || this.player.getState() == "run") && this.player.x > SCROLL_THRESHOLD) {
-        this.sceneRenderer.scrollBackground(this.player.facing, dt);
+      if((playerCenterX>screenCenterX)) {
+        this.sceneRenderer.scrollBackground(this.cameraRenderer.cameraX);
         //Hier wird unterschieden: 
         //--> gehen wir nach links, d.h. zurück, dann muss sich der Hintergrund wieder nach rechts bewegen.
         //--> gehen wir nach rechts, d.h. vorne, dann muss sich der Hintergrund nach links bewegen.
