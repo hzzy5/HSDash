@@ -16,7 +16,7 @@ export class Renderer {
         await this.app.init({
             width: window.innerWidth,
             height: window.innerHeight,
-            backgroundColor: 0x87ceeb, 
+            //backgroundColor: 0x87ceeb, 
             antialias: true, // Kanten glätten -> sonst Linien gezackt
             resizeTo: window // Automatisch an Fenstergröße anpassen
         }); 
@@ -32,8 +32,9 @@ export class Renderer {
         this.hud = new PIXI.Container();
         this.ui = new PIXI.Container();
 
+        //Der Reihe nach hinzufügen
         this.app.stage.addChild(this.background, this.world, this.hud, this.ui);
-
+        
         //Ein Ticker für die ganze View 
         this.ticker = this.app.ticker;
 
@@ -87,13 +88,25 @@ export class Renderer {
         //Objekt mit alias: src
         const assets = {
             //SZENE
-            background: "assets/bilder/11_background.png",
-            clouds: "assets/bilder/10_distant_clouds.png",
-            hill2: "assets/bilder/06_hill2.png",
-            hill1: "assets/bilder/05_hill1.png",
-            trees: "assets/bilder/03_distant_trees.png",
-            //bushes: "assets/bilder/04_bushes.png",
-            ground: "assets/bilder/01_ground.png",
+            // background: "assets/bilder/11_background.png",
+            // clouds: "assets/bilder/10_distant_clouds.png",
+            // hill2: "assets/bilder/06_hill2.png",
+            // hill1: "assets/bilder/05_hill1.png",
+            // trees: "assets/bilder/03_distant_trees.png",
+            // //bushes: "assets/bilder/04_bushes.png",
+            // ground: "assets/bilder/01_ground.png",
+
+            lampen1: "assets/bilder_lvl1/00_lampen1.png",
+            trees: "assets/bilder_lvl1/01_Trees.png",
+            ground: "assets/bilder_lvl1/02_Ground.png",
+            lampen2: "assets/bilder_lvl1/03_lampen2.png",
+            hsd: "assets/bilder_lvl1/04_HSD.png",
+            carsL: "assets/bilder_lvl1/05_Cars_left.png",
+            carsR: "assets/bilder_lvl1/06_Cars_right.png",
+            city: "assets/bilder_lvl1/07_City_back.png",
+            clouds: "assets/bilder_lvl1/08_clouds.png",
+            sky: "assets/bilder_lvl1/09_Sky.png",
+
 
             //SPIELELEMENTE
             player: "assets/bilder/player4.png",

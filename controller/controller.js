@@ -66,7 +66,7 @@ export class Controller {
         this.playerRenderer = new PlayerRenderer(this.renderer.world); //alle Renderer arbeiten mit derselben PIXI.app
         await this.playerRenderer.initAnimations(); //Player-Animation laden
         
-        this.sceneRenderer = new SceneRenderer(this.renderer.background);
+        this.sceneRenderer = new SceneRenderer(this.renderer.background, this.renderer.screen);
         await this.sceneRenderer.createBackground(); //Szene erstellen
                 
         this.coinRenderer = new CoinRenderer(this.renderer.world, this.renderer.ticker);
