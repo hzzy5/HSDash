@@ -76,7 +76,6 @@ export class Player {
     const GRAVITY = 1200; // px/s^2
     this.vy += GRAVITY * dt;
     this.move(0, this.vy * dt);
-    //State fall?? iwo bei vy > 0  
   }
 
   //Methode, um zu dashen.

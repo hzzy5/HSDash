@@ -6,7 +6,12 @@ import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs
     - Graphic, Sprites, ... erzeugen und rendern
     - gameloop
 */
+const VIRTUAL_WIDTH = 1536;
+const VIRTUAL_HEIGHT = 800;
+const TILE_SIZE = 32;
+
 export class Renderer {
+    
     
     //Initialisierung der Canvas
     async initRenderer() {
@@ -16,7 +21,7 @@ export class Renderer {
         await this.app.init({
             width: window.innerWidth,
             height: window.innerHeight,
-            //backgroundColor: 0x87ceeb, 
+            backgroundColor: 0x4682b4, 
             antialias: true, // Kanten glätten -> sonst Linien gezackt
             resizeTo: window // Automatisch an Fenstergröße anpassen
         }); 
@@ -27,13 +32,14 @@ export class Renderer {
         document.body.appendChild(this.app.canvas);
 
         //Container
+        this.game = new PIXI.Container();
         this.background = new PIXI.Container();
         this.world = new PIXI.Container();
         this.hud = new PIXI.Container();
         this.ui = new PIXI.Container();
 
-        //Der Reihe nach hinzufügen
-        this.app.stage.addChild(this.background, this.world, this.hud, this.ui);
+        this.app.stage.addChild(this.game, this.ui);
+        this.game.addChild(this.background, this.world, this.hud); //game sammelt alle Container mit den Spielelementen. Für Skalierung usw.
         
         //Ein Ticker für die ganze View 
         this.ticker = this.app.ticker;
@@ -41,17 +47,15 @@ export class Renderer {
         //Screen der View
         this.screen = this.app.screen;
 
-        //Event Listener für Fenstergrößenänderungen
-        window.addEventListener('resize', () => {
-            // ground.drawRect(0, app.screen.height - 100, app.screen.width, 100);
-        });
+        //Für Fenstergrößenänderungen
+        this.resize();
     }
 
     //Methode, um Sprites zu erstellen 
     createSprite(alias) {
         let sprite = PIXI.Sprite.from(alias);
         //Sprite anzeigen lassen
-        this.app.stage.addChild(sprite); 
+        this.world.addChild(sprite); 
         //^^ this ist hier das app-Objekt
 
         return sprite;
@@ -66,13 +70,17 @@ export class Renderer {
 
     //Methode um ein 32x32-Tile zu erzeugen. 
     createTile(x, y, fillColor = 0x8a4513, borderColor = 0x000000, borderWidth = 2) {
+        //Ins Bild passen 48x25 Tiles
+        const tileX = VIRTUAL_WIDTH / TILE_SIZE;
+        const tileY = VIRTUAL_HEIGHT / TILE_SIZE;
+
         const gfx = new PIXI.Graphics();
         gfx.beginFill(fillColor);           //Rechteck
-        gfx.drawRect(0, 0, 32, 32);
+        gfx.drawRect(0, 0, TILE_SIZE, TILE_SIZE);
         gfx.endFill();
 
         gfx.lineStyle(borderWidth, borderColor);    //Umrandung
-        gfx.drawRect(0, 0, 32, 32);
+        gfx.drawRect(0, 0, TILE_SIZE, TILE_SIZE);
         gfx.endFill();
 
         gfx.x = x;
@@ -80,7 +88,7 @@ export class Renderer {
         
         this.world.addChild(gfx);
         
-        return { x, y, width: 32, height: 32};
+        return { x, y, width: TILE_SIZE, height: TILE_SIZE};
     }
 
     //Methode, um die Assets zu preloaden
@@ -138,6 +146,29 @@ export class Renderer {
         //SCHRIFT 
         await document.fonts.load('16px "Press Start 2P"');
         await document.fonts.ready;
+    }
+
+    //Methode wird bei Änderungen der Fenstergröße aufgerufen.
+    resize() {
+        const resize = () => {
+            const scaleX = window.innerWidth / VIRTUAL_WIDTH;
+            const scaleY = window.innerHeight / VIRTUAL_HEIGHT;
+            const scale = Math.min(scaleX, scaleY);
+
+            //Container skalieren
+            this.game.scale.set(scale);
+            
+            //UI bleibt fix
+            this.hud.scale.set(1);
+            this.ui.scale.set(1);
+
+            //Zentrieren
+            this.game.x = (window.innerWidth - VIRTUAL_WIDTH * scale) / 2;
+            this.game.y = (window.innerHeight - VIRTUAL_HEIGHT * scale) / 2;
+        };
+
+        resize();
+        window.addEventListener("resize", resize);
     }
 
 

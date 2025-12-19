@@ -70,7 +70,7 @@ export class Controller {
         await this.sceneRenderer.createBackground(); //Szene erstellen
                 
         this.coinRenderer = new CoinRenderer(this.renderer.world, this.renderer.ticker);
-        this.hudRenderer = new HudRenderer(this.renderer.hud);
+        this.hudRenderer = new HudRenderer(this.renderer.hud, this.renderer.screen);
         this.cameraRenderer = new CameraRenderer(this.renderer.world, this.renderer.screen)
 
         //SOUND:

@@ -2,9 +2,11 @@
 import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs";
 
 export class HudRenderer {
-    constructor(container) {
-        //Refrenz auf den Conatainer, der in der PIXI.app liegt.
+    constructor(container, screen) {
+        //Refrenz auf den Conatainer und screen, der in der PIXI.app liegt.
         this.hud = container;
+        this.screen = screen; //für die responsive Platzierung 
+
     }
 
     // HUD: Coin-Anzeige oben rechts
@@ -17,7 +19,7 @@ export class HudRenderer {
             strokeThickness: 4
         });
 
-        this.coinHud.x = window.innerWidth - 300;
+        this.coinHud.x = this.screen.width - 300;
         this.coinHud.y = 20;
         this.coinHud.zIndex = 9999;
 
