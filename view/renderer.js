@@ -32,14 +32,12 @@ export class Renderer {
         document.body.appendChild(this.app.canvas);
 
         //Container
-        this.game = new PIXI.Container();
         this.background = new PIXI.Container();
         this.world = new PIXI.Container();
         this.hud = new PIXI.Container();
         this.ui = new PIXI.Container();
 
-        this.app.stage.addChild(this.game, this.ui);
-        this.game.addChild(this.background, this.world, this.hud); //game sammelt alle Container mit den Spielelementen. Für Skalierung usw.
+        this.app.stage.addChild(this.background, this.world, this.hud, this.ui);
         
         //Ein Ticker für die ganze View 
         this.ticker = this.app.ticker;
@@ -156,15 +154,17 @@ export class Renderer {
             const scale = Math.min(scaleX, scaleY);
 
             //Container skalieren
-            this.game.scale.set(scale);
+            this.background.scale.set(scale);
+            this.world.scale.set(scale);
             
             //UI bleibt fix
             this.hud.scale.set(1);
             this.ui.scale.set(1);
 
-            //Zentrieren
-            this.game.x = (window.innerWidth - VIRTUAL_WIDTH * scale) / 2;
-            this.game.y = (window.innerHeight - VIRTUAL_HEIGHT * scale) / 2;
+            //Zentrieren 
+            // this.game.x = (window.innerWidth - VIRTUAL_WIDTH * scale) / 2;
+            // this.game.y = (window.innerHeight - VIRTUAL_HEIGHT * scale) / 2;
+            //ABER mit Rändern. Vielleicht lieber auskommentieren
         };
 
         resize();
