@@ -38,7 +38,6 @@ export class LevelLoader {
         this.blocks['#'] = {sx:0, sy:0, collide:true, solid:true, type:"player"}; //player
         this.blocks['x'] = {sx:0, sy:0, collide:true, solid:true, type:"block"}; //block
         this.blocks['o'] = {sx:0, sy:0, collide:false, solid:false, type:"münze"}; //münze
-        this.blocks['-'] = {sx:0, sy:0, collide:true, solid:false, type:"block"}; //unsichtbarer Block
     }
 
     //Methode, die das Level anhand der Map anzeigt.
@@ -68,10 +67,6 @@ export class LevelLoader {
                     let coin = new Coin(posX, posY);
                     coin.sprite = this.coinRenderer.createCoinSprite(posX, posY);
                     this.coins.push(coin);
-                }
-
-                if (char === '-') {
-                    tile = this.renderer.createInvisibleTile(posX, posY);
                 }
 
                 if (tile && blockInfo.collide) {

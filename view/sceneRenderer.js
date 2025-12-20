@@ -16,9 +16,9 @@ export class SceneRenderer {
     //Methode, um aus Tiling Sprites (= sich wiederholende Bilder) den Hintergrund zusammenzubauen. 
     createTilingSprite(alias) {
         let texture = PIXI.Texture.from(alias);
-        let sprite = PIXI.TilingSprite.from(texture, window.innerWidth, texture.height*2);
+        let sprite = PIXI.TilingSprite.from(texture, VIRTUAL_WIDTH, texture.height*2);
         sprite.position.set(0,0);
-        sprite.width = window.innerWidth;
+        sprite.width = VIRTUAL_WIDTH;
         sprite.height = texture.height*2;
 
         sprite.tileScale.set(2, 2);
