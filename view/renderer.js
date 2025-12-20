@@ -91,6 +91,22 @@ export class Renderer {
         return { x, y, width: TILE_SIZE, height: TILE_SIZE};
     }
 
+    //Methode um ein unsichtbaren 32x32-Tile zu erzeugen. 
+    createInvisibleTile(x, y) {
+        //Ins Bild passen 48x25 Tiles
+        const tileX = VIRTUAL_WIDTH / TILE_SIZE;
+        const tileY = VIRTUAL_HEIGHT / TILE_SIZE;
+
+        const gfx = new PIXI.Graphics();
+
+        gfx.x = x;
+        gfx.y = y;
+        
+        this.world.addChild(gfx);
+        
+        return { x, y, width: TILE_SIZE, height: TILE_SIZE};
+    }
+
     //Methode, um die Assets zu preloaden
     async loadAssets() {
         //Objekt mit alias: src
@@ -161,7 +177,8 @@ export class Renderer {
 
             //Container skalieren
             this.world.scale.set(scale); 
-            this.background.scale.set(scale);
+            //this.background.scale.set(scale);
+            //this.background.width = window.innerWidth;
 
             //UI bleibt fix
             this.hud.scale.set(1);
