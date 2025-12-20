@@ -16,11 +16,12 @@ export class SceneRenderer {
     //Methode, um aus Tiling Sprites (= sich wiederholende Bilder) den Hintergrund zusammenzubauen. 
     createTilingSprite(alias) {
         let texture = PIXI.Texture.from(alias);
-        let sprite = PIXI.TilingSprite.from(texture, this.screen.width, texture.height*2);
+        let sprite = PIXI.TilingSprite.from(texture, VIRTUAL_WIDTH, texture.height*2);
         sprite.position.set(0,0);
+        sprite.width = VIRTUAL_WIDTH;
         sprite.height = texture.height*2;
 
-        sprite.tileScale.set(2);
+        sprite.tileScale.set(2, 2);
         this.background.addChild(sprite); 
         return sprite;
     }
@@ -55,34 +56,34 @@ export class SceneRenderer {
     //Methode, die die Szene initialisiert
     createBackground() {
         //Hintergrund aufbauen
-        this.sky = this.createTilingSprite("sky",  VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-        this.sky.y = 0;
+        this.sky = this.createTilingSprite("sky");
+        this.sky.y = -10;
         
-        this.clouds = this.createTilingSprite("clouds", VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-        this.clouds.y = 0;
+        this.clouds = this.createTilingSprite("clouds");
+        this.clouds.y = 30;
         
-        this.city = this.createTilingSprite("city", VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-        this.city.y = 100;
-        this.carsR = this.createTilingSprite("carsR", VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-        this.carsR.y = 65;
+        this.city = this.createTilingSprite("city");
+        this.city.y = 130;
+        this.carsR = this.createTilingSprite("carsR");
+        this.carsR.y = 95;
         
-        this.carsL = this.createTilingSprite("carsL", VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-        this.carsL.y = 65;
+        this.carsL = this.createTilingSprite("carsL");
+        this.carsL.y = 95;
         
-        this.hsd = this.createTilingSprite("hsd", VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-        this.hsd.y = 100;
+        this.hsd = this.createTilingSprite("hsd");
+        this.hsd.y = 130;
         
-        this.lampen2 = this.createTilingSprite("lampen2", VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-        this.lampen2.y = 65;
+        this.lampen2 = this.createTilingSprite("lampen2");
+        this.lampen2.y = 95;
 
-        this.ground = this.createTilingSprite("ground", VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-        this.ground.y = 70;
+        this.ground = this.createTilingSprite("ground");
+        this.ground.y = 100;
         
-        this.trees = this.createTilingSprite("trees", VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-        this.trees.y = 65;
+        this.trees = this.createTilingSprite("trees");
+        this.trees.y = 95;
         
-        this.lampen1 = this.createTilingSprite("lampen1", VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-        this.lampen1.y = 65;
+        this.lampen1 = this.createTilingSprite("lampen1");
+        this.lampen1.y = 95;
     }
 
     //Methode, die den Hintergrund bewegt. Durch die verschiedenen Geschwindigkeiten wird ein Tiefeneffekt erzeugt.

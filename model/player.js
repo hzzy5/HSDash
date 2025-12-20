@@ -1,3 +1,8 @@
+const TILE_SIZE = 32; //Skaliert, je nach Fenstergröße
+const GRAVITY = 1200; //px/s²
+const JUMP_HEIGHT = 3 * TILE_SIZE; //Der Spieler springt immer 3*32 Pixel hoch. So ist die Sprungkraft für jede Fenstergröße angepasst
+
+
 export class Player {
 
   // Konstruktor
@@ -21,16 +26,13 @@ export class Player {
 
     //Zustände für die Spritesheet-Animationen: idle, walk, run, jump, fall, dash.
     this.state = "idle" 
-    //Richtung, in die sich der Spieler dreht
-    this.turningLeft = false;
-    this.turningRight = false;
     
     // Geschwindigkeit beim Sprung
     // Vertikale Geschwindigkeit und Sprung-Parameter
     this.vy = 0; // px/s positiv = nach unten, negativ = nach oben. Wird durch Gravitation und Velocity verändert
     this.onGround = false;
-    this.jumpVelocity = Math.round(-480 * scale); // px/s (negativ = nach oben). Einmalig beim Absprung gesetzt
-    this.jumpCount = 0; //Flag. Zählt die Sprünge.
+    this.jumpVelocity = -Math.sqrt(2 * GRAVITY * JUMP_HEIGHT); //Formel, um die Geschwindigkeit zu berechnen
+    this.jumpCount = 0; //Zählt die Sprünge.
   
     // Dash Eigenschaften
     this.dashSpeed = Math.max(200, Math.round(800 * scale)); // px/s
@@ -63,7 +65,7 @@ export class Player {
   jump() {
     if (this.jumpCount<2) { //maximal ein Doppelsprung. Keine onGround-Abfrage, da sonst der zweite Sprung verhindert wird.
       //Absprung
-      this.vy = (this.jumpVelocity !== undefined) ? this.jumpVelocity : -480;
+      this.vy = this.jumpVelocity;
       this.jumpCount++;
       this.onGround = false;
       this.setState("jump");
@@ -73,7 +75,6 @@ export class Player {
 
   //Methode, die die Gravitation simuliert. Der Spieler fällt nach unten.
   applyGravity(dt) {
-    const GRAVITY = 1200; // px/s^2
     this.vy += GRAVITY * dt;
     this.move(0, this.vy * dt);
   }

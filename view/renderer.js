@@ -6,9 +6,11 @@ import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs
     - Graphic, Sprites, ... erzeugen und rendern
     - gameloop
 */
-const VIRTUAL_WIDTH = 1536;
-const VIRTUAL_HEIGHT = 800;
+//Skalierung anahnd dieser Größen
+const VIRTUAL_WIDTH = 1536; //48*32, d.h. 48 Spalten passen in ein Screen
+const VIRTUAL_HEIGHT = 800; //25*32, d.h. 25 Zeilen passen in einen Screen
 const TILE_SIZE = 32;
+
 
 export class Renderer {
     
@@ -149,24 +151,29 @@ export class Renderer {
     //Methode wird bei Änderungen der Fenstergröße aufgerufen.
     resize() {
         const resize = () => {
+            //Spielfeld propotional zum Bildschirm
             const scaleX = window.innerWidth / VIRTUAL_WIDTH;
             const scaleY = window.innerHeight / VIRTUAL_HEIGHT;
+            
+            //Uniforme Skalierung, sonst ist das Bild verzerrt
+            //Kleinere Skalierung wählen, damit nichts weggeschnitten wird. 
             const scale = Math.min(scaleX, scaleY);
 
             //Container skalieren
+            this.world.scale.set(scale); 
             this.background.scale.set(scale);
-            this.world.scale.set(scale);
-            
+
             //UI bleibt fix
             this.hud.scale.set(1);
             this.ui.scale.set(1);
 
-            //Zentrieren 
-            // this.game.x = (window.innerWidth - VIRTUAL_WIDTH * scale) / 2;
-            // this.game.y = (window.innerHeight - VIRTUAL_HEIGHT * scale) / 2;
-            //ABER mit Rändern. Vielleicht lieber auskommentieren
-        };
+            //Zentrieren
+            this.world.x = (window.innerWidth - VIRTUAL_WIDTH * scale) / 2;
+            this.world.y = (window.innerHeight - VIRTUAL_HEIGHT * scale) / 2;
+            this.background.x = (window.innerWidth - VIRTUAL_WIDTH * scale) / 2;
+            this.background.y = (window.innerHeight - VIRTUAL_HEIGHT * scale) / 2;
 
+        };
         resize();
         window.addEventListener("resize", resize);
     }

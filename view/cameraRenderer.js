@@ -16,6 +16,9 @@ export class CameraRenderer {
 
     // Aktualisiert die Kamera basierend auf der Spielerposition
     updateCamera(player) {
+        //Bei Fenstergröße-Änderungen: Skalierungsfaktor aus der resize()_methode holen
+        const scale = this.world.scale.x;
+
         const screenCenterX = this.screen.width / 2;
         const playerCenterX = player.x + player.width / 2;
         
@@ -23,34 +26,8 @@ export class CameraRenderer {
         if (playerCenterX > screenCenterX) {
             this.cameraX = playerCenterX - screenCenterX;
         }
-        this.world.x = -this.cameraX;
+
+        this.world.x = -this.cameraX * scale;
     }
-    
-    // // Aktualisiert die Platform-Positionen nach Kamera-bewegung
-    // updatePlatformPositions(platformManager) {
-    //     const platforms = platformManager.getAllPlatforms();
-    //     platformGraphics.forEach((gfx, index) => {
-    //         const platform = platforms[index];
-    //         gfx.x = platform.x - cameraX; //Für jede platform wird der kamera offset aufgerechnet
-    //     });
-    // }
-
-    // // Aktualisiert die Boden-Position nach Kamera-bewegung 
-    // updateGroundPosition() {
-    //     ground.x = -cameraX; // Boden wird mit Kamera mitbewegt
-    // }
-
-    // renderPlayer(player) {
-    //     // Spielerposition aktualisieren (mit Kamera-bewegung)
-    //     playerGraphic.x = player.x - cameraX;
-    //     playerGraphic.y = player.y;
-    // }
-
-
-
 
 } //end class
-
-
-
-

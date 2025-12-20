@@ -115,14 +115,6 @@ export class Controller {
         const coin1 = new Coin(300, window.innerHeight - 350, 32, 32);
         coin1.sprite = this.coinRenderer.createCoinSprite(coin1.x, coin1.y);
         this.coins.push(coin1);
-
-        const coin2 = new Coin(600, window.innerHeight - 450, 32, 32);
-        coin2.sprite = this.coinRenderer.createCoinSprite(coin2.x, coin2.y);
-        this.coins.push(coin2);
-
-        const coin3 = new Coin(900, window.innerHeight - 450, 32, 32);
-        coin3.sprite = this.coinRenderer.createCoinSprite(coin3.x, coin3.y);
-        this.coins.push(coin3);
         
         this.totalCoins = this.coins.length;  
         this.collectedCoins = 0;
@@ -143,7 +135,7 @@ export class Controller {
       this.checkCoinCollection();//Münzeneinsammlung prüfen
       
       //Hintergrund scrollen
-      this.scrollBackground(dt);
+      this.sceneRenderer.scrollBackground(this.cameraRenderer.cameraX);
 
       //Camera bewegen
       this.cameraRenderer.updateCamera(this.player);
@@ -174,9 +166,6 @@ export class Controller {
       //Wenn taste nicht mehr gedrückt dann muss das im array auch wieder zurückgesetzt werden
       const k = (typeof e.key === 'string') ? e.key.toLowerCase() : e.key;
       this.keys[k] = false;
-      //Player-Variablen zurücksetzen
-      this.player.turningLeft = true;
-      this.player.turningRight = true;
     }
 
     
@@ -191,11 +180,9 @@ export class Controller {
       let dir = 0; //Richtung: -1 = links, 1 = rechts, 0 = keine Bewegung -> wird nach jedem frame neu berechnet
       if (this.keys['a'] || this.keys['arrowleft']) {
         dir -= 1; // -= weil es nach jedem frame neu berechnet wird und so es möglich ist dass beide tasten gedrückt werden
-        this.player.turningLeft = true;
       }
       if (this.keys['d'] || this.keys['arrowright']) {
         dir += 1; //bei += genauso ( 0 += 1 = 1 -= 1 = 0)
-        this.player.turningRight = true;
       }
 
       //=== SPRINT (Shift) ===
@@ -335,23 +322,6 @@ export class Controller {
 
       this.playerRenderer.renderPlayer(this.player.x, this.player.y, this.player.x1, this.player.y1, this.player.width, this.player.height); //player rendern
       this.playerRenderer.updatePlayerAnimation(this.player.getState(), this.player.facing); //Player-animation abspielen
-    }
-
-
-    //=== UPDATE BACKGROUND ============================================================================================
-    scrollBackground(dt) {
-      //Scrollen, wenn der Player die Hälfte des rechten Bildschirms erreicht
-      const screenCenterX = this.renderer.screen.width / 2;
-      const playerCenterX = this.player.x + this.player.width / 2;
-      const SCROLL_THRESHOLD = window.innerWidth / 2;
-      //this.player.getState() == "walk" || this.player.getState() == "run" && ^^&& this.player.x > SCROLL_THRESHOLD
-
-      if((playerCenterX>screenCenterX)) {
-        this.sceneRenderer.scrollBackground(this.cameraRenderer.cameraX);
-        //Hier wird unterschieden: 
-        //--> gehen wir nach links, d.h. zurück, dann muss sich der Hintergrund wieder nach rechts bewegen.
-        //--> gehen wir nach rechts, d.h. vorne, dann muss sich der Hintergrund nach links bewegen.
-      }
     }
 
     //=== UPDATE COINS ============================================================================================
