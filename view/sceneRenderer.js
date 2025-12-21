@@ -21,7 +21,7 @@ export class SceneRenderer {
         sprite.width = VIRTUAL_WIDTH;
         sprite.height = texture.height*2;
 
-        sprite.tileScale.set(2, 2);
+        sprite.tileScale.set(2);
         this.background.addChild(sprite); 
         return sprite;
     }
@@ -57,48 +57,50 @@ export class SceneRenderer {
     createBackground() {
         //Hintergrund aufbauen
         this.sky = this.createTilingSprite("sky");
-        this.sky.y = -10;
+        this.sky.y = -150;
         
         this.clouds = this.createTilingSprite("clouds");
-        this.clouds.y = 30;
+        this.clouds.y = -10;
         
         this.city = this.createTilingSprite("city");
-        this.city.y = 130;
+        this.city.y = -100;
         this.carsR = this.createTilingSprite("carsR");
-        this.carsR.y = 95;
+        this.carsR.y = -105;
         
         this.carsL = this.createTilingSprite("carsL");
-        this.carsL.y = 95;
+        this.carsL.y = -105;
         
         this.hsd = this.createTilingSprite("hsd");
-        this.hsd.y = 130;
+        this.hsd.y = -95;
         
         this.lampen2 = this.createTilingSprite("lampen2");
-        this.lampen2.y = 95;
+        this.lampen2.y = -90;
 
         this.ground = this.createTilingSprite("ground");
-        this.ground.y = 100;
+        this.ground.y = -100;
         
         this.trees = this.createTilingSprite("trees");
-        this.trees.y = 95;
+        this.trees.y = -105;
         
         this.lampen1 = this.createTilingSprite("lampen1");
-        this.lampen1.y = 95;
+        this.lampen1.y = -105;
     }
 
     //Methode, die den Hintergrund bewegt. Durch die verschiedenen Geschwindigkeiten wird ein Tiefeneffekt erzeugt.
     scrollBackground(camera) {
         //Die x-Position wird immer dorthin gesetzt, wo die Kamera ist und mit einer Geschwidigkeit multipliziert.  
-        this.sky.tilePosition.x = camera *-0.5;
-        this.clouds.tilePosition.x = camera *-0.75;
-        this.city.tilePosition.x = camera *-0.95;
-        this.carsR.tilePosition.x = camera *0.5;
+        this.sky.tilePosition.x = camera *-0.3;
+        this.clouds.tilePosition.x = camera *-0.6;
+        this.city.tilePosition.x = camera * -0.8;       //*-0.95;
+
+        this.carsR.tilePosition.x = camera *0.4;
         this.carsL.tilePosition.x = camera *-1.5;
-        this.hsd.tilePosition.x = camera *-1.11;
-        this.lampen2.tilePosition.x = camera *-1.15;
-        this.ground.tilePosition.x = camera *-1.15;
-        this.trees.tilePosition.x = camera *-1.15;
-        this.lampen1.tilePosition.x = camera *-1.2;
+
+        this.hsd.tilePosition.x = camera * -0.87;       //*-1.11;
+        this.ground.tilePosition.x = camera * -1;    //*-1.15;
+        this.trees.tilePosition.x = camera * -1;     //*-1.15;
+        this.lampen1.tilePosition.x = camera * -0.95;   //*-1.2;
+        this.lampen2.tilePosition.x = camera * -0.95;   //*-1.15;
     }
 
 

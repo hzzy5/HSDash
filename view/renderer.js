@@ -6,11 +6,10 @@ import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs
     - Graphic, Sprites, ... erzeugen und rendern
     - gameloop
 */
-//Skalierung anahnd dieser Größen
+//Virtuelle Spielweltgrößen, unabhängig von der tatsächlichen Fenstergröße. So werden alle Positionen proportional zur virtuellen Welt gesetzt.
 const VIRTUAL_WIDTH = 1536; //48*32, d.h. 48 Spalten passen in ein Screen
 const VIRTUAL_HEIGHT = 800; //25*32, d.h. 25 Zeilen passen in einen Screen
 const TILE_SIZE = 32;
-
 
 export class Renderer {
     
@@ -48,7 +47,7 @@ export class Renderer {
         this.screen = this.app.screen;
 
         //Für Fenstergrößenänderungen
-        this.resize();
+        //this.resize();
     }
 
     //Methode, um Sprites zu erstellen 
@@ -90,6 +89,23 @@ export class Renderer {
         
         return { x, y, width: TILE_SIZE, height: TILE_SIZE};
     }
+
+    //Methode um ein unsichtbaren 32x32-Tile zu erzeugen. 
+    createInvisibleTile(x, y) {
+        //Ins Bild passen 48x25 Tiles
+        const tileX = VIRTUAL_WIDTH / TILE_SIZE;
+        const tileY = VIRTUAL_HEIGHT / TILE_SIZE;
+
+        const gfx = new PIXI.Graphics();
+
+        gfx.x = x;
+        gfx.y = y;
+        
+        this.world.addChild(gfx);
+        
+        return { x, y, width: TILE_SIZE, height: TILE_SIZE};
+    }
+
 
     //Methode, um die Assets zu preloaden
     async loadAssets() {
@@ -169,9 +185,9 @@ export class Renderer {
 
             //Zentrieren
             this.world.x = (window.innerWidth - VIRTUAL_WIDTH * scale) / 2;
-            this.world.y = (window.innerHeight - VIRTUAL_HEIGHT * scale) / 2;
+            this.world.y = 0; 
             this.background.x = (window.innerWidth - VIRTUAL_WIDTH * scale) / 2;
-            this.background.y = (window.innerHeight - VIRTUAL_HEIGHT * scale) / 2;
+            this.background.y = 0;
 
         };
         resize();

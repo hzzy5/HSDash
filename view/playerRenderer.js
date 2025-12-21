@@ -60,8 +60,8 @@ export class PlayerRenderer {
             this.idleAnimation.animationSpeed = 1 / 6; //6 fps
             this.idleAnimation.anchor.set(0.5, 0); //pivot point ist mittig (0.5) unten (1)
             this.idleAnimation.loop = true;
+            this.idleAnimation.name = "idle";
             //this.view.app.stage.addChild(this.idleAnimation);
-        
 
         //WALK
             const sheet2 = PIXI.Assets.get('walkAnimation').data.animations;
@@ -70,9 +70,9 @@ export class PlayerRenderer {
             this.walkAnimation.animationSpeed = 1 / 6; 
             this.walkAnimation.anchor.set(0.5, 0);
             this.walkAnimation.loop = true;
+            this.walkAnimation.name = "walk";
             //this.view.app.stage.addChild(this.walkAnimation);
         
-
         //RUN
             const sheet3 = PIXI.Assets.get('runAnimation').data.animations;
             // create an animated sprite
@@ -80,8 +80,8 @@ export class PlayerRenderer {
             this.runAnimation.animationSpeed = 1 / 6; 
             this.runAnimation.anchor.set(0.5, 0);
             this.runAnimation.loop = true; 
+            this.runAnimation.name = "run";
             //this.view.app.stage.addChild(this.runAnimation);
-        
         
         //JUMP
         //Wenn es noch keine jump-animation gibt
@@ -91,8 +91,8 @@ export class PlayerRenderer {
             this.jumpAnimation.animationSpeed = 1 / 6; 
             this.jumpAnimation.anchor.set(0.5, 0);
             this.jumpAnimation.loop = false;
+            this.jumpAnimation.name = "jump";
             //this.view.app.stage.addChild(this.jumpAnimation);
-        
         
         //FALL
             const sheet5 = PIXI.Assets.get('fallAnimation').data.animations;
@@ -101,8 +101,8 @@ export class PlayerRenderer {
             this.fallAnimation.animationSpeed = 1 / 6; 
             this.fallAnimation.anchor.set(0.5, 0);
             this.fallAnimation.loop = false; 
+            this.fallAnimation.name = "fall";
             //this.view.app.stage.addChild(this.fallAnimation);
-        
 
         //DASH
             const sheet6 = PIXI.Assets.get('dashAnimation').data.animations;
@@ -111,8 +111,8 @@ export class PlayerRenderer {
             this.dashAnimation.animationSpeed = 1 / 6; 
             this.dashAnimation.anchor.set(0.5, 0);
             this.dashAnimation.loop = false;
+            this.dashAnimation.name = "dash";
             //this.view.app.stage.addChild(this.dashAnimation);
-        
 
         //Alle möglichen Animationen
         this.animations = [this.idleAnimation, this.walkAnimation, this.runAnimation, this.jumpAnimation, this.fallAnimation, this.dashAnimation];
@@ -144,11 +144,7 @@ export class PlayerRenderer {
         this.currentAnimation = nextAnimation;
         this.updateFacing(facing);
         this.world.addChild(this.currentAnimation);
-        this.currentAnimation.play();
-        // //Beim Sprung und Dash muss die Animation beim ersten Frame starten - auch bei Unterbrechungen 
-        // if (this.currentAnimation === this.jumpAnimation || this.currentAnimation === this.dashAnimation) {
-        //     this.currentAnimation.gotoAndPlay(0);
-        // }   
+        this.currentAnimation.gotoAndPlay(0);
     }
 
     //Methode, die die Animation anhand des Player-Zustandes auswählt.
@@ -188,8 +184,9 @@ export class PlayerRenderer {
     //Methode, die schaut, ob es sich um eine lockedAnimation handelt. LockedAnimations sollten immer bis zum Ende laufen, sonst "flackern" sie.
     isLockedAnimation(a) {
         return (
-            a === this.jumpAnimation ||
             a === this.dashAnimation
+            // || a === this.jumpAnimation 
+            // || a === this.fallAnimation   
         );
     }
  

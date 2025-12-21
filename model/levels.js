@@ -5,33 +5,34 @@ export var levels = [
         name: "level01",
         //ggf. weitere Eigenschaften
         map: [
-            "                                                                                                                                                                                                                 ",
+
+
             "                                                                                                                                                                                                                  ",
             "                                                                                                                                                                                                                  ",
             "                                                                                                                                                                                                                  ",
             "                                                                                                                                                                                                                  ",
-            "                                                                                                                                                                                                                 ",
+            "                                                                                                                                                                                                                  ",
             "                                                                                                                                                                                                                  ",
             "                                                                                                                                                                                                                  ",
             "                                                                                                                                                                                                                  ",
             "                                        o o o                                                                                                                                                                     ",
-            "                                                                                                                                                                                                                 ",
+            "                                                                                                                                                                                                                  ",
             "                         xxxx          xxxxxx                                                                                                                                                                     ",
             "                         xxxx                                      xxxx                                                                                                                                           ",
             "                                                               xxxx                                                                                                                                               ",
             "                                                                                                                                                                                                                  ",
+            "                                                                                                                         o o    o o                                                                               ",
+            "                      xxxx                                                                                                                                                                                        ",
+            "                  xxxx                                                         o              oooo                                                                                                                ",
+            "                                                                                                                       o o        o o                                                                             ",
+            "                                          o                                                                                                                                                                       ",
+            "                                        o   o                        o                                                                                                                                            ",
+            "                                      o       o                               o           o                                                                                                                       ",
+            "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ",
+            "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ",
+            "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ",
             "                                                                                                                                                                                                                  ",
-            "                      xxxx                                                                          x                                                                                                             ",
-            "                  xxxx                                                                               x                                                                                                            ",
-            "                                                                                                      x                                                                                                           ",
-            "                                          o                                                       x                                                                                                               ",
-            "                                        o   o                                                      x                                                                                                              ",
-            "       xx                             o       o                                                      x                                                                                                            ",
-            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx x",
-            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  ",
-            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  ",
-            
+            "                                                                                                                                                                                                                  ",
         ]
     }
 
