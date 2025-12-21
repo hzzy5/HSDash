@@ -112,6 +112,7 @@ export class Renderer {
             player: "assets/bilder/player4.png",
             enemy: "assets/bilder/barrier.png",
             coin: "assets/bilder/coin.png",
+            life: "assets/bilder/herz.jpg",
 
             //SPRITESHEETS, JSON
             idleAnimation: "assets/bilder/idleSprite.json",

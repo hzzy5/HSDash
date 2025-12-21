@@ -8,7 +8,7 @@ window.onload = async function() {
     await controller.initController(); //warten bis alles initialisiert ist, bevor man die app startet.
 
     //Damit gleiche Renderer- & Collision - Instanzen genutzt werden
-    let levelloader = new LevelLoader(controller.renderer, controller.playerRenderer, controller.coinRenderer, controller.sceneRenderer, controller.collision, controller.coins); 
+    let levelloader = new LevelLoader(controller.renderer, controller.playerRenderer, controller.coinRenderer, controller.lifesRenderer, controller.sceneRenderer, controller.collision, controller.coins, controller.lifes); 
     await levelloader.loadLevel(levelloader.levels[0]);
     
     controller.renderer.startGameLoop((dt) => controller.gameLoop(dt));
