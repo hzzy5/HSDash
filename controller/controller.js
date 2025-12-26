@@ -3,6 +3,7 @@ import { Player } from "../model/player.js";
 import { Coin } from "../model/coin.js";
 import { Collision } from "../model/collision.js";
 import { Life } from "../model/life.js";
+import { Spikes } from "../model/spikes.js";
 
 //VIEW
 import { Renderer } from "../view/renderer.js"; 
@@ -12,6 +13,7 @@ import { LifesRenderer } from "../view/lifesRenderer.js";
 import { SceneRenderer } from "../view/sceneRenderer.js";
 import { HudRenderer } from "../view/hudRenderer.js";
 import { CameraRenderer } from "../view/cameraRenderer.js";
+import { SpikesRenderer } from "../view/spikesRenderer.js";
 
 //CONTROLLER
 import { SoundController } from "./soundcontroller.js";
@@ -27,12 +29,14 @@ export class Controller {
     sceneRenderer;
     hudRenderer;
     cameraRenderer;
+    spikeRenderer;
 
     //MODEL
     player;
     enemy;
     enemySprite;
     collision;
+    spikes = [];
 
     leftBound;
     rightBound;
@@ -79,7 +83,8 @@ export class Controller {
         this.hudRenderer = new HudRenderer(this.renderer.hud);
         this.cameraRenderer = new CameraRenderer(this.renderer.world, this.renderer.screen)
         this.lifesRenderer = new LifesRenderer(this.renderer.world, this.renderer.ticker);
-        
+        this.spikeRenderer = new SpikesRenderer(this.renderer.world, this.renderer.ticker);
+
         //SOUND:
         this.sound = new SoundController(); //SoundController initialisieren 
         await this.sound.init();
@@ -154,6 +159,7 @@ export class Controller {
       this.updatePlayer(dt);
       this.checkCoinCollection();//Münzeneinsammlung prüfen
       this.checkLifesCollection(); //Lebeneinsammlung prüfen
+      this.checkEnemies();
       
       //Hintergrund scrollen
       this.scrollBackground(dt);
@@ -436,6 +442,18 @@ export class Controller {
 
     gameOver(){
         this.renderer.ticker.stop();
+    }
+
+    checkEnemies() {
+        //alle Spikes durchgehen die auf dem Spielfeld liegen und sehen ob sie berührt wurden
+        for (const spike of this.spikes) {
+          // Kollision prüfen mit Spikes
+          if (this.collision.collision(this.player, spike)) {
+            console.log("Stacheln berührt!");
+            this.playerGotHit();
+          }
+        }
+
     }
 
     

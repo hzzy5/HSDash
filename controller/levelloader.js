@@ -5,6 +5,7 @@ import { Collision } from "../model/collision.js";
 import { Coin } from "../model/coin.js";
 import { levels } from "../model/levels.js";
 import { Life } from "../model/life.js";
+import { Spikes } from "../model/spikes.js";
 
 //VIEW
 import { Renderer } from "../view/renderer.js"; 
@@ -12,21 +13,24 @@ import { PlayerRenderer } from "../view/playerRenderer.js";
 import { CoinRenderer } from "../view/coinRenderer.js";
 import { SceneRenderer } from "../view/sceneRenderer.js";
 import { LifesRenderer } from "../view/lifesRenderer.js";
+import { SpikesRenderer } from "../view/spikesRenderer.js";
 
 export class LevelLoader {
 
-    constructor(renderer, playerRenderer, coinRenderer, lifesRenderer, sceneRenderer, collision, coins, lifes) {
+    constructor(renderer, playerRenderer, coinRenderer, lifesRenderer, sceneRenderer, collision, coins, lifes, spikes, spikesRenderer) {
         this.renderer = renderer;
         this.playerRenderer = playerRenderer;
         this.coinRenderer = coinRenderer;
         this.lifesRenderer = lifesRenderer;
         this.sceneRenderer = sceneRenderer;
+        this.spikesRenderer = spikesRenderer;
 
 
         this.collision = collision;
         this.player;
         this.coins = coins;
         this.lifes = lifes;
+        this.spikes = spikes;
 
         this.levels = levels;
 
@@ -43,6 +47,7 @@ export class LevelLoader {
         this.blocks['x'] = {sx:0, sy:0, collide:true, solid:true, type:"block"}; //block
         this.blocks['o'] = {sx:0, sy:0, collide:false, solid:false, type:"münze"}; //münze
         this.blocks['l'] = {sx:0, sy:0, collide:false, solid:false, type:"leben"}; //leben
+        this.blocks['s'] = {sx:0, sy:0, collide:true, solid:true, type:"spike"}; //stacheln
     }
 
     //Methode, die das Level anhand der Map anzeigt.
@@ -78,6 +83,12 @@ export class LevelLoader {
                     let life = new Life(posX, posY);
                     life.sprite = this.lifesRenderer.createLifeSprite(posX, posY);
                     this.lifes.push(life);
+                }
+
+                if (char === 's') {
+                    let spike = new Spikes(posX, posY);
+                    spike.sprite = this.spikesRenderer.createSpikeSprite(posX, posY);
+                    this.spikes.push(spike);
                 }
 
                 if (tile && blockInfo.collide) {
