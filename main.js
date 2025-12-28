@@ -11,7 +11,12 @@ window.onload = async function() {
     let levelloader = new LevelLoader(controller.renderer, controller.playerRenderer, controller.coinRenderer, controller.sceneRenderer, controller.collision, controller.coins); 
     await levelloader.loadLevel(levelloader.levels[0]);
     
-    controller.renderer.startGameLoop((dt) => controller.gameLoop(dt));
+
+    /////////////////////////hier!!!!
+
+    
+    //controller.renderer.startGameLoop((dt) => controller.gameLoop(dt));   
+    
 
     // //Test
     // console.log(window.innerHeight +","+ window.innerWidth);

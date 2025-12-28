@@ -10,6 +10,10 @@ import { CoinRenderer } from "../view/coinRenderer.js";
 import { SceneRenderer } from "../view/sceneRenderer.js";
 import { HudRenderer } from "../view/hudRenderer.js";
 import { CameraRenderer } from "../view/cameraRenderer.js";
+import { StartScreenRenderer } from "../view/startScreenRenderer.js";
+
+
+
 
 //CONTROLLER
 import { SoundController } from "./soundcontroller.js";
@@ -49,6 +53,10 @@ export class Controller {
     sound;
     buttonMusikAus;
 
+    //STARTSCREEN / GAMESTATE
+    gameStarted = false;
+
+
      
 
 
@@ -72,6 +80,23 @@ export class Controller {
         this.coinRenderer = new CoinRenderer(this.renderer.world, this.renderer.ticker);
         this.hudRenderer = new HudRenderer(this.renderer.hud, this.renderer.screen);
         this.cameraRenderer = new CameraRenderer(this.renderer.world, this.renderer.screen)
+        
+        //this.startScreenRenderer = new StartScreenRenderer(this.renderer.ui);
+
+        this.startScreenRenderer = new StartScreenRenderer(
+          this.renderer.ui,
+          this.renderer.screen
+        );
+
+        this.startScreenRenderer.createStartButton(() => {
+            this.gameStarted = true; //Spiel ist gestartet
+            this.startScreenRenderer.hide();
+            this.renderer.startGameLoop((dt) => this.gameLoop(dt));
+        });
+
+        this.startScreenRenderer.show();
+
+       
 
         //SOUND:
         this.sound = new SoundController(); //SoundController initialisieren 
@@ -122,7 +147,9 @@ export class Controller {
 
         //=== ABFRAGEN ===
         document.addEventListener("keydown", (e) => this.keyIsDown(e));
-        document.addEventListener("keyup", (e) => this.keyIsUp(e));        
+        document.addEventListener("keyup", (e) => this.keyIsUp(e));  
+        
+        
     }
     /*vllt iwie optimieren: nur zeichnen, wenn etwas geändert wurde.*/
     
@@ -130,6 +157,7 @@ export class Controller {
     //=== GAMELOOP ============================================================================================
     //Methode, die alle Update-Funktionen pro Frame aufurft. 
     gameLoop(dt) {
+      if (!this.gameStarted) return; //Wenn das Spiel nicht gestartet ist, nichts updaten
       //Spieler updaten (Sprung, Dash, Bewegung)
       this.updatePlayer(dt);
       this.checkCoinCollection();//Münzeneinsammlung prüfen
