@@ -28,6 +28,7 @@ export class Player {
     // Geschwindigkeit beim Sprung
     // Vertikale Geschwindigkeit und Sprung-Parameter
     this.vy = 0; // px/s positiv = nach unten, negativ = nach oben. Wird durch Gravitation und Velocity verändert
+    this.prevVy = 0; //zum Springen auf Gegner bei if-abfragen nötig, vy reicht nicht aus, sonst stirbt man bei doppelsprung
     this.onGround = false;
     this.jumpVelocity = Math.round(-480 * scale); // px/s (negativ = nach oben). Einmalig beim Absprung gesetzt
     this.jumpCount = 0; //Flag. Zählt die Sprünge.
