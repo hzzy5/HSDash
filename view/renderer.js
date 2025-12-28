@@ -137,6 +137,7 @@ export class Renderer {
             enemy: "assets/bilder/barrier.png",
             coin: "assets/bilder/coin.png",
             life: "assets/bilder/herz.jpg",
+            spike: "assets/bilder/stacheln2.png",
 
             //SPRITESHEETS, JSON
             idleAnimation: "assets/bilder/idleSprite.json",
