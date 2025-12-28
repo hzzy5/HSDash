@@ -32,6 +32,29 @@ export class HudRenderer {
         }
     }
 
+    // HUD: Leben-Anzeige unter Coin-Anzeige
+    createLifeHud(totalLifes) {
+        this.lifeHud = new PIXI.Text(`${totalLifes} Leben`, {
+            fontFamily: "Press Start 2P",
+            fontSize: 22,
+            fill: 0xffffff,
+            stroke: 0x000000,
+            strokeThickness: 4
+        });
+
+        this.lifeHud.x = window.innerWidth - 300;
+        this.lifeHud.y = 50;
+        this.lifeHud.zIndex = 9999;
+
+        this.hud.addChild(this.lifeHud);
+    }
+
+    updateLifeHud(total) {
+        if (this.lifeHud) {
+            this.lifeHud.text = `${total} Leben`;
+        }
+    }
+
 } //end class
 
 

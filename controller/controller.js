@@ -2,6 +2,7 @@
 import { Player } from "../model/player.js";
 import { Coin } from "../model/coin.js";
 import { Collision } from "../model/collision.js";
+import { Life } from "../model/life.js";
 
 //VIEW
 import { Renderer } from "../view/renderer.js"; 
@@ -11,6 +12,7 @@ import { SceneRenderer } from "../view/sceneRenderer.js";
 import { HudRenderer } from "../view/hudRenderer.js";
 import { CameraRenderer } from "../view/cameraRenderer.js";
 import { StartScreenRenderer } from "../view/startScreenRenderer.js";
+import { LifesRenderer } from "../view/lifesRenderer.js";
 
 
 
@@ -28,6 +30,7 @@ export class Controller {
     sceneRenderer;
     hudRenderer;
     cameraRenderer;
+    lifesRenderer;
 
     //MODEL
     player;
@@ -48,6 +51,7 @@ export class Controller {
     // Collider-Liste (vierecke mit x,y,width,height)
     colliders = []; //Für kollisionen
     coins = [];  // Liste aller Münzen im Level
+    lifes = []; //Liste aller Leben die man einsammeln kann im Level
 
     //SOUND
     sound;
@@ -80,6 +84,7 @@ export class Controller {
         this.coinRenderer = new CoinRenderer(this.renderer.world, this.renderer.ticker);
         this.hudRenderer = new HudRenderer(this.renderer.hud, this.renderer.screen);
         this.cameraRenderer = new CameraRenderer(this.renderer.world, this.renderer.screen)
+        this.lifesRenderer = new LifesRenderer(this.renderer.world, this.renderer.ticker);
         
         //this.startScreenRenderer = new StartScreenRenderer(this.renderer.ui);
 
@@ -145,6 +150,12 @@ export class Controller {
         this.collectedCoins = 0;
         this.hudRenderer.createCoinHud(this.totalCoins);
 
+        //=== LEBEN ===
+        this.collectedLifes = 2; //Startwert 2 Leben
+        this.totalLifes = this.lifes.length;
+        this.hudRenderer.createLifeHud(this.collectedLifes);
+
+
         //=== ABFRAGEN ===
         document.addEventListener("keydown", (e) => this.keyIsDown(e));
         document.addEventListener("keyup", (e) => this.keyIsUp(e));  
@@ -161,6 +172,7 @@ export class Controller {
       //Spieler updaten (Sprung, Dash, Bewegung)
       this.updatePlayer(dt);
       this.checkCoinCollection();//Münzeneinsammlung prüfen
+      this.checkLifesCollection(); //Lebeneinsammlung prüfen
       
       //Hintergrund scrollen
       this.sceneRenderer.scrollBackground(this.cameraRenderer.cameraX);
@@ -371,6 +383,56 @@ export class Controller {
 
           }
         }
+    }
+
+    //=== UPDATE LIVES ============================================================================================
+    checkLifesCollection() {
+        //alle Leben durchgehen die auf dem Spielfeld liegen und sehen ob sie eingesammelt wurden
+        for (const life of this.lifes) {
+           if (life.collected) continue;
+
+          // Kollision prüfen mit Leben
+          if (this.collision.collision(this.player, life)) {
+            console.log("Leben eingesammelt!");
+            life.collect(); //auch wenn man 2 hat wird es "eingesammelt", indem es entfernt wird ohne das der Player eins dazu bekommt
+            if(this.collectedLifes < 2){
+                //Soundeffect
+                this.sound.coinCollected(); 
+            
+                this.lifesRenderer.showFloatingText("+1", life.x, life.y - 20);
+                this.collectedLifes++;
+                this.hudRenderer.updateLifeHud(this.collectedLifes);
+            }
+          }
+        }
+
+        //wenn der Player ausserhalb des Spiels ist (ins loch gefallen oder so), stirbt er
+        //800 scheint zu funktionieren, später nochmal testen wenn levelaufbau fertig, und verschiedene Bildschirmgrößen lol
+        if(this.player.y > 800){
+            this.collectedLifes = 0;
+            this.hudRenderer.updateLifeHud(this.collectedLifes);
+            console.log("Du bist gestorben! :)");
+            this.gameOver();
+        }
+    }
+
+    //wenn man getroffen wird Leben updaten
+    playerGotHit(){
+        this.collectedLifes--;
+        //Soundeffect - anderen noch suchen
+        //this.sound.coinCollected(); 
+        //wie kommt amn an die x und y koordinaten - player Koordinaten oder so nehmen
+        this.lifesRenderer.showFloatingText("-1", this.player.x, this.player.y - 20);
+        this.hudRenderer.updateLifeHud(this.collectedLifes);
+        if(this.collectedLifes <= 0){
+            //Message oder spiel neu starten
+            console.log("Du bist gestorben! :)");
+            this.gameOver();
+        }
+    }
+
+    gameOver(){
+        this.renderer.ticker.stop();
     }
 
     
