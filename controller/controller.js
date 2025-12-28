@@ -4,6 +4,7 @@ import { Coin } from "../model/coin.js";
 import { Collision } from "../model/collision.js";
 import { Life } from "../model/life.js";
 import { Spikes } from "../model/spikes.js";
+import { Gumbas } from "../model/gumbas.js";
 
 //VIEW
 import { Renderer } from "../view/renderer.js"; 
@@ -15,6 +16,7 @@ import { CameraRenderer } from "../view/cameraRenderer.js";
 import { StartScreenRenderer } from "../view/startScreenRenderer.js";
 import { LifesRenderer } from "../view/lifesRenderer.js";
 import { SpikesRenderer } from "../view/spikesRenderer.js";
+import { GumbasRenderer } from "../view/gumbasRenderer.js";
 
 
 
@@ -34,6 +36,7 @@ export class Controller {
     cameraRenderer;
     lifesRenderer;
     spikeRenderer;
+    gumbaRenderer;
 
     //MODEL
     player;
@@ -41,6 +44,7 @@ export class Controller {
     enemySprite;
     collision;
     spikes = []; //Liste aller Stacheln, die es im Level gibt
+    gumbas = []; //Liste aller Gumbas, die es im Level gibt
 
     leftBound;
     rightBound;
@@ -90,6 +94,7 @@ export class Controller {
         this.cameraRenderer = new CameraRenderer(this.renderer.world, this.renderer.screen)
         this.lifesRenderer = new LifesRenderer(this.renderer.world, this.renderer.ticker);
         this.spikeRenderer = new SpikesRenderer(this.renderer.world, this.renderer.ticker);
+        this.gumbaRenderer = new GumbasRenderer(this.renderer.world, this.renderer.ticker);
 
         //this.startScreenRenderer = new StartScreenRenderer(this.renderer.ui);
 
@@ -178,7 +183,7 @@ export class Controller {
       this.updatePlayer(dt);
       this.checkCoinCollection();//Münzeneinsammlung prüfen
       this.checkLifesCollection(); //Lebeneinsammlung prüfen
-      this.checkEnemies();
+      this.checkEnemies(dt);
       
       //Hintergrund scrollen
       this.sceneRenderer.scrollBackground(this.cameraRenderer.cameraX);
@@ -295,6 +300,8 @@ export class Controller {
       }
 
       //=== VERTIKALE BEWEGUNG ===
+      //für Kollisionserkennung mit Gegnern
+      this.player.prevVy = this.player.vy;
       //SPRINGEN: wenn eine Sprunganforderung vorliegt und wir auf dem Boden sind
       if (this.jumpRequested) {
         this.sound.jump();
@@ -441,7 +448,7 @@ export class Controller {
         this.renderer.ticker.stop();
     }
 
-    checkEnemies() {
+    checkEnemies(dt) {
         //alle Spikes durchgehen die auf dem Spielfeld liegen und sehen ob sie berührt wurden
         for (const spike of this.spikes) {
           // Kollision prüfen mit Spikes
@@ -450,6 +457,47 @@ export class Controller {
             this.playerGotHit();
           }
         }
+
+        //alle Gumbas durchgehen die auf dem Spielfeld liegen und sehen ob sie berührt wurden
+        for (const gumba of this.gumbas) {
+            if(!gumba.alive) continue; //wenn nicht mehr Leben dann zum nächsten gehen
+
+            //Bewegung Gumba
+            gumba.move(dt);
+
+            //Kollision mit Kollisionsblöcken
+            for (const c of this.collision.colliders) {
+                if (this.collision.collision(gumba, c)) {
+
+                    // an Kante setzen
+                    if (gumba.direction > 0) {
+                        gumba.x = c.x - gumba.width;
+                    } else {
+                        gumba.x = c.x + c.width;
+                    }
+
+                    gumba.reverse();
+                    gumba.updateHitbox();
+                    break;
+                }
+            }
+
+            //Sprite synchronisieren
+            if (gumba.sprite) {
+                gumba.sprite.x = gumba.x;
+                gumba.sprite.y = gumba.y;
+                gumba.sprite.scale.x = 0.06 * gumba.direction; // Spiegeln
+            }
+
+            // Player Kollision prüfen mit Gumbas
+            if (this.collision.collisionUp(this.player, gumba)) {
+                console.log("Gumba besiegt!");
+                gumba.dies();
+            }else if(this.collision.collision(this.player, gumba)){
+                console.log("Gumba berührt!");
+                this.playerGotHit();
+            }
+          }
 
     }
 

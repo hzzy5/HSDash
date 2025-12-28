@@ -6,6 +6,7 @@ import { Coin } from "../model/coin.js";
 import { levels } from "../model/levels.js";
 import { Life } from "../model/life.js";
 import { Spikes } from "../model/spikes.js";
+import { Gumbas } from "../model/gumbas.js";
 
 //VIEW
 import { Renderer } from "../view/renderer.js"; 
@@ -14,16 +15,18 @@ import { CoinRenderer } from "../view/coinRenderer.js";
 import { SceneRenderer } from "../view/sceneRenderer.js";
 import { LifesRenderer } from "../view/lifesRenderer.js";
 import { SpikesRenderer } from "../view/spikesRenderer.js";
+import { GumbasRenderer } from "../view/gumbasRenderer.js";
 
 export class LevelLoader {
 
-    constructor(renderer, playerRenderer, coinRenderer, lifesRenderer, sceneRenderer, collision, coins, lifes, spikes, spikesRenderer) {
+    constructor(renderer, playerRenderer, coinRenderer, lifesRenderer, sceneRenderer, collision, coins, lifes, spikes, spikesRenderer, gumbas, gumbaRenderer) {
         this.renderer = renderer;
         this.playerRenderer = playerRenderer;
         this.coinRenderer = coinRenderer;
         this.sceneRenderer = sceneRenderer;
         this.lifesRenderer = lifesRenderer;
         this.spikesRenderer = spikesRenderer;
+        this.gumbaRenderer = gumbaRenderer;
 
 
         this.collision = collision;
@@ -31,6 +34,7 @@ export class LevelLoader {
         this.coins = coins;
         this.lifes = lifes;
         this.spikes = spikes;
+        this.gumbas = gumbas;
 
         this.levels = levels;
 
@@ -49,6 +53,7 @@ export class LevelLoader {
         this.blocks['-'] = {sx:0, sy:0, collide:true, solid:false, type:"block"}; //unsichtbarer Block
         this.blocks['l'] = {sx:0, sy:0, collide:false, solid:false, type:"leben"}; //leben
         this.blocks['s'] = {sx:0, sy:0, collide:true, solid:true, type:"spike"}; //stacheln
+        this.blocks['g'] = {sx:0, sy:0, collide:true, solid:true, type:"gumba"}; //gumbas
     }
 
     //Methode, die das Level anhand der Map anzeigt.
@@ -96,7 +101,12 @@ export class LevelLoader {
                     this.spikes.push(spike);
                 }
 
-                
+                if (char === 'g') {
+                    let gumba = new Gumbas(posX, posY);
+                    gumba.sprite = this.gumbaRenderer.createGumbaSprite(posX, posY);
+                    this.gumbas.push(gumba);
+                }
+
                 
                 if (tile && blockInfo.collide) {
                     this.collision.addCollider(tile);

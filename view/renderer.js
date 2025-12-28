@@ -138,6 +138,7 @@ export class Renderer {
             coin: "assets/bilder/coin.png",
             life: "assets/bilder/herz.jpg",
             spike: "assets/bilder/stacheln2.png",
+            gumba: "assets/bilder/gumba.png",
 
             //SPRITESHEETS, JSON
             idleAnimation: "assets/bilder/idleSprite.json",
