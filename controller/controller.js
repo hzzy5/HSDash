@@ -17,8 +17,7 @@ import { StartScreenRenderer } from "../view/startScreenRenderer.js";
 import { LifesRenderer } from "../view/lifesRenderer.js";
 import { SpikesRenderer } from "../view/spikesRenderer.js";
 import { GumbasRenderer } from "../view/gumbasRenderer.js";
-
-
+import { GameOverScreenRenderer } from "../view/gameOverScreenRenderer.js";
 
 
 //CONTROLLER
@@ -68,6 +67,9 @@ export class Controller {
     //STARTSCREEN / GAMESTATE
     gameStarted = false;
 
+    //GAMEOVERSCREEN / GAMESTATE
+    isGameOver = false;
+
 
      
 
@@ -110,6 +112,15 @@ export class Controller {
         });
 
         this.startScreenRenderer.show();
+
+        this.gameOverScreenRenderer = new GameOverScreenRenderer(
+            this.renderer.ui,
+            this.renderer.screen
+        );
+
+        this.gameOverScreenRenderer.createStartButton(() => {
+            this.restartGame();
+        });
 
        
 
@@ -427,6 +438,12 @@ export class Controller {
             console.log("Du bist gestorben! :)");
             this.gameOver();
         }
+
+        if(this.collectedLifes <= 0){
+            //Message oder spiel neu starten
+            console.log("Du bist gestorben! :)");
+            this.gameOver();
+        }
     }
 
     //wenn man getroffen wird Leben updaten
@@ -446,6 +463,10 @@ export class Controller {
 
     gameOver(){
         this.renderer.ticker.stop();
+
+        this.isGameOver = true; 
+  
+        this.gameOverScreenRenderer.show();
     }
 
     checkEnemies(dt) {
@@ -499,6 +520,57 @@ export class Controller {
             }
           }
 
+    }
+
+    restartGame(){
+        console.log("Spiel wird neu gestartet");
+
+        this.isGameOver = false;
+
+        this.gameOverScreenRenderer.hide();
+
+        // Spielzustand resetten
+        this.resetLevel();
+
+        this.renderer.ticker.start();
+    }
+
+    resetLevel(){
+        //Player auf Anfangsposition
+        this.player.x = 100;
+        this.player.y = 100;
+        this.player.vy = 0;
+        this.player.onGround = false;
+        this.player.state = "idle" ;
+
+        //Kamera zurücksetzen auf Player position
+        this.cameraRenderer.resetCamera();
+
+        //Gumbas zurückk zum Leben
+        for (const gumba of this.gumbas) {
+            gumba.alive = true;
+            gumba.sprite.visible = true;
+        }
+
+        //coins alle anzeigen
+        for (const coin of this.coins) {
+            coin.collected = false;
+            coin.sprite.visible = true;
+        }
+
+        //herzen alle anzeigen
+        for (const life of this.lifes) {
+            life.collected = false;
+            life.sprite.visible = true;
+        }
+
+        //herzenanzahl zurück auf 2 
+        this.collectedLifes = 2;
+        this.hudRenderer.updateLifeHud(this.collectedLifes);
+
+        //eingesammelte Münzen auf 0
+        this.collectedCoins = 0;
+        this.hudRenderer.updateCoinHud(this.collectedCoins, this.totalCoins);
     }
 
     

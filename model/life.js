@@ -19,10 +19,8 @@ export class Life{
     // Wenn Leben gesammelt wird
     collect() {
         this.collected = true;
-        // Sprite später im Controller entfernen
-        if (this.sprite && this.sprite.parent) {
-            this.sprite.parent.removeChild(this.sprite);
-        }
+        //unsichtbar machen, für neustart einfacher
+        this.sprite.visible = false;
     }
 
     // Update der Hitbox (falls Sprite Position verändert würde)

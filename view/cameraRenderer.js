@@ -30,4 +30,11 @@ export class CameraRenderer {
         this.world.x = -this.cameraX * scale;
     }
 
+    resetCamera() {
+        this.cameraX = 0;
+        //this.cameraY = 0;
+        this.world.x = 0;
+        this.world.y = 0;
+    }
+
 } //end class
