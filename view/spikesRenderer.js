@@ -9,7 +9,7 @@ export class SpikesRenderer{
         this.ticker = ticker;
     }
 
-    // Methode, um das Leben-Sprite zu erstellen, falls man Leben wieder einsammeln kann
+    // Methode, um das Stacheln-Sprite zu erstellen
     createSpikeSprite(x, y) {
         const sprite = PIXI.Sprite.from("spike");
     
@@ -17,9 +17,9 @@ export class SpikesRenderer{
         sprite.x = x;
         sprite.y = y + 20;
 
-        sprite.anchor.set(0.5);      // Zentriert die Münze
-        sprite.scale.set(0.3);      // Macht die Münze kleiner 
-        sprite.zIndex = 900;         // Münze über Player und über Plattform
+        sprite.anchor.set(0.5);      // Zentriert die Stacheln
+        sprite.scale.set(0.3);      // Macht die Stacheln kleiner 
+        sprite.zIndex = 900;         // Stacheln über Player und über Plattform
 
 
         this.world.addChild(sprite);

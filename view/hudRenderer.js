@@ -32,27 +32,45 @@ export class HudRenderer {
         }
     }
 
-    // HUD: Leben-Anzeige unter Coin-Anzeige
-    createLifeHud(totalLifes) {
-        this.lifeHud = new PIXI.Text(`${totalLifes} Leben`, {
-            fontFamily: "Press Start 2P",
-            fontSize: 22,
-            fill: 0xffffff,
-            stroke: 0x000000,
-            strokeThickness: 4
-        });
 
-        this.lifeHud.x = window.innerWidth - 300;
-        this.lifeHud.y = 50;
-        this.lifeHud.zIndex = 9999;
+    LifeHud(numberLifes){
+        switch(numberLifes){
+            case 0: this.heartSprite1 = PIXI.Sprite.from("blackheart");
+                    this.heartSprite2 = PIXI.Sprite.from("blackheart");
+                    break;
+            case 1: this.heartSprite1 = PIXI.Sprite.from("life");
+                    this.heartSprite2 = PIXI.Sprite.from("blackheart");
+                    break;
+            case 2: this.heartSprite1 = PIXI.Sprite.from("life");
+                    this.heartSprite2 = PIXI.Sprite.from("life");
+                    break;
+            default: this.heartSprite1 = null;
+                     this.heartSprite2 = null;
+        }
 
-        this.hud.addChild(this.lifeHud);
+        if(this.heartSprite1 != null && this.heartSprite2 != null){
+            this.positionHeartSprites();
+        }
+        
     }
 
-    updateLifeHud(total) {
-        if (this.lifeHud) {
-            this.lifeHud.text = `${total} Leben`;
-        }
+    positionHeartSprites(){
+        this.heartSprite1.x = window.innerWidth - 50;
+        this.heartSprite1.y = 80;
+
+        this.heartSprite1.anchor.set(0.5);      // Zentriert die Münze
+        this.heartSprite1.scale.set(0.08);      // Macht die Münze kleiner 
+        this.heartSprite1.zIndex = 900;         // Münze über Player und über Plattform
+
+        this.heartSprite2.x = window.innerWidth - 120;
+        this.heartSprite2.y = 80;
+
+        this.heartSprite2.anchor.set(0.5);      // Zentriert die Münze
+        this.heartSprite2.scale.set(0.08);      // Macht die Münze kleiner 
+        this.heartSprite2.zIndex = 900;
+
+        this.hud.addChild(this.heartSprite1);
+        this.hud.addChild(this.heartSprite2);
     }
 
 } //end class

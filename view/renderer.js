@@ -137,6 +137,7 @@ export class Renderer {
             enemy: "assets/bilder/barrier.png",
             coin: "assets/bilder/coin.png",
             life: "assets/bilder/herz.jpg",
+            blackheart: "assets/bilder/schwarzesHerz.png",
             spike: "assets/bilder/stacheln2.png",
             gumba: "assets/bilder/gumba.png",
 

@@ -17,7 +17,6 @@ export class LifesRenderer{
         sprite.x = x;
         sprite.y = y;
 
-        //falls das benötigt wird, erstmal keine Leben wieder einsammeln
         sprite.anchor.set(0.5);      // Zentriert die Münze
         sprite.scale.set(0.08);      // Macht die Münze kleiner 
         sprite.zIndex = 900;         // Münze über Player und über Plattform

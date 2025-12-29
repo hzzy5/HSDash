@@ -174,7 +174,7 @@ export class Controller {
         //=== LEBEN ===
         this.collectedLifes = 2; //Startwert 2 Leben
         this.totalLifes = this.lifes.length;
-        this.hudRenderer.createLifeHud(this.collectedLifes);
+        this.hudRenderer.LifeHud(this.collectedLifes);
 
 
         //=== ABFRAGEN ===
@@ -427,7 +427,7 @@ export class Controller {
             
                 this.lifesRenderer.showFloatingText("+1", life.x, life.y - 20);
                 this.collectedLifes++;
-                this.hudRenderer.updateLifeHud(this.collectedLifes);
+                this.hudRenderer.LifeHud(this.collectedLifes);
             }
           }
         }
@@ -436,7 +436,7 @@ export class Controller {
         //800 scheint zu funktionieren, später nochmal testen wenn levelaufbau fertig, und verschiedene Bildschirmgrößen lol
         if(this.player.y > 800){
             this.collectedLifes = 0;
-            this.hudRenderer.updateLifeHud(this.collectedLifes);
+            this.hudRenderer.LifeHud(this.collectedLifes);
             console.log("Du bist gestorben! :)");
             this.gameOver();
         }
@@ -460,7 +460,7 @@ export class Controller {
         //this.sound.coinCollected(); 
         //wie kommt amn an die x und y koordinaten - player Koordinaten oder so nehmen
         this.lifesRenderer.showFloatingText("-1", this.player.x, this.player.y - 20);
-        this.hudRenderer.updateLifeHud(this.collectedLifes);
+        this.hudRenderer.LifeHud(this.collectedLifes);
         if(this.collectedLifes <= 0){
             //Message oder spiel neu starten
             console.log("Du bist gestorben! :)");
@@ -542,7 +542,6 @@ export class Controller {
 
         this.gameOverScreenRenderer.hide();
 
-        // Spielzustand resetten
         this.resetLevel();
 
         this.renderer.ticker.start();
@@ -579,7 +578,7 @@ export class Controller {
 
         //herzenanzahl zurück auf 2 
         this.collectedLifes = 2;
-        this.hudRenderer.updateLifeHud(this.collectedLifes);
+        this.hudRenderer.LifeHud(this.collectedLifes);
 
         //eingesammelte Münzen auf 0
         this.collectedCoins = 0;
