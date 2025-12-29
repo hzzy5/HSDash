@@ -52,6 +52,10 @@ export class Player {
     this.x2 = this.x + this.width / 2;
     this.y1 = this.y - this.height;
     this.y2 = this.y;
+
+    //wenn man getroffen wird 3 sek invincible
+    this.invincible = false;
+    this.invincibleTimer = 0;
   }
   
 
@@ -140,6 +144,18 @@ export class Player {
   setWidthAndHeight(width, height) {
     this.width = width;
     this.height = height;
+  }
+
+  //für 3 sek nach einem Treffer unbesiegbar
+  updateInvincibility(dt){
+    if(!this.invincible) return;
+
+    this.invincibleTimer -= dt;
+
+    if(this.invincibleTimer <= 0){
+      this.invincible = false;
+      this.invincibleTimer = 0;
+    }
   }
 
 

@@ -195,6 +195,8 @@ export class Controller {
       this.checkCoinCollection();//Münzeneinsammlung prüfen
       this.checkLifesCollection(); //Lebeneinsammlung prüfen
       this.checkEnemies(dt);
+      this.player.updateInvincibility(dt);
+      this.playerRenderer.setInvincibleBlink(this.player.invincible);
       
       //Hintergrund scrollen
       this.sceneRenderer.scrollBackground(this.cameraRenderer.cameraX);
@@ -448,6 +450,11 @@ export class Controller {
 
     //wenn man getroffen wird Leben updaten
     playerGotHit(){
+        if (this.player.invincible) return;
+
+        this.player.invincible = true;
+        this.player.invincibleTimer = 2;
+
         this.collectedLifes--;
         //Soundeffect - anderen noch suchen
         //this.sound.coinCollected(); 
@@ -473,6 +480,7 @@ export class Controller {
         //alle Spikes durchgehen die auf dem Spielfeld liegen und sehen ob sie berührt wurden
         for (const spike of this.spikes) {
           // Kollision prüfen mit Spikes
+          if (this.player.invincible) continue;
           if (this.collision.collision(this.player, spike)) {
             console.log("Stacheln berührt!");
             this.playerGotHit();
@@ -514,7 +522,12 @@ export class Controller {
             if (this.collision.collisionUp(this.player, gumba)) {
                 console.log("Gumba besiegt!");
                 gumba.dies();
-            }else if(this.collision.collision(this.player, gumba)){
+                continue;
+            }
+        
+            if (this.player.invincible) continue;
+
+            if(this.collision.collision(this.player, gumba)){
                 console.log("Gumba berührt!");
                 this.playerGotHit();
             }

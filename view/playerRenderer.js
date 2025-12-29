@@ -199,5 +199,25 @@ export class PlayerRenderer {
         .stroke({ width: 2, color: 0xff0000 });
     }
 
+    //wenn getroffen, dann blinkt der Player
+    setInvincibleBlink(isInvincible) {
+        //wenn nicht unbesiegbar, dann ganz normal animation lassen, alpha = 1 Animation komplett sichtbar
+        if (!isInvincible) {
+            this.animations.forEach(a => {
+                if (a) a.alpha = 1;
+            });
+            return; //Methode abbrechen
+        }
+        
+        //timer berechnen, alle 100ms wechseln
+        //aktuelle Zeit in Millisekunden durch 100, durch Modulo 2, dann kommt 0 oder 1 raus
+        const blink = Math.floor(performance.now() / 100) % 2;
+    
+        //für jede Animaiton a, bei 1 tranparent (alpha = 0,3) anzeigen, bei 0 normal (alpha = 1)
+        this.animations.forEach(a => {
+            if (a) a.alpha = blink ? 0.3 : 1;
+        });
+    }
+
 
 } //end class
