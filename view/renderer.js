@@ -152,7 +152,8 @@ export class Renderer {
             
             
             //SOUND
-            soundAus: "assets/bilder/MusikAusButton.png"
+            soundAus: "assets/bilder_lvl1/musikbuttonaus.png",
+            soundAn: "assets/bilder_lvl1/musikbuttonan.png"
             //ggf weitere Assets
         };
 

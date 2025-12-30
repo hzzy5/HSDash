@@ -64,6 +64,7 @@ export class Controller {
     //SOUND
     sound;
     buttonMusikAus;
+    musicPlays;
 
     //STARTSCREEN / GAMESTATE
     gameStarted = false;
@@ -109,6 +110,8 @@ export class Controller {
         this.startScreenRenderer.createStartButton(() => {
             this.gameStarted = true; //Spiel ist gestartet
             this.startScreenRenderer.hide();
+            this.sound.backroundMusic();
+            this.musicPlays = true;
             this.renderer.startGameLoop((dt) => this.gameLoop(dt));
         });
 
@@ -131,9 +134,9 @@ export class Controller {
         
         //SoundButton
         this.buttonMusikAus = this.renderer.createSprite("soundAus");
-        this.renderer.renderSprite(this.buttonMusikAus, 20, 10);
-        this.buttonMusikAus.width = window.innerWidth / 8;
-        this.buttonMusikAus.height = window.innerHeight / 10;
+        this.buttonMusikAus.width *= 2.5;
+        this.buttonMusikAus.height *= 2.5;
+        this.renderer.renderSprite(this.buttonMusikAus, 0, 0);
         //damit den Sprite wie einen Button nutzten kann
         //interaktivität sicherstellen
         this.buttonMusikAus.eventMode = "static";
@@ -143,6 +146,8 @@ export class Controller {
         this.buttonMusikAus.on("pointertap", () => {
             console.log("Button wurde angeklickt");
             this.sound.switchOnOff();
+            this.musicPlays = !this.musicPlays;
+            this.changeButtonPicture();
         });
         
       
@@ -611,6 +616,22 @@ export class Controller {
         this.collectedCoins = 0;
         this.collected5Coins = 0;
         this.hudRenderer.updateCoinHud(this.collectedCoins, this.collected5Coins);
+    }
+
+    //wenn Musik Button angeklickt wird das Bild verändert, von "Musik aus" zu "Musik an" oder umgekehrt
+    changeButtonPicture(){
+        if (this.musicPlays){
+            this.buttonMusikAus = this.renderer.createSprite("soundAus");
+            this.buttonMusikAus.width *= 2.5;
+            this.buttonMusikAus.height *= 2.5;
+            this.renderer.renderSprite(this.buttonMusikAus, 0, 0);
+        }else{
+            this.buttonMusikAus = this.renderer.createSprite("soundAn");
+            this.buttonMusikAus.width *= 2.5;
+            this.buttonMusikAus.height *= 2.5;
+            this.renderer.renderSprite(this.buttonMusikAus, 0, 0);
+        }
+
     }
 
     

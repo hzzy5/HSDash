@@ -44,6 +44,16 @@ export class SoundController{
     jump(){
         if(this.shouldSoundBeOn){
             this.jumpsound.play();
+            //falls Hintergrundmusik doch noch nicht beim Start des Levels abgespielt wurde
+            if(!this.musicplaying){
+                this.backroundmusicLevel.play();
+                this.musicplaying = true;
+            }
+        }
+    }
+
+    backroundMusic(){
+        if(this.shouldSoundBeOn){
             if(!this.musicplaying){
                 this.backroundmusicLevel.play();
                 this.musicplaying = true;
@@ -64,6 +74,7 @@ export class SoundController{
             this.backroundmusicLevel.play();
         }else{
             this.jumpsound.pause();
+            this.coincollected.pause();
             this.backroundmusicLevel.pause();
         }
     }
