@@ -7,11 +7,17 @@ export class SoundController{
     //jumpsound
     jumpsound;
 
+    //Player wird getroffen
+    playergotHit;
+
     //Münze eingesammelt
     coincollected;
 
     //5coin eingesammelt
     coin5collected;
+
+    //Leben einsammeln
+    lifecollected;
 
     //hintergrundmusik
     backroundmusicLevel;
@@ -41,6 +47,16 @@ export class SoundController{
 
         this.coin5collected = new Howl({
             src: ["../assets/audio/coin5-collected.mp3"],
+            volume: 0.5
+        });
+
+        this.lifecollected = new Howl({
+            src: ["../assets/audio/life-collected2.mp3"],
+            volume: 0.8
+        });
+
+        this.playergotHit = new Howl({
+            src: ["../assets/audio/player-got-hit2.mp3"],
             volume: 0.5
         });
             
@@ -80,6 +96,20 @@ export class SoundController{
     coin5Collected(){
         if(this.shouldSoundBeOn){
             this.coin5collected.play();
+        
+        }
+    }
+
+    lifeCollected(){
+        if(this.shouldSoundBeOn){
+            this.lifecollected.play();
+        
+        }
+    }
+
+    playerGotHit(){
+        if(this.shouldSoundBeOn){
+            this.playergotHit.play();
         
         }
     }

@@ -474,7 +474,7 @@ export class Controller {
             life.collect(); //auch wenn man 2 hat wird es "eingesammelt", indem es entfernt wird ohne das der Player eins dazu bekommt
             if(this.collectedLifes < 2){
                 //Soundeffect
-                this.sound.coinCollected(); 
+                this.sound.lifeCollected(); 
             
                 this.lifesRenderer.showFloatingText("+1", life.x, life.y - 20);
                 this.collectedLifes++;
@@ -508,8 +508,8 @@ export class Controller {
         this.player.invincibleTimer = 2;
 
         this.collectedLifes--;
-        //Soundeffect - anderen noch suchen
-        //this.sound.coinCollected(); 
+        //Sound effect
+        this.sound.playerGotHit();
         //wie kommt amn an die x und y koordinaten - player Koordinaten oder so nehmen
         this.lifesRenderer.showFloatingText("-1", this.player.x, this.player.y - 20);
         this.hudRenderer.LifeHud(this.collectedLifes);
