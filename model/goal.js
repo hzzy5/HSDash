@@ -7,7 +7,7 @@ export class Goal{
         this.sprite = null;       // wird später vom Renderer gesetzt
 
         //True, wenn das Ziel erreicht wurde
-        this.reached = false;
+        //this.reached = false;
     }
 
     // Update der Hitbox (falls Sprite Position verändert würde)
@@ -18,8 +18,8 @@ export class Goal{
         this.y2 = this.y + this.height;
     }
 
-    //Wenn das Ziel erreicht wurde, wird das Flag auf true gesetzt
-    onReached() {
-        this.reached = true;
-    }
+    // //Wenn das Ziel erreicht wurde, wird das Flag auf true gesetzt
+    // onReached() {
+    //     this.reached = true;
+    // }
 }

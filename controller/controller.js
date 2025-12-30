@@ -660,13 +660,12 @@ export class Controller {
     //=== LEVEL COMPLETED? ============================================================================================
     levelCompleted() {
       if (!this.goal) return;
-      for (const goal of this.goal) {
-        if (this.collision.collision(this.player, goal)) {
-          goal.onReached();
-          
-        }
+      const goal = this.goal[0];
+      
+      //Wenn man das Ziel erreicht hat
+      if (this.collision.collision(this.player, goal)) {
+        this.gameWon();
       }
-      if (this.goal.some(g => g.reached)) this.gameWon(); //da es ein Array ist brauchen wir das some
     }
 
 
@@ -687,7 +686,7 @@ export class Controller {
       this.sound.levelWon();
       this.renderer.ticker.stop();
       this.isGameWin = true;
-      this.gameWinScreenRenderer.show(); //SPÄTER ÄNDERN: SCREEN.HIDE
+      this.gameWinScreenRenderer.show(); 
     }
     
 
