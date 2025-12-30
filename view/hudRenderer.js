@@ -10,8 +10,9 @@ export class HudRenderer {
     }
 
     // HUD: Coin-Anzeige oben rechts
-    createCoinHud(totalCoins) {
-        this.coinHud = new PIXI.Text(`Coins: 0 / ${totalCoins}`, {
+    createCoinHud() {
+        //Text: Anzahl Münzen
+        this.coinHud = new PIXI.Text(`0`, {
             fontFamily: "Press Start 2P",
             fontSize: 22,
             fill: 0xffffff,
@@ -19,16 +20,61 @@ export class HudRenderer {
             strokeThickness: 4
         });
 
-        this.coinHud.x = this.screen.width - 300;
-        this.coinHud.y = 20;
+        this.coinHud.x = this.screen.width - 135;
+        this.coinHud.y = 30;
         this.coinHud.zIndex = 9999;
 
         this.hud.addChild(this.coinHud);
+
+        //Bild von Coin
+        this.coinSprite = PIXI.Sprite.from("coin");
+
+        this.coinSprite.x = this.screen.width - 50;
+        this.coinSprite.y = 40;
+
+        this.coinSprite.anchor.set(0.5);      // Zentriert die Münze
+        this.coinSprite.scale.set(0.15);      // Macht die Münze kleiner 
+        this.coinSprite.zIndex = 900;         // Münze über Player und über Plattform
+
+        this.hud.addChild(this.coinSprite);
+
+        //Anzahl 5Coins
+
+        this.coin5Hud = new PIXI.Text(`0 / 3`, {
+            fontFamily: "Press Start 2P",
+            fontSize: 22,
+            fill: 0xffffff,
+            stroke: 0x000000,
+            strokeThickness: 4
+        });
+
+        this.coin5Hud.x = this.screen.width - 355;
+        this.coin5Hud.y = 30;
+        this.coin5Hud.zIndex = 9999;
+
+        this.hud.addChild(this.coin5Hud);
+
+        //Bild 5Coin
+        this.coin5Sprite = PIXI.Sprite.from("coin5");
+
+        this.coin5Sprite.x = this.screen.width - 185;
+        this.coin5Sprite.y = 40;
+
+        this.coin5Sprite.anchor.set(0.5);      // Zentriert die Münze
+        this.coin5Sprite.scale.set(0.025);      // Macht die Münze kleiner 
+        this.coin5Sprite.zIndex = 900;         // Münze über Player und über Plattform
+
+        this.hud.addChild(this.coin5Sprite);
+
     }
 
-    updateCoinHud(collected, total) {
+    updateCoinHud(coinsCollected, coins5Collected) {
         if (this.coinHud) {
-            this.coinHud.text = `Coins: ${collected} / ${total}`;
+            this.coinHud.text = `${coinsCollected}`;
+        }
+
+        if (this.coin5Hud) {
+            this.coin5Hud.text = `${coins5Collected} / 3`;
         }
     }
 
@@ -55,21 +101,24 @@ export class HudRenderer {
     }
 
     positionHeartSprites(){
+        //Herz 1
         this.heartSprite1.x = window.innerWidth - 50;
-        this.heartSprite1.y = 80;
+        this.heartSprite1.y = 100;
 
         this.heartSprite1.anchor.set(0.5);      // Zentriert die Münze
         this.heartSprite1.scale.set(0.08);      // Macht die Münze kleiner 
         this.heartSprite1.zIndex = 900;         // Münze über Player und über Plattform
 
+        this.hud.addChild(this.heartSprite1);
+
+        //Herz 2
         this.heartSprite2.x = window.innerWidth - 120;
-        this.heartSprite2.y = 80;
+        this.heartSprite2.y = 100;
 
         this.heartSprite2.anchor.set(0.5);      // Zentriert die Münze
         this.heartSprite2.scale.set(0.08);      // Macht die Münze kleiner 
         this.heartSprite2.zIndex = 900;
 
-        this.hud.addChild(this.heartSprite1);
         this.hud.addChild(this.heartSprite2);
     }
 

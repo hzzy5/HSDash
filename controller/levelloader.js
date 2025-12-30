@@ -19,7 +19,7 @@ import { GumbasRenderer } from "../view/gumbasRenderer.js";
 
 export class LevelLoader {
 
-    constructor(renderer, playerRenderer, coinRenderer, lifesRenderer, sceneRenderer, collision, coins, lifes, spikes, spikesRenderer, gumbas, gumbaRenderer) {
+    constructor(renderer, playerRenderer, coinRenderer, lifesRenderer, sceneRenderer, collision, coins, lifes, spikes, spikesRenderer, gumbas, gumbaRenderer, coins5) {
         this.renderer = renderer;
         this.playerRenderer = playerRenderer;
         this.coinRenderer = coinRenderer;
@@ -32,6 +32,7 @@ export class LevelLoader {
         this.collision = collision;
         this.player;
         this.coins = coins;
+        this.coins5 = coins5;
         this.lifes = lifes;
         this.spikes = spikes;
         this.gumbas = gumbas;
@@ -50,6 +51,7 @@ export class LevelLoader {
         this.blocks['#'] = {sx:0, sy:0, collide:true, solid:true, type:"player"}; //player
         this.blocks['x'] = {sx:0, sy:0, collide:true, solid:true, type:"block"}; //block
         this.blocks['o'] = {sx:0, sy:0, collide:false, solid:false, type:"münze"}; //münze
+        this.blocks['5'] = {sx:0, sy:0, collide:false, solid:false, type:"5coin"}; //5Coin
         this.blocks['-'] = {sx:0, sy:0, collide:true, solid:false, type:"block"}; //unsichtbarer Block
         this.blocks['l'] = {sx:0, sy:0, collide:false, solid:false, type:"leben"}; //leben
         this.blocks['s'] = {sx:0, sy:0, collide:true, solid:true, type:"spike"}; //stacheln
@@ -83,6 +85,12 @@ export class LevelLoader {
                     let coin = new Coin(posX, posY);
                     coin.sprite = this.coinRenderer.createCoinSprite(posX, posY);
                     this.coins.push(coin);
+                }
+
+                if (char === '5') {
+                    let coin5 = new Coin(posX, posY);
+                    coin5.sprite = this.coinRenderer.create5CoinSprite(posX, posY);
+                    this.coins5.push(coin5);
                 }
 
                 if (char === '-') {

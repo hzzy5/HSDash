@@ -136,6 +136,7 @@ export class Renderer {
             player: "assets/bilder/player4.png",
             enemy: "assets/bilder/barrier.png",
             coin: "assets/bilder/coin.png",
+            coin5: "assets/bilder/startcoin.jpg",
             life: "assets/bilder/herz.jpg",
             blackheart: "assets/bilder/schwarzesHerz.png",
             spike: "assets/bilder/stacheln2.png",

@@ -12,7 +12,7 @@ export class CoinRenderer {
 
     // Methode, um das Münz-Sprite zu erstellen
     createCoinSprite(x, y) {
-    const sprite = PIXI.Sprite.from("coin");
+        const sprite = PIXI.Sprite.from("coin");
 
       // Position
       sprite.x = x;
@@ -25,6 +25,21 @@ export class CoinRenderer {
       this.world.addChild(sprite);
       return sprite;
     }
+
+    create5CoinSprite(x, y) {
+        const sprite = PIXI.Sprite.from("coin5");
+    
+          // Position
+          sprite.x = x;
+          sprite.y = y;
+    
+          sprite.anchor.set(0.5);      // Zentriert die Münze
+          sprite.scale.set(0.025);      // Macht die Münze kleiner 
+          sprite.zIndex = 900;         // Münze über Player und über Plattform
+    
+          this.world.addChild(sprite);
+          return sprite;
+        }
 
 
     // Kurze Textanzeige, z.B. "+1", wenn ein Coin gesammelt wird – fliegt nach oben

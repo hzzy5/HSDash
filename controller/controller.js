@@ -58,6 +58,7 @@ export class Controller {
     // Collider-Liste (vierecke mit x,y,width,height)
     colliders = []; //Für kollisionen
     coins = [];  // Liste aller Münzen im Level
+    coins5 = []; //Liste aller 5Coins im Level
     lifes = []; //Liste aller Leben die man einsammeln kann im Level
 
     //SOUND
@@ -169,7 +170,8 @@ export class Controller {
         
         this.totalCoins = this.coins.length;  
         this.collectedCoins = 0;
-        this.hudRenderer.createCoinHud(this.totalCoins);
+        this.collected5Coins = 0;
+        this.hudRenderer.createCoinHud();
 
         //=== LEBEN ===
         this.collectedLifes = 2; //Startwert 2 Leben
@@ -405,10 +407,30 @@ export class Controller {
         
             this.coinRenderer.showFloatingText("+1", coin.x, coin.y - 20);
             this.collectedCoins++;
-            this.hudRenderer.updateCoinHud(this.collectedCoins, this.totalCoins);
+            this.hudRenderer.updateCoinHud(this.collectedCoins, this.collected5Coins);
 
           }
         }
+
+        //HIER DIE 5 COINS ERGÄNZEN DIE ES EINZUSAMMELN GIBT, QUASI GENAU WIE OBEN
+
+        for (const coin5 of this.coins5) {
+            if (coin5.collected) continue;
+ 
+           // Kollision prüfen
+           if (this.collision.collision(this.player, coin5)) {
+             console.log("5Coin eingesammelt!");
+             coin5.collect();
+ 
+             //Soundeffect
+             this.sound.coinCollected(); 
+         
+             this.coinRenderer.showFloatingText("+1", coin5.x, coin5.y - 20);
+             this.collected5Coins++;
+             this.hudRenderer.updateCoinHud(this.collectedCoins, this.collected5Coins);
+ 
+           }
+         }
     }
 
     //=== UPDATE LIVES ============================================================================================
@@ -570,6 +592,11 @@ export class Controller {
             coin.sprite.visible = true;
         }
 
+        for (const coin5 of this.coins5) {
+            coin5.collected = false;
+            coin5.sprite.visible = true;
+        }
+
         //herzen alle anzeigen
         for (const life of this.lifes) {
             life.collected = false;
@@ -582,7 +609,8 @@ export class Controller {
 
         //eingesammelte Münzen auf 0
         this.collectedCoins = 0;
-        this.hudRenderer.updateCoinHud(this.collectedCoins, this.totalCoins);
+        this.collected5Coins = 0;
+        this.hudRenderer.updateCoinHud(this.collectedCoins, this.collected5Coins);
     }
 
     
