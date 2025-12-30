@@ -7,6 +7,9 @@ export class SoundController{
     //jumpsound
     jumpsound;
 
+    //wenn der Player dashed
+    playerdash;
+
     //Player wird getroffen
     playergotHit;
 
@@ -24,6 +27,9 @@ export class SoundController{
 
     //Gumba stirbt
     gumbadies;
+
+    //Level gewonnen
+    levelwon;
 
     //hintergrundmusik
     backroundmusicLevel;
@@ -68,12 +74,22 @@ export class SoundController{
 
         this.gumbadies = new Howl({
             src: ["../assets/audio/gumba-dies.mp3"],
-            volume: 0.99
+            volume: 1
         });
 
         this.playerdies = new Howl({
             src: ["../assets/audio/player-death.mp3"],
             volume: 0.7
+        });
+
+        this.levelwon = new Howl({
+            src: ["../assets/audio/level-won.mp3"],
+            volume: 0.7
+        });
+
+        this.playerdash = new Howl({
+            src: ["../assets/audio/player-dash.mp3"],
+            volume: 1
         });
             
 
@@ -140,6 +156,20 @@ export class SoundController{
     gumbaDies(){
         if(this.shouldSoundBeOn){
             this.gumbadies.play();
+        
+        }
+    }
+
+    levelWon(){
+        if(this.shouldSoundBeOn){
+            this.levelwon.play();
+        
+        }
+    }
+
+    playerDash(){
+        if(this.shouldSoundBeOn){
+            this.playerdash.play();
         
         }
     }

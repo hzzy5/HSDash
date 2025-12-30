@@ -298,6 +298,7 @@ export class Controller {
 
       // Wenn Dash angefordert wurde und wir in der Luft sind, starte den Dash (sofern verfügbar)
       if (this.dashRequested) {
+        this.sound.playerDash();
         this.player.dash(dir);
         this.dashRequested = false;
       }
@@ -683,6 +684,7 @@ export class Controller {
     //=== WiN ============================================================================================
     gameWon() {
       console.log("Spiel gewonnen"); 
+      this.sound.levelWon();
       this.renderer.ticker.stop();
       this.isGameWin = true;
       this.gameWinScreenRenderer.show(); //SPÄTER ÄNDERN: SCREEN.HIDE
