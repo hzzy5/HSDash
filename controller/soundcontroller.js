@@ -10,6 +10,9 @@ export class SoundController{
     //Münze eingesammelt
     coincollected;
 
+    //5coin eingesammelt
+    coin5collected;
+
     //hintergrundmusik
     backroundmusicLevel;
 
@@ -17,7 +20,7 @@ export class SoundController{
     musicplaying = false;
 
     async init() {
-        //sound
+        //springen
         this.jumpsound = new Howl({
             src: ["../assets/audio/jump.mp3"],
             volume: 0.5
@@ -26,12 +29,18 @@ export class SoundController{
         //hintergrundmusik
         this.backroundmusicLevel = new Howl({
             src: ["../assets/audio/hintergrundmusik-level.mp3"],
-            volume: 0.5,
+            volume: 0.3,
             loop: true
         });
 
+        //Münze einsammeln
         this.coincollected = new Howl({
             src: ["../assets/audio/coin-recieved.mp3"],
+            volume: 0.5
+        });
+
+        this.coin5collected = new Howl({
+            src: ["../assets/audio/coin5-collected.mp3"],
             volume: 0.5
         });
             
@@ -64,6 +73,13 @@ export class SoundController{
     coinCollected(){
         if(this.shouldSoundBeOn){
             this.coincollected.play();
+        
+        }
+    }
+
+    coin5Collected(){
+        if(this.shouldSoundBeOn){
+            this.coin5collected.play();
         
         }
     }

@@ -452,7 +452,7 @@ export class Controller {
              coin5.collect();
  
              //Soundeffect
-             this.sound.coinCollected(); 
+             this.sound.coin5Collected(); 
          
              this.coinRenderer.showFloatingText("+1", coin5.x, coin5.y - 20);
              this.collected5Coins++;
