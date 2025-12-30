@@ -12,14 +12,18 @@ export class CoinRenderer {
 
     // Methode, um das Münz-Sprite zu erstellen
     createCoinSprite(x, y) {
-        const sprite = PIXI.Sprite.from("coin");
+        //const sprite = PIXI.Sprite.from("coin");
+        const sheet = PIXI.Assets.get('coin').data.animations;
+        const sprite = PIXI.AnimatedSprite.fromFrames(sheet["coin_frame"]); //name der frames
+        sprite.animationSpeed = 1 / 10; 
+        sprite.play();
 
       // Position
       sprite.x = x;
       sprite.y = y;
 
       sprite.anchor.set(0.5);      // Zentriert die Münze
-      sprite.scale.set(0.15);      // Macht die Münze kleiner 
+      sprite.scale.set(2.5);      // Macht die Münze kleiner 
       sprite.zIndex = 900;         // Münze über Player und über Plattform
 
       this.world.addChild(sprite);
@@ -27,14 +31,19 @@ export class CoinRenderer {
     }
 
     create5CoinSprite(x, y) {
-        const sprite = PIXI.Sprite.from("coin5");
+        //const sprite = PIXI.Sprite.from("coin5");
+        const sheet = PIXI.Assets.get('coin5').data.animations;
+        const sprite = PIXI.AnimatedSprite.fromFrames(sheet["fivecoin_frame"]); //name der frames
+        sprite.animationSpeed = 1 / 10; 
+        sprite.play();
+
     
           // Position
           sprite.x = x;
           sprite.y = y;
     
           sprite.anchor.set(0.5);      // Zentriert die Münze
-          sprite.scale.set(0.025);      // Macht die Münze kleiner 
+          sprite.scale.set(3);      // Macht die Münze kleiner 
           sprite.zIndex = 900;         // Münze über Player und über Plattform
     
           this.world.addChild(sprite);

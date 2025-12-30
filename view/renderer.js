@@ -112,14 +112,6 @@ export class Renderer {
         //Objekt mit alias: src
         const assets = {
             //SZENE
-            // background: "assets/bilder/11_background.png",
-            // clouds: "assets/bilder/10_distant_clouds.png",
-            // hill2: "assets/bilder/06_hill2.png",
-            // hill1: "assets/bilder/05_hill1.png",
-            // trees: "assets/bilder/03_distant_trees.png",
-            // //bushes: "assets/bilder/04_bushes.png",
-            // ground: "assets/bilder/01_ground.png",
-
             lampen1: "assets/bilder_lvl1/00_lampen1.png",
             trees: "assets/bilder_lvl1/01_Trees.png",
             ground: "assets/bilder_lvl1/02_Ground.png",
@@ -134,13 +126,17 @@ export class Renderer {
 
             //SPIELELEMENTE
             player: "assets/bilder/player4.png",
-            enemy: "assets/bilder/barrier.png",
-            coin: "assets/bilder/coin.png",
-            coin5: "assets/bilder/startcoin.jpg",
+            //coin: "assets/bilder/coin.png",
+            coin: "assets/bilder/coin_anim.json",
+            coinHUD: "assets/bilder/coin_frame1.png",
+            //coin5: "assets/bilder/startcoin.jpg",
+            coin5: "assets/bilder/fivecoin_anim.json",
+            coin5HUD: "assets/bilder/fivecoin_frame1.png",
             life: "assets/bilder/herz.jpg",
             blackheart: "assets/bilder/schwarzesHerz.png",
             spike: "assets/bilder/stacheln2.png",
             gumba: "assets/bilder/gumba.png",
+            //gumba: "assets/bilder/minidahm_anim.json",
             goalPole: "assets/bilder/ziel.png",
 
             //SPRITESHEETS, JSON
