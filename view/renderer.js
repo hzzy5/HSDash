@@ -141,6 +141,7 @@ export class Renderer {
             blackheart: "assets/bilder/schwarzesHerz.png",
             spike: "assets/bilder/stacheln2.png",
             gumba: "assets/bilder/gumba.png",
+            goalPole: "assets/bilder/ziel.png",
 
             //SPRITESHEETS, JSON
             idleAnimation: "assets/bilder/idleSprite.json",

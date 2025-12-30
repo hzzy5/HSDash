@@ -8,7 +8,15 @@ window.onload = async function() {
     await controller.initController(); //warten bis alles initialisiert ist, bevor man die app startet.
 
     //Damit gleiche Renderer- & Collision - Instanzen genutzt werden
-    let levelloader = new LevelLoader(controller.renderer, controller.playerRenderer, controller.coinRenderer, controller.lifesRenderer, controller.sceneRenderer, controller.collision, controller.coins, controller.lifes, controller.spikes, controller.spikeRenderer, controller.gumbas, controller.gumbaRenderer, controller.coins5); 
+    let levelloader = new LevelLoader(controller.renderer, controller.playerRenderer, 
+                                      controller.sceneRenderer,
+                                      controller.collision,
+                                      controller.coinRenderer, controller.coins, controller.coins5,
+                                      controller.lifesRenderer, controller.lifes, 
+                                      controller.spikeRenderer, controller.spikes, 
+                                      controller.gumbaRenderer, controller.gumbas,
+                                      controller.goalRenderer, controller.goal,); 
+
     await levelloader.loadLevel(levelloader.levels[0]);
     
 
@@ -17,19 +25,6 @@ window.onload = async function() {
     
     //controller.renderer.startGameLoop((dt) => controller.gameLoop(dt));   
     
-
-    // //Test
-    // console.log(window.innerHeight +","+ window.innerWidth);
-    // console.log(controller.collision.collision({x:0,y:0,width:50,height:50},{x:25,y:25,width:50,height:50})); //Collision Funktion funktioniert
-    // console.log("Player Position:", controller.player.x, controller.player.y);
-
-    // console.log("Colliders:", controller.collision.getAllColliders());
-    // console.log("Before move:", controller.player.x, controller.player.y);
- 
-    // console.log("After move:", controller.player.x, controller.player.y);
-    // console.log(controller.playerSprite.height);
-    // console.log(controller.playerSprite.width);
-    // console.log(controller.collision.getAllColliders());
 };
 
 

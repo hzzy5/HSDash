@@ -5,6 +5,7 @@ import { Collision } from "../model/collision.js";
 import { Life } from "../model/life.js";
 import { Spikes } from "../model/spikes.js";
 import { Gumbas } from "../model/gumbas.js";
+import { Goal } from "../model/goal.js";
 
 //VIEW
 import { Renderer } from "../view/renderer.js"; 
@@ -17,7 +18,9 @@ import { StartScreenRenderer } from "../view/startScreenRenderer.js";
 import { LifesRenderer } from "../view/lifesRenderer.js";
 import { SpikesRenderer } from "../view/spikesRenderer.js";
 import { GumbasRenderer } from "../view/gumbasRenderer.js";
+import { GoalRenderer } from "../view/goalRenderer.js";
 import { GameOverScreenRenderer } from "../view/gameOverScreenRenderer.js";
+import { GameWinScreenRenderer } from "../view/gameWinScreenRenderer.js"
 
 
 //CONTROLLER
@@ -36,6 +39,7 @@ export class Controller {
     lifesRenderer;
     spikeRenderer;
     gumbaRenderer;
+    goalRenderer;
 
     //MODEL
     player;
@@ -44,6 +48,8 @@ export class Controller {
     collision;
     spikes = []; //Liste aller Stacheln, die es im Level gibt
     gumbas = []; //Liste aller Gumbas, die es im Level gibt
+    goal = []; //max. 1 Ziel
+
 
     leftBound;
     rightBound;
@@ -72,6 +78,10 @@ export class Controller {
     //GAMEOVERSCREEN / GAMESTATE
     isGameOver = false;
 
+    //WINSCREEN / GAMESTATE
+    isGameWin = false;
+
+
 
      
 
@@ -99,9 +109,12 @@ export class Controller {
         this.lifesRenderer = new LifesRenderer(this.renderer.world, this.renderer.ticker);
         this.spikeRenderer = new SpikesRenderer(this.renderer.world, this.renderer.ticker);
         this.gumbaRenderer = new GumbasRenderer(this.renderer.world, this.renderer.ticker);
+        this.goalRenderer = new GoalRenderer(this.renderer.world);
+
 
         //this.startScreenRenderer = new StartScreenRenderer(this.renderer.ui);
 
+        //STARTSCREEN
         this.startScreenRenderer = new StartScreenRenderer(
           this.renderer.ui,
           this.renderer.screen
@@ -117,6 +130,7 @@ export class Controller {
 
         this.startScreenRenderer.show();
 
+        //GAMEOVER SCREEN
         this.gameOverScreenRenderer = new GameOverScreenRenderer(
             this.renderer.ui,
             this.renderer.screen
@@ -126,6 +140,15 @@ export class Controller {
             this.restartGame();
         });
 
+        //GAMEWIN
+        this.gameWinScreenRenderer = new GameWinScreenRenderer(
+            this.renderer.ui,
+            this.renderer.screen
+        );
+
+        this.gameWinScreenRenderer.createStartButton(() => {
+            this.restartGame(); //HIER METHODE SPÄTER ÄNDERN
+        });
        
 
         //SOUND:
@@ -204,6 +227,7 @@ export class Controller {
       this.checkEnemies(dt);
       this.player.updateInvincibility(dt);
       this.playerRenderer.setInvincibleBlink(this.player.invincible);
+      this.levelCompleted(); //Ziel erreicht?
       
       //Hintergrund scrollen
       this.sceneRenderer.scrollBackground(this.cameraRenderer.cameraX);
@@ -475,6 +499,7 @@ export class Controller {
         }
     }
 
+    //=== PLAYER GETROFFEN ============================================================================================
     //wenn man getroffen wird Leben updaten
     playerGotHit(){
         if (this.player.invincible) return;
@@ -495,14 +520,7 @@ export class Controller {
         }
     }
 
-    gameOver(){
-        this.renderer.ticker.stop();
-
-        this.isGameOver = true; 
-  
-        this.gameOverScreenRenderer.show();
-    }
-
+    //=== CHECK ENEMIES ============================================================================================
     checkEnemies(dt) {
         //alle Spikes durchgehen die auf dem Spielfeld liegen und sehen ob sie berührt wurden
         for (const spike of this.spikes) {
@@ -561,13 +579,15 @@ export class Controller {
           }
 
     }
-
+    
+    //=== RESTART ============================================================================================
     restartGame(){
         console.log("Spiel wird neu gestartet");
 
         this.isGameOver = false;
 
         this.gameOverScreenRenderer.hide();
+        this.gameWinScreenRenderer.hide();
 
         this.resetLevel();
 
@@ -618,6 +638,7 @@ export class Controller {
         this.hudRenderer.updateCoinHud(this.collectedCoins, this.collected5Coins);
     }
 
+    //=== MUSIC BUTTON ============================================================================================
     //wenn Musik Button angeklickt wird das Bild verändert, von "Musik aus" zu "Musik an" oder umgekehrt
     changeButtonPicture(){
         if (this.musicPlays){
@@ -634,6 +655,35 @@ export class Controller {
 
     }
 
+    //=== LEVEL COMPLETED? ============================================================================================
+    levelCompleted() {
+      if (!this.goal) return;
+      for (const goal of this.goal) {
+        if (this.collision.collision(this.player, goal)) {
+          goal.onReached();
+          
+        }
+      }
+      if (this.goal.some(g => g.reached)) this.gameWon(); //da es ein Array ist brauchen wir das some
+    }
+
+
+    //=== GAMEOVER ============================================================================================
+    gameOver(){
+        this.renderer.ticker.stop();
+
+        this.isGameOver = true; 
+  
+        this.gameOverScreenRenderer.show();
+    }
+
+    //=== WiN ============================================================================================
+    gameWon() {
+      console.log("Spiel gewonnen"); 
+      this.renderer.ticker.stop();
+      this.isGameWin = true;
+      this.gameWinScreenRenderer.show(); //SPÄTER ÄNDERN: SCREEN.HIDE
+    }
     
 
 } //end class

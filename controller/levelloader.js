@@ -7,19 +7,21 @@ import { levels } from "../model/levels.js";
 import { Life } from "../model/life.js";
 import { Spikes } from "../model/spikes.js";
 import { Gumbas } from "../model/gumbas.js";
+import { Goal } from "../model/goal.js";
 
 //VIEW
-import { Renderer } from "../view/renderer.js"; 
-import { PlayerRenderer } from "../view/playerRenderer.js";
-import { CoinRenderer } from "../view/coinRenderer.js";
-import { SceneRenderer } from "../view/sceneRenderer.js";
-import { LifesRenderer } from "../view/lifesRenderer.js";
-import { SpikesRenderer } from "../view/spikesRenderer.js";
-import { GumbasRenderer } from "../view/gumbasRenderer.js";
+// import { Renderer } from "../view/renderer.js"; 
+// import { PlayerRenderer } from "../view/playerRenderer.js";
+// import { CoinRenderer } from "../view/coinRenderer.js";
+// import { SceneRenderer } from "../view/sceneRenderer.js";
+// import { LifesRenderer } from "../view/lifesRenderer.js";
+// import { SpikesRenderer } from "../view/spikesRenderer.js";
+// import { GumbasRenderer } from "../view/gumbasRenderer.js";
+//import { GoalRenderer } from "../view/goalRenderer.js";
 
 export class LevelLoader {
 
-    constructor(renderer, playerRenderer, coinRenderer, lifesRenderer, sceneRenderer, collision, coins, lifes, spikes, spikesRenderer, gumbas, gumbaRenderer, coins5) {
+    constructor(renderer, playerRenderer, sceneRenderer, collision, coinRenderer, coins, coins5, lifesRenderer, lifes, spikesRenderer, spikes,  gumbaRenderer, gumbas, goalRenderer, goal) {
         this.renderer = renderer;
         this.playerRenderer = playerRenderer;
         this.coinRenderer = coinRenderer;
@@ -27,40 +29,37 @@ export class LevelLoader {
         this.lifesRenderer = lifesRenderer;
         this.spikesRenderer = spikesRenderer;
         this.gumbaRenderer = gumbaRenderer;
-
+        this.goalRenderer = goalRenderer;
 
         this.collision = collision;
-        this.player;
+        //this.player;
         this.coins = coins;
         this.coins5 = coins5;
         this.lifes = lifes;
         this.spikes = spikes;
         this.gumbas = gumbas;
+        this.goal = goal;
 
         this.levels = levels;
 
         this.TILE_SIZE = 32; //Konstante
 
-        /*  Block Lookup
-            Zeichen aus der Map = Objekt zum Anzeigen
-            - sx ist die Spalte, sy ist die Reihe.
-            - collide: Kann eine Kollision passieren?
-            - solid: Kann der Spieler nicht durch?
+                /*  Block Lookup als Set
+            Zeichen aus der LevelMap = Element zum Anzeigen
         */
-        this.blocks = {};
-        this.blocks['#'] = {sx:0, sy:0, collide:true, solid:true, type:"player"}; //player
-        this.blocks['x'] = {sx:0, sy:0, collide:true, solid:true, type:"block"}; //block
-        this.blocks['o'] = {sx:0, sy:0, collide:false, solid:false, type:"münze"}; //münze
-        this.blocks['5'] = {sx:0, sy:0, collide:false, solid:false, type:"5coin"}; //5Coin
-        this.blocks['-'] = {sx:0, sy:0, collide:true, solid:false, type:"block"}; //unsichtbarer Block
-        this.blocks['l'] = {sx:0, sy:0, collide:false, solid:false, type:"leben"}; //leben
-        this.blocks['s'] = {sx:0, sy:0, collide:true, solid:true, type:"spike"}; //stacheln
-        this.blocks['g'] = {sx:0, sy:0, collide:true, solid:true, type:"gumba"}; //gumbas
+        this.blocks = new Set();
+        this.blocks.add('x'); //block
+        this.blocks.add('o'); //münze
+        this.blocks.add('5'); //5coin
+        this.blocks.add('-'); //unsichtbarer Block
+        this.blocks.add('l'); //leben
+        this.blocks.add('s'); //stacheln
+        this.blocks.add('g'); //gumba
+        this.blocks.add('z'); //Ziel
     }
 
     //Methode, die das Level anhand der Map anzeigt.
     loadLevel(level) {
-        let tile;
         let posX, posY;
         const mapLength = level.map.length; //Anzahl der Zeilen
         for (let y = 0; y < mapLength; y++) { //durch die Zeilen laufen
@@ -68,62 +67,60 @@ export class LevelLoader {
             for (let x = 0; x < row.length; x++) {  //durch die Spalten laufen
                 //Zeichen aus der Map lesen
                 const char = row[x];    
-                const blockInfo = this.blocks[char];
 
-                // ignorieren wenn nicht definiert oder Leerzeichen
-                if (!blockInfo) continue;
+                // ignorieren, wenn es ein nicht definiertes Zeichen ist (auch Leerzeichen!)
+                if (!this.blocks.has(char)) continue;
 
                 posX = x * this.TILE_SIZE;
                 posY = y * this.TILE_SIZE;
 
-                // BLOCK => Kollisionsobjekt + zeichnen
                 if (char === 'x') {
-                    tile = this.renderer.createTile(posX, posY);
+                    let tile = this.renderer.createTile(posX, posY);
+                    this.collision.addCollider(tile);
                 }
 
-                if (char === 'o') {
+                else if (char === 'o') {
                     let coin = new Coin(posX, posY);
                     coin.sprite = this.coinRenderer.createCoinSprite(posX, posY);
                     this.coins.push(coin);
                 }
 
-                if (char === '5') {
+                else if (char === '5') {
                     let coin5 = new Coin(posX, posY);
                     coin5.sprite = this.coinRenderer.create5CoinSprite(posX, posY);
                     this.coins5.push(coin5);
                 }
 
-                if (char === '-') {
-                    tile = this.renderer.createInvisibleTile(posX, posY);
+                else if (char === '-') {
+                    let tile = this.renderer.createInvisibleTile(posX, posY);
+                    this.collision.addCollider(tile);
                 }
                 
-                if (char === 'l') {
+                else if (char === 'l') {
                     let life = new Life(posX, posY);
                     life.sprite = this.lifesRenderer.createLifeSprite(posX, posY);
                     this.lifes.push(life);
                 }
 
-                if (char === 's') {
+                else if (char === 's') {
                     let spike = new Spikes(posX, posY);
                     spike.sprite = this.spikesRenderer.createSpikeSprite(posX, posY);
                     this.spikes.push(spike);
                 }
 
-                if (char === 'g') {
+                else if (char === 'g') {
                     let gumba = new Gumbas(posX, posY);
                     gumba.sprite = this.gumbaRenderer.createGumbaSprite(posX, posY);
                     this.gumbas.push(gumba);
                 }
 
-                
-                if (tile && blockInfo.collide) {
-                    this.collision.addCollider(tile);
+                else if (char === 'z') {
+                    let goalPole = new Goal(posX, posY);
+                    goalPole.sprite = this.goalRenderer.createGoalSprite(goalPole);
+                    this.goal.push(goalPole);
                 }
             }
-            //Block reseten
-            tile = null;
-        }
-            
+        }      
     }
 
 } //end class
