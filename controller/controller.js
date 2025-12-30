@@ -566,6 +566,7 @@ export class Controller {
             // Player Kollision prüfen mit Gumbas
             if (this.collision.collisionUp(this.player, gumba)) {
                 console.log("Gumba besiegt!");
+                this.sound.gumbaDies();
                 gumba.dies();
                 continue;
             }
@@ -673,6 +674,8 @@ export class Controller {
         this.renderer.ticker.stop();
 
         this.isGameOver = true; 
+
+        this.sound.playerDies();
   
         this.gameOverScreenRenderer.show();
     }

@@ -10,6 +10,9 @@ export class SoundController{
     //Player wird getroffen
     playergotHit;
 
+    //player Stirbt
+    playerdies;
+
     //Münze eingesammelt
     coincollected;
 
@@ -18,6 +21,9 @@ export class SoundController{
 
     //Leben einsammeln
     lifecollected;
+
+    //Gumba stirbt
+    gumbadies;
 
     //hintergrundmusik
     backroundmusicLevel;
@@ -57,7 +63,17 @@ export class SoundController{
 
         this.playergotHit = new Howl({
             src: ["../assets/audio/player-got-hit2.mp3"],
-            volume: 0.5
+            volume: 0.8
+        });
+
+        this.gumbadies = new Howl({
+            src: ["../assets/audio/gumba-dies.mp3"],
+            volume: 0.99
+        });
+
+        this.playerdies = new Howl({
+            src: ["../assets/audio/player-death.mp3"],
+            volume: 0.7
         });
             
 
@@ -110,6 +126,20 @@ export class SoundController{
     playerGotHit(){
         if(this.shouldSoundBeOn){
             this.playergotHit.play();
+        
+        }
+    }
+
+    playerDies(){
+        if(this.shouldSoundBeOn){
+            this.playerdies.play();
+        
+        }
+    }
+
+    gumbaDies(){
+        if(this.shouldSoundBeOn){
+            this.gumbadies.play();
         
         }
     }
