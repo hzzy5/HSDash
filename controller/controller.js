@@ -19,6 +19,7 @@ import { LifesRenderer } from "../view/lifesRenderer.js";
 import { SpikesRenderer } from "../view/spikesRenderer.js";
 import { GumbasRenderer } from "../view/gumbasRenderer.js";
 import { GoalRenderer } from "../view/goalRenderer.js";
+import { BlockRenderer } from "../view/blockRenderer.js";
 import { GameOverScreenRenderer } from "../view/gameOverScreenRenderer.js";
 import { GameWinScreenRenderer } from "../view/gameWinScreenRenderer.js"
 
@@ -40,6 +41,7 @@ export class Controller {
     spikeRenderer;
     gumbaRenderer;
     goalRenderer;
+    blockRenderer;
 
     //MODEL
     player;
@@ -110,6 +112,7 @@ export class Controller {
         this.spikeRenderer = new SpikesRenderer(this.renderer.world, this.renderer.ticker);
         this.gumbaRenderer = new GumbasRenderer(this.renderer.world, this.renderer.ticker);
         this.goalRenderer = new GoalRenderer(this.renderer.world);
+        this.blockRenderer = new BlockRenderer(this.renderer.world);
 
 
         //this.startScreenRenderer = new StartScreenRenderer(this.renderer.ui);

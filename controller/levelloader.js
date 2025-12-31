@@ -17,11 +17,12 @@ import { Goal } from "../model/goal.js";
 // import { LifesRenderer } from "../view/lifesRenderer.js";
 // import { SpikesRenderer } from "../view/spikesRenderer.js";
 // import { GumbasRenderer } from "../view/gumbasRenderer.js";
-//import { GoalRenderer } from "../view/goalRenderer.js";
+// import { GoalRenderer } from "../view/goalRenderer.js";
+
 
 export class LevelLoader {
 
-    constructor(renderer, playerRenderer, sceneRenderer, collision, coinRenderer, coins, coins5, lifesRenderer, lifes, spikesRenderer, spikes,  gumbaRenderer, gumbas, goalRenderer, goal) {
+    constructor(renderer, playerRenderer, sceneRenderer, collision, coinRenderer, coins, coins5, lifesRenderer, lifes, spikesRenderer, spikes,  gumbaRenderer, gumbas, goalRenderer, goal, blockRenderer) {
         this.renderer = renderer;
         this.playerRenderer = playerRenderer;
         this.coinRenderer = coinRenderer;
@@ -30,6 +31,7 @@ export class LevelLoader {
         this.spikesRenderer = spikesRenderer;
         this.gumbaRenderer = gumbaRenderer;
         this.goalRenderer = goalRenderer;
+        this.blockRenderer = blockRenderer
 
         this.collision = collision;
         //this.player;
@@ -75,8 +77,8 @@ export class LevelLoader {
                 posY = y * this.TILE_SIZE;
 
                 if (char === 'x') {
-                    let tile = this.renderer.createTile(posX, posY);
-                    this.collision.addCollider(tile);
+                    let tile = this.blockRenderer.createTile(posX, posY, "brownStone");
+                    if (tile) this.collision.addCollider(tile);
                 }
 
                 else if (char === 'o') {
@@ -92,8 +94,8 @@ export class LevelLoader {
                 }
 
                 else if (char === '-') {
-                    let tile = this.renderer.createInvisibleTile(posX, posY);
-                    this.collision.addCollider(tile);
+                    let tile = this.blockRenderer.createInvisibleTile(posX, posY);
+                    if (tile) this.collision.addCollider(tile);
                 }
                 
                 else if (char === 'l') {

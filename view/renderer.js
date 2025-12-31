@@ -67,45 +67,6 @@ export class Renderer {
         sprite.y = y;
     }
 
-    //Methode um ein 32x32-Tile zu erzeugen. 
-    createTile(x, y, fillColor = 0x8a4513, borderColor = 0x000000, borderWidth = 2) {
-        //Ins Bild passen 48x25 Tiles
-        const tileX = VIRTUAL_WIDTH / TILE_SIZE;
-        const tileY = VIRTUAL_HEIGHT / TILE_SIZE;
-
-        const gfx = new PIXI.Graphics();
-        gfx.beginFill(fillColor);           //Rechteck
-        gfx.drawRect(0, 0, TILE_SIZE, TILE_SIZE);
-        gfx.endFill();
-
-        gfx.lineStyle(borderWidth, borderColor);    //Umrandung
-        gfx.drawRect(0, 0, TILE_SIZE, TILE_SIZE);
-        gfx.endFill();
-
-        gfx.x = x;
-        gfx.y = y;
-        
-        this.world.addChild(gfx);
-        
-        return { x, y, width: TILE_SIZE, height: TILE_SIZE};
-    }
-
-    //Methode um ein unsichtbaren 32x32-Tile zu erzeugen. 
-    createInvisibleTile(x, y) {
-        //Ins Bild passen 48x25 Tiles
-        const tileX = VIRTUAL_WIDTH / TILE_SIZE;
-        const tileY = VIRTUAL_HEIGHT / TILE_SIZE;
-
-        const gfx = new PIXI.Graphics();
-
-        gfx.x = x;
-        gfx.y = y;
-        
-        this.world.addChild(gfx);
-        
-        return { x, y, width: TILE_SIZE, height: TILE_SIZE};
-    }
-
 
     //Methode, um die Assets zu preloaden
     async loadAssets() {
