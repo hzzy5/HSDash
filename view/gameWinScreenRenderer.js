@@ -32,7 +32,7 @@ export class GameWinScreenRenderer {
         // OVERLAY
         // =========================
         const overlay = new PIXI.Graphics();
-        overlay.beginFill(0xff1a2a, 0.55);
+        overlay.beginFill(0x005000, 0.55);
         overlay.drawRect(0, 0, window.innerWidth, window.innerHeight);
         overlay.endFill();
         this.container.addChild(overlay);
@@ -56,7 +56,7 @@ export class GameWinScreenRenderer {
             fontSize: 42,
             fill: 0xffffff,
             dropShadow: true,
-            dropShadowColor: 0xff0000,
+            dropShadowColor: 0x00ff00,
             dropShadowBlur: 8,
             dropShadowDistance: 4
         });
