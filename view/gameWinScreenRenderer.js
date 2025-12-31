@@ -2,10 +2,11 @@ import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs
 
 export class GameWinScreenRenderer {
 
-    constructor(uiContainer) {
+    constructor(uiContainer,screen, coins5) {
         // UI-Container von außen
         this.ui = uiContainer;
         this.screen = screen;
+        this.collected5Coins = coins5;
 
         // eigener Startscreen-Container
         this.container = new PIXI.Container();
@@ -51,7 +52,7 @@ export class GameWinScreenRenderer {
         titleContainer.addChild(titleBg);
 
         // Titel-Text
-        const titleText = new PIXI.Text("GAME WON", {
+        const titleText = new PIXI.Text("YOU WIN!", {
             fontFamily: "Press Start 2P",
             fontSize: 42,
             fill: 0xffffff,
@@ -69,6 +70,38 @@ export class GameWinScreenRenderer {
         // Titel-Position
         titleContainer.x = window.innerWidth / 2 - 230;
         titleContainer.y = window.innerHeight / 2 - 140;
+
+
+        // =========================
+        // STARCOIN ANZEIGE
+        // =========================
+        //Anzahl der eingesammelten starcoins 
+        //Texturen vorbereiten
+        const coinFilledTex = PIXI.Texture.from("coin5HUD");
+        const coinEmptyTex = PIXI.Texture.from("coin5empty");
+
+        //Coins erzeugen: Wenn Index größer der eingesammelten Münzen ist, 5Coin anzeigen, sonst leer.
+        let coin1 = new PIXI.Sprite(this.collected5Coins >= 1 ? coinFilledTex : coinEmptyTex);
+        let coin2 = new PIXI.Sprite(this.collected5Coins >= 2 ? coinFilledTex : coinEmptyTex);
+        let coin3 = new PIXI.Sprite(this.collected5Coins >= 3 ? coinFilledTex : coinEmptyTex);
+
+        //Anker und Scale
+        [coin1, coin2, coin3].forEach((coin, i) => {
+            coin.anchor.set(0.5);
+            coin.scale.set(i === 1 ? 5.5 : 4); //Wenn es die zweite Münze ist um 5.5 skalieren, sonst 4. 
+            coin.zIndex = 900;
+        });
+
+        //Container hinzufügen
+        titleContainer.addChild(coin1, coin2, coin3);
+
+        //Position relativ zum Container setzen
+        coin1.x = 125; //links
+        coin1.y = -50;
+        coin2.x = 230; //mitte
+        coin2.y = -75;
+        coin3.x = 335; //rechts
+        coin3.y = -50;
 
 
         // =========================
@@ -125,4 +158,10 @@ export class GameWinScreenRenderer {
             onStart();
         });
     }
-}
+
+    //Methode, um die eingesammelten Starcoins abzufragen
+    getCollected5Coins(coins) {
+        this.collected5Coins = coins;
+    }
+
+} //end class

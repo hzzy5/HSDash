@@ -93,6 +93,7 @@ export class Renderer {
             //coin5: "assets/bilder/startcoin.jpg",
             coin5: "assets/bilder/fivecoin_anim.json",
             coin5HUD: "assets/bilder/fivecoin_frame1.png",
+            coin5empty: "assets/bilder/fivecoin_frame1_empty.png",
             life: "assets/bilder/herz.jpg",
             blackheart: "assets/bilder/schwarzesHerz.png",
             spike: "assets/bilder/stacheln2.png",

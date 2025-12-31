@@ -146,12 +146,14 @@ export class Controller {
         //GAMEWIN
         this.gameWinScreenRenderer = new GameWinScreenRenderer(
             this.renderer.ui,
-            this.renderer.screen
+            this.renderer.screen,
+            this.collected5Coins
         );
 
-        this.gameWinScreenRenderer.createStartButton(() => {
-            this.restartGame(); //HIER METHODE SPÄTER ÄNDERN
-        });
+        // this.gameWinScreenRenderer.createStartButton(() => {
+        //     this.restartGame(); //HIER METHODE SPÄTER ÄNDERN
+        // });
+        
        
 
         //SOUND:
@@ -195,10 +197,6 @@ export class Controller {
         // this.rightBound = this.sceneRenderer.createBound(this.rightBound.x, this.rightBound.y, this.rightBound.width, this.rightBound.height);
 
         //=== MÜNZEN ===
-        const coin1 = new Coin(300, window.innerHeight - 350, 32, 32);
-        coin1.sprite = this.coinRenderer.createCoinSprite(coin1.x, coin1.y);
-        this.coins.push(coin1);
-        
         this.totalCoins = this.coins.length;  
         this.collectedCoins = 0;
         this.collected5Coins = 0;
@@ -460,6 +458,7 @@ export class Controller {
          
              this.coinRenderer.showFloatingText("+1", coin5.x, coin5.y - 20);
              this.collected5Coins++;
+             this.gameWinScreenRenderer.getCollected5Coins(this.collected5Coins); //für die Anzeige beim Endscreen
              this.hudRenderer.updateCoinHud(this.collectedCoins, this.collected5Coins);
  
            }
@@ -685,9 +684,18 @@ export class Controller {
 
     //=== WiN ============================================================================================
     gameWon() {
+      //Endscreen erzeugen
+      this.gameWinScreenRenderer.createStartButton(() => {
+            this.restartGame(); //HIER METHODE SPÄTER ÄNDERN
+      });
+
       console.log("Spiel gewonnen"); 
+
       this.sound.levelWon();
+
       this.renderer.ticker.stop();
+      
+      //Screen anzeigen lassen 
       this.isGameWin = true;
       this.gameWinScreenRenderer.show(); 
     }
