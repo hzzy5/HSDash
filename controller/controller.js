@@ -436,7 +436,7 @@ export class Controller {
             //Soundeffect
             this.sound.coinCollected(); 
         
-            this.coinRenderer.showFloatingText("+1", coin.x, coin.y - 20);
+            this.coinRenderer.showFloatingTextForCoin("+1", coin.x, coin.y - 20);
             this.collectedCoins++;
             this.hudRenderer.updateCoinHud(this.collectedCoins, this.collected5Coins);
 
@@ -456,7 +456,7 @@ export class Controller {
              //Soundeffect
              this.sound.coin5Collected(); 
          
-             this.coinRenderer.showFloatingText("+1", coin5.x, coin5.y - 20);
+             this.coinRenderer.showFloatingTextFor5Coin("+1", coin5.x, coin5.y - 20);
              this.collected5Coins++;
              this.gameWinScreenRenderer.getCollected5Coins(this.collected5Coins); //für die Anzeige beim Endscreen
              this.hudRenderer.updateCoinHud(this.collectedCoins, this.collected5Coins);

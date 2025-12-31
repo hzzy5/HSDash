@@ -52,10 +52,41 @@ export class CoinRenderer {
 
 
     // Kurze Textanzeige, z.B. "+1", wenn ein Coin gesammelt wird – fliegt nach oben
-    showFloatingText(msg, x, y) {
+    showFloatingTextForCoin(msg, x, y) {
         const t = new PIXI.Text(msg, {
             fill: 0xffff00,
             fontSize: 32,
+            fontWeight: "bold",
+            fontFamily: "Press Start 2P"
+        });
+
+        t.x = x;
+        t.y = y;
+        t.zIndex = 1000;
+        this.world.addChild(t);
+
+        let life = 30; // ca. 30 Frames
+
+        const update = () => {
+            t.y -= 1;        // nach oben fliegen
+            t.alpha -= 0.03; // langsam ausblenden
+            life--;
+
+            if (life <= 0) {
+                this.ticker.remove(update);    // aus dem Ticker entfernen
+                this.world.removeChild(t);
+                t.destroy();
+            }
+        };
+
+        this.ticker.add(update);
+    }
+
+    //Dasselbe für 5Coins
+    showFloatingTextFor5Coin(msg, x, y) {
+        const t = new PIXI.Text(msg, {
+            fill: 0x5ed2ff,
+            fontSize: 38,
             fontWeight: "bold",
             fontFamily: "Press Start 2P"
         });
