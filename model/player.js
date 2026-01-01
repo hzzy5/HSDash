@@ -11,6 +11,9 @@ export class Player {
     this.x = _x;
     this.y = _y;
 
+    //Auswahl zwischen zwei Charakteren
+    this.characterId = null; 
+
     // Default Größe (responsive relativ zur Fensterhöhe)
     const refH = (typeof window !== 'undefined' && window.innerHeight) ? window.innerHeight : 800;
     const scale = refH / 800; // Basis-Referenzhöhe 800px
@@ -123,11 +126,6 @@ export class Player {
     this.y2 = this.y;
   } 
 
-  //Methode, die die x-Position zurückgibt. Unnötig??
-  getPositionX() {
-    return this.x;
-  }
-
   //Methode, die den Zustand eines Spielers setzt, z.B. idle, run, jump, ...
   setState(newState) {
     if( this.state !== newState ) {
@@ -145,6 +143,11 @@ export class Player {
     this.width = width;
     this.height = height;
   }
+
+  //Methode, die die CharacterID setzt - je nach dem für welchen Character sich der Spieler entscheidet.
+   setCharacter(characterId) {
+        this.characterId = characterId;
+    }
 
   //für 3 sek nach einem Treffer unbesiegbar
   updateInvincibility(dt){

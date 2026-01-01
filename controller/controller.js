@@ -22,6 +22,7 @@ import { GoalRenderer } from "../view/goalRenderer.js";
 import { BlockRenderer } from "../view/blockRenderer.js";
 import { GameOverScreenRenderer } from "../view/gameOverScreenRenderer.js";
 import { GameWinScreenRenderer } from "../view/gameWinScreenRenderer.js"
+import { CharacterSelectRederer } from "../view/characterSelectRenderer.js";
 
 
 //CONTROLLER
@@ -42,6 +43,7 @@ export class Controller {
     gumbaRenderer;
     goalRenderer;
     blockRenderer;
+    characterSelectRenderer;
 
     //MODEL
     player;
@@ -91,7 +93,7 @@ export class Controller {
     //methode um das ganze Spiel zu initialisieren. Hier werden die Methoden aus der View usw aufgerufen. 
     async initController() {
         //MODEL:
-        this.player = new Player("Spieler1", 100, 100);
+        this.player = new Player("Spieler1", 100, -100); //player fällt von oben
         this.collision = new Collision();
 
         //VIEW:
@@ -122,16 +124,36 @@ export class Controller {
           this.renderer.ui,
           this.renderer.screen
         );
+        
+        //Startscreen sofort anzeigen
+        this.startScreenRenderer.show();
 
-        this.startScreenRenderer.createStartButton(() => {
+        //SELECT CHARACTER SCREEN
+        this.characterSelectRenderer = new CharacterSelectRederer(
+          this.renderer.ui, 
+          this.renderer.screen
+        );
+
+        //SPIEL STARTEN, wenn auf den Button geklickt wird
+        this.startScreenRenderer.createStartButton(() => { 
+          this.startScreenRenderer.hide();
+          //Wechseln zum Charakterauswahl Screen
+          this.characterSelectRenderer.show();
+
+          //Wenn der Spieler einen Charakter ausgewählt hat
+          this.characterSelectRenderer.createButton(() => {
             this.gameStarted = true; //Spiel ist gestartet
-            this.startScreenRenderer.hide();
+          
+            this.characterSelectRenderer.hide();
+
             this.sound.backroundMusic();
             this.musicPlays = true;
+            
             this.renderer.startGameLoop((dt) => this.gameLoop(dt));
+          });
         });
-
-        this.startScreenRenderer.show();
+        
+      
 
         //GAMEOVER SCREEN
         this.gameOverScreenRenderer = new GameOverScreenRenderer(
@@ -143,6 +165,7 @@ export class Controller {
             this.restartGame();
         });
 
+        
         //GAMEWIN
         this.gameWinScreenRenderer = new GameWinScreenRenderer(
             this.renderer.ui,
@@ -150,11 +173,7 @@ export class Controller {
             this.collected5Coins
         );
 
-        // this.gameWinScreenRenderer.createStartButton(() => {
-        //     this.restartGame(); //HIER METHODE SPÄTER ÄNDERN
-        // });
-        
-       
+
 
         //SOUND:
         this.sound = new SoundController(); //SoundController initialisieren 
@@ -419,7 +438,7 @@ export class Controller {
         }
       }
 
-      this.playerRenderer.renderPlayer(this.player.x, this.player.y, this.player.x1, this.player.y1, this.player.width, this.player.height); //player rendern
+      this.playerRenderer.renderPlayer(this.player.x, this.player.y); //player rendern
       this.playerRenderer.updatePlayerAnimation(this.player.getState(), this.player.facing); //Player-animation abspielen
     }
 
@@ -685,7 +704,7 @@ export class Controller {
     //=== WiN ============================================================================================
     gameWon() {
       //Endscreen erzeugen
-      this.gameWinScreenRenderer.createStartButton(() => {
+      this.gameWinScreenRenderer.createButton(() => {
             this.restartGame(); //HIER METHODE SPÄTER ÄNDERN
       });
 

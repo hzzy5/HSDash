@@ -86,7 +86,10 @@ export class Renderer {
 
 
             //SPIELELEMENTE
-            player: "assets/bilder/player4.png",
+            //player: "assets/bilder/player4.png",
+            sebastian: "assets/bilder_lvl1/playermodel.png",
+            dennis: "assets/bilder_lvl1/playermodel2.png",
+
             //coin: "assets/bilder/coin.png",
             coin: "assets/bilder/coin_anim.json",
             coinHUD: "assets/bilder/coin_frame1.png",

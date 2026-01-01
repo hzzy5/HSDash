@@ -29,6 +29,15 @@ export class StartScreenRenderer {
     createStartButton(onStart) {
 
         // =========================
+        // OVERLAY
+        // =========================
+        const overlay = new PIXI.Graphics();
+        overlay.beginFill(0x0b1a2a, 0.55);
+        overlay.drawRect(0, 0, window.innerWidth, window.innerHeight);
+        overlay.endFill();
+        this.container.addChild(overlay);
+
+        // =========================
         // TITEL CONTAINER
         // =========================
         const titleContainer = new PIXI.Container();
@@ -42,7 +51,7 @@ export class StartScreenRenderer {
         titleContainer.addChild(titleBg);
 
         // Titel-Text
-        const titleText = new PIXI.Text("HSD RUN", {
+        const titleText = new PIXI.Text("HSDash", {
             fontFamily: "Press Start 2P",
             fontSize: 42,
             fill: 0xffffff,
@@ -61,15 +70,7 @@ export class StartScreenRenderer {
         titleContainer.x = window.innerWidth / 2 - 230;
         titleContainer.y = window.innerHeight / 2 - 140;
 
-        // =========================
-        // OVERLAY
-        // =========================
-        const overlay = new PIXI.Graphics();
-        overlay.beginFill(0x0b1a2a, 0.55);
-        overlay.drawRect(0, 0, window.innerWidth, window.innerHeight);
-        overlay.endFill();
-        this.container.addChild(overlay);
-
+        
         // =========================
         // START BUTTON CONTAINER
         // =========================

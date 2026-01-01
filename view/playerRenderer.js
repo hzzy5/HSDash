@@ -26,7 +26,7 @@ export class PlayerRenderer {
     }
 
     //Metehode, um das Sprite zu positioniert
-    renderPlayer(x, y, x1, y1, w, h) {
+    renderPlayer(x, y) {
         if(this.currentAnimation) {
             this.currentAnimation.position.set(x,y);
         }

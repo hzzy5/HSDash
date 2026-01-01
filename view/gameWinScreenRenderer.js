@@ -27,7 +27,7 @@ export class GameWinScreenRenderer {
         this.container.visible = false;
     }
 
-    createStartButton(onStart) {
+    createButton(onStart) {
 
         // =========================
         // OVERLAY
