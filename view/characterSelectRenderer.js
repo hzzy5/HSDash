@@ -215,13 +215,12 @@ export class CharacterSelectRederer {
 
         // Click-Event
         playerFrame1.on("pointertap", () => {
-            onSelect();
+            onSelect("sebastian"); //Player1 ausgewählt
         });
 
         playerFrame2.on("pointertap", () => {
-            onSelect();
+            onSelect("dennis"); //Player2 ausgewählt
         });
-
     }
 
 } //end class

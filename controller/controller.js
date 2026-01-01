@@ -47,6 +47,7 @@ export class Controller {
 
     //MODEL
     player;
+    selectedPlayer;
     enemy;
     enemySprite;
     collision;
@@ -141,7 +142,9 @@ export class Controller {
           this.characterSelectRenderer.show();
 
           //Wenn der Spieler einen Charakter ausgewählt hat
-          this.characterSelectRenderer.createButton(() => {
+          this.characterSelectRenderer.createButton((selectedPlayer) => {
+            this.setPlayer(selectedPlayer);
+            this.selectedPlayer = selectedPlayer; //Auswahl speichern
             this.gameStarted = true; //Spiel ist gestartet
           
             this.characterSelectRenderer.hide();
@@ -165,7 +168,7 @@ export class Controller {
             this.restartGame();
         });
 
-        
+
         //GAMEWIN
         this.gameWinScreenRenderer = new GameWinScreenRenderer(
             this.renderer.ui,
@@ -284,6 +287,17 @@ export class Controller {
     }
 
     
+
+    //=== UPDATE PLAYER ============================================================================================
+    setPlayer(selected) {
+      this.selectedPlayer = selected; //controller
+      this.player.characterId = selected; //model
+      this.playerRenderer.setCharacter(selected); //view
+      
+      console.log(this.selectedPlayer); //funktioniert
+      console.log(this.player.characterId);
+    }
+
     //=== UPDATE PLAYER ============================================================================================
     // Wird vom Renderer-Ticker mit dt (Sekunden) aufgerufen
     updatePlayer(dt) {

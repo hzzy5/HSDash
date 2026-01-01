@@ -18,11 +18,33 @@ export class PlayerRenderer {
         this.animations = null;
         //Aktuelle Animation
         this.currentAnimation = null;
+        //Player, der ausgewählt wurde
+        this.characterId
 
          this.hitboxDebug = new PIXI.Graphics();
          this.hitboxDebug.zIndex = 9999;
          this.world.sortableChildren = true;
          this.world.addChild(this.hitboxDebug);
+
+        this.CHARACTER_ANIMATIONS = {
+            sebastian: {
+                idle: "sebastian_idleRight",
+                walk: "sebastian_walkRight",
+                run: "sebastian_runRight",
+                jump: "sebastian_jumpRight",
+                fall: "sebastian_fallRight",
+                dash: "sebastian_dashRight"
+            },
+
+            dennis: {
+                idle: "dennis_idleRight",
+                walk: "dennis_walkRight",
+                run: "dennis_runRight",
+                jump: "dennis_jumpRight",
+                fall: "dennis_fallRight",
+                dash: "dennis_dashRight"
+            }
+        };
     }
 
     //Metehode, um das Sprite zu positioniert
@@ -48,6 +70,11 @@ export class PlayerRenderer {
         //^^ this ist hier das app-Objekt
 
         return sprite;
+    }
+
+    setCharacter(characterId) {
+        this.characterId = characterId;
+        console.log(this.characterId);
     }
 
     //Methode, die alle Animationen lädt
