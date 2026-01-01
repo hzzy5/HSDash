@@ -89,6 +89,7 @@ export class Renderer {
             //player: "assets/bilder/player4.png",
             sebastian: "assets/bilder_lvl1/playermodel.png",
             dennis: "assets/bilder_lvl1/playermodel2.png",
+            blueFrame: "assets/bilder/rahmen.png",
 
             //coin: "assets/bilder/coin.png",
             coin: "assets/bilder/coin_anim.json",

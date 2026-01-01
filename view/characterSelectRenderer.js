@@ -84,7 +84,7 @@ export class CharacterSelectRederer {
         //Hintergrund und Player erstellen
         //1
         const bg1 = new PIXI.Graphics();
-        bg1.beginFill(0x49a5f9); 
+        bg1.beginFill(0x1790ff); 
         bg1.drawRect(0, 0, 200, 300); 
         bg1.endFill();
         playerFrame1.addChild(bg1);
@@ -92,13 +92,13 @@ export class CharacterSelectRederer {
         const player1 = PIXI.Sprite.from("sebastian");
         player1.anchor.set(0.5);
         player1.scale.set(4);
-        player1.x = 100; //innerhalb playerFrame1
-        player1.y = 150;
+        player1.x = bg1.width / 2; //innerhalb playerFrame1
+        player1.y = bg1.height / 2;
         playerFrame1.addChild(player1);
 
         //2
         const bg2 = new PIXI.Graphics();
-        bg2.beginFill(0x49a5f9); 
+        bg2.beginFill(0x1790ff); 
         bg2.drawRect(0, 0, 200, 300); 
         bg2.endFill();
         playerFrame2.addChild(bg2);
@@ -106,14 +106,29 @@ export class CharacterSelectRederer {
         const player2 = PIXI.Sprite.from("dennis");
         player2.anchor.set(0.5);
         player2.scale.set(3.6);
-        player2.x = 100; //innerhalb playerFrame2
-        player2.y = 150;
+        player2.x = bg2.width / 2; //innerhalb playerFrame2
+        player2.y = bg2.height / 2;
         playerFrame2.addChild(player2);
 
         playerFrame1.x = window.innerWidth / 2 - 250;
-        playerFrame1.y = window.innerHeight / 2 - 150;
+        playerFrame1.y = window.innerHeight / 2 - 100;
         playerFrame2.x = window.innerWidth / 2 + 50;
-        playerFrame2.y = window.innerHeight / 2 - 150;
+        playerFrame2.y = window.innerHeight / 2 - 100;
+
+        //Hover Frame
+        const blueFrame1 = PIXI.Sprite.from("blueFrame");
+        blueFrame1.anchor.set(0.5);
+        blueFrame1.scale.set(0.6);
+        blueFrame1.x = 100; //innerhalb playerFrame2
+        blueFrame1.y = 159;
+        
+
+        const blueFrame2 = PIXI.Sprite.from("blueFrame");
+        blueFrame2.anchor.set(0.5);
+        blueFrame2.scale.set(0.6);
+        blueFrame2.x = 100; //innerhalb playerFrame2
+        blueFrame2.y = 159;
+        
 
         // =========================
         // PLAYER BUTTONS
@@ -127,31 +142,74 @@ export class CharacterSelectRederer {
         
         // Hover-Effekt
         playerFrame1.on("pointerover", () => {
-            // btn.clear();
-            // btn.beginFill(0x999999, 1);
-            // btn.drawRoundedRect(0, 0, 260, 70, 14);
-            // btn.endFill();
+            //Hintergrund ändern, später ggf Animation??
+            bg1.clear();
+            bg1.beginFill(0x8dc8ff); 
+            bg1.drawRect(0, 0, 200, 300); 
+            bg1.endFill();
+
+
+            //Vergrößern
+            playerFrame1.scale.set(1.15);
+            playerFrame1.x = window.innerWidth / 2 - 265;
+            playerFrame1.y = window.innerHeight / 2 - 130;
+         
+            //Frame hinzufügen
+            playerFrame1.addChildAt(blueFrame1, 1);
+
         });
 
-        playerFrame2.on("pointerover", () => {
-            // btn.clear();
-            // btn.beginFill(0x999999, 1);
-            // btn.drawRoundedRect(0, 0, 260, 70, 14);
-            // btn.endFill();
-        });
-        
         playerFrame1.on("pointerout", () => {
-            // btn.clear();
-            // btn.beginFill(0x333333, 0.9);
-            // btn.drawRoundedRect(0, 0, 260, 70, 14);
-            // btn.endFill();
+            //Player bild zurücksetzen
+
+            //Hintergrund zurücksetzen
+            bg1.beginFill(0x1790ff); 
+            bg1.drawRect(0, 0, 200, 300); 
+            bg1.endFill();
+
+            //Skalierung zurücksetzen
+            playerFrame1.scale.set(1);
+            playerFrame1.x = window.innerWidth / 2 - 250;
+            playerFrame1.y = window.innerHeight / 2 - 100;
+        
+            //Blauen Rahmen entfernen
+            playerFrame1.removeChild(blueFrame1);
+        });
+
+
+        playerFrame2.on("pointerover", () => {
+            //Hintergrund ändern, später ggf Animation??
+            bg2.clear();
+            bg2.beginFill(0x8dc8ff); 
+            bg2.drawRect(0, 0, 200, 300); 
+            bg2.endFill();
+
+            //Vergrößern
+            playerFrame2.scale.set(1.15);
+            playerFrame2.x = window.innerWidth / 2 + 35;
+            playerFrame2.y = window.innerHeight / 2 - 130;
+         
+            //Frame hinzufügen
+            playerFrame2.addChildAt(blueFrame2, 1);
+            
         });
 
         playerFrame2.on("pointerout", () => {
-            // btn.clear();
-            // btn.beginFill(0x333333, 0.9);
-            // btn.drawRoundedRect(0, 0, 260, 70, 14);
-            // btn.endFill();
+            //Player bild zurücksetzen
+
+            //Hintergrund zurücksetzen
+            bg2.beginFill(0x1790ff); 
+            bg2.drawRect(0, 0, 200, 300); 
+            bg2.endFill();
+
+            //Vergrößern
+            playerFrame2.scale.set(1);
+            playerFrame2.x = window.innerWidth / 2 + 50;
+            playerFrame2.y = window.innerHeight / 2 - 100;
+            
+            //Blauen Rahmen entfernen
+            playerFrame2.removeChild(blueFrame2);
+            
         });
 
 
