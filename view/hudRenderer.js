@@ -11,6 +11,20 @@ export class HudRenderer {
 
     // HUD: Coin-Anzeige oben rechts
     createCoinHud() {
+        // ==================
+        // COIN HUD       ===
+        // ==================
+        //Background
+        const coinContainer = new PIXI.Container();
+        this.hud.addChild(coinContainer);
+
+        const bg = new PIXI.Graphics();
+        bg.beginFill(0xffffff, 0.55);
+        bg.drawRoundedRect(this.screen.width - 210, 17, 230, 50, 52);
+        bg.endFill();
+        coinContainer.addChild(bg);
+
+
         //Text: Anzahl Münzen
         this.coinHud = new PIXI.Text(`0`, {
             fontFamily: "Press Start 2P",
@@ -24,22 +38,35 @@ export class HudRenderer {
         this.coinHud.y = 30;
         this.coinHud.zIndex = 9999;
 
-        this.hud.addChild(this.coinHud);
+        coinContainer.addChild(this.coinHud);
 
         //Bild von Coin
         this.coinSprite = PIXI.Sprite.from("coinHUD");
 
-        this.coinSprite.x = this.screen.width - 50;
-        this.coinSprite.y = 40;
+        this.coinSprite.x = this.screen.width - 190;
+        this.coinSprite.y = 39;
 
         this.coinSprite.anchor.set(0.5);      // Zentriert die Münze
-        this.coinSprite.scale.set(2);      // Macht die Münze kleiner 
+        this.coinSprite.scale.set(2.4);      // Macht die Münze kleiner 
         this.coinSprite.zIndex = 900;         // Münze über Player und über Plattform
 
-        this.hud.addChild(this.coinSprite);
+        coinContainer.addChild(this.coinSprite);
+
+
+        // ==================
+        // 5COIN HUD      ===
+        // ==================
+        //Background
+        const coin5Container = new PIXI.Container();
+        this.hud.addChild(coin5Container);
+
+        const bg5 = new PIXI.Graphics();
+        bg5.beginFill(0xffffff, 0.55);
+        bg5.drawRoundedRect(this.screen.width - 210, 85, 230, 50, 52);
+        bg5.endFill();
+        coin5Container.addChild(bg5);
 
         //Anzahl 5Coins
-
         this.coin5Hud = new PIXI.Text(`0 / 3`, {
             fontFamily: "Press Start 2P",
             fontSize: 22,
@@ -48,8 +75,8 @@ export class HudRenderer {
             strokeThickness: 4
         });
 
-        this.coin5Hud.x = this.screen.width - 355;
-        this.coin5Hud.y = 30;
+        this.coin5Hud.x = this.screen.width - 135;
+        this.coin5Hud.y = 100;
         this.coin5Hud.zIndex = 9999;
 
         this.hud.addChild(this.coin5Hud);
@@ -57,14 +84,14 @@ export class HudRenderer {
         //Bild 5Coin
         this.coin5Sprite = PIXI.Sprite.from("coin5HUD");
 
-        this.coin5Sprite.x = this.screen.width - 185;
-        this.coin5Sprite.y = 40;
+        this.coin5Sprite.x = this.screen.width - 187;
+        this.coin5Sprite.y = 108;
 
         this.coin5Sprite.anchor.set(0.5);      // Zentriert die Münze
-        this.coin5Sprite.scale.set(2.25);      // Macht die Münze kleiner 
+        this.coin5Sprite.scale.set(2.4);      // Macht die Münze kleiner 
         this.coin5Sprite.zIndex = 900;         // Münze über Player und über Plattform
 
-        this.hud.addChild(this.coin5Sprite);
+        coin5Container.addChild(this.coin5Sprite);
 
     }
 
@@ -102,8 +129,8 @@ export class HudRenderer {
 
     positionHeartSprites(){
         //Herz 1
-        this.heartSprite1.x = window.innerWidth - 50;
-        this.heartSprite1.y = 100;
+        this.heartSprite1.x = window.innerWidth / 2 -35;
+        this.heartSprite1.y = 39;
 
         this.heartSprite1.anchor.set(0.5);      // Zentriert die Münze
         this.heartSprite1.scale.set(0.08);      // Macht die Münze kleiner 
@@ -112,8 +139,8 @@ export class HudRenderer {
         this.hud.addChild(this.heartSprite1);
 
         //Herz 2
-        this.heartSprite2.x = window.innerWidth - 120;
-        this.heartSprite2.y = 100;
+        this.heartSprite2.x = window.innerWidth /2 +35;
+        this.heartSprite2.y = 39;
 
         this.heartSprite2.anchor.set(0.5);      // Zentriert die Münze
         this.heartSprite2.scale.set(0.08);      // Macht die Münze kleiner 
