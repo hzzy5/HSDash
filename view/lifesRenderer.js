@@ -18,7 +18,7 @@ export class LifesRenderer{
         sprite.y = y;
 
         sprite.anchor.set(0.5);      // Zentriert die Münze
-        sprite.scale.set(0.08);      // Macht die Münze kleiner 
+        sprite.scale.set(2);      // Macht die Münze kleiner 
         sprite.zIndex = 900;         // Münze über Player und über Plattform
 
         this.world.addChild(sprite);

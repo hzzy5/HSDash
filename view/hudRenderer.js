@@ -133,7 +133,7 @@ export class HudRenderer {
         this.heartSprite1.y = 39;
 
         this.heartSprite1.anchor.set(0.5);      // Zentriert die Münze
-        this.heartSprite1.scale.set(0.08);      // Macht die Münze kleiner 
+        this.heartSprite1.scale.set(2);      // Macht die Münze kleiner 
         this.heartSprite1.zIndex = 900;         // Münze über Player und über Plattform
 
         this.hud.addChild(this.heartSprite1);
@@ -143,7 +143,7 @@ export class HudRenderer {
         this.heartSprite2.y = 39;
 
         this.heartSprite2.anchor.set(0.5);      // Zentriert die Münze
-        this.heartSprite2.scale.set(0.08);      // Macht die Münze kleiner 
+        this.heartSprite2.scale.set(2);      // Macht die Münze kleiner 
         this.heartSprite2.zIndex = 900;
 
         this.hud.addChild(this.heartSprite2);
