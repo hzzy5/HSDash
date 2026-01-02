@@ -88,7 +88,7 @@ export class GameWinScreenRenderer {
         //Anker und Scale
         [coin1, coin2, coin3].forEach((coin, i) => {
             coin.anchor.set(0.5);
-            coin.scale.set(i === 1 ? 5.5 : 4); //Wenn es die zweite Münze ist um 5.5 skalieren, sonst 4. 
+            coin.scale.set(i === 1 ? 2 : 1.4); //Wenn es die zweite Münze ist, größer skalieren, sonst normal. 
             coin.zIndex = 900;
         });
 
@@ -96,11 +96,11 @@ export class GameWinScreenRenderer {
         titleContainer.addChild(coin1, coin2, coin3);
 
         //Position relativ zum Container setzen
-        coin1.x = 125; //links
+        coin1.x = 123; //links
         coin1.y = -50;
         coin2.x = 230; //mitte
         coin2.y = -75;
-        coin3.x = 335; //rechts
+        coin3.x = 337; //rechts
         coin3.y = -50;
 
 

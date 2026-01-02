@@ -4,7 +4,7 @@ export class Gumbas{
         this.y = y;
         this.width = width;
         this.height = height;
-        this.speed = 40; //evt anpassen
+        this.speed = 70; //evt anpassen
         this.direction = -1 //startet nach links
 
         this.alive = true; //Gumba lebt

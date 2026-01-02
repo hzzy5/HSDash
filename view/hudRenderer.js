@@ -44,10 +44,10 @@ export class HudRenderer {
         this.coinSprite = PIXI.Sprite.from("coinHUD");
 
         this.coinSprite.x = this.screen.width - 190;
-        this.coinSprite.y = 39;
+        this.coinSprite.y = 42.5;
 
         this.coinSprite.anchor.set(0.5);      // Zentriert die Münze
-        this.coinSprite.scale.set(2.4);      // Macht die Münze kleiner 
+        this.coinSprite.scale.set(1.2);      // Macht die Münze kleiner 
         this.coinSprite.zIndex = 900;         // Münze über Player und über Plattform
 
         coinContainer.addChild(this.coinSprite);
@@ -88,7 +88,7 @@ export class HudRenderer {
         this.coin5Sprite.y = 108;
 
         this.coin5Sprite.anchor.set(0.5);      // Zentriert die Münze
-        this.coin5Sprite.scale.set(2.4);      // Macht die Münze kleiner 
+        this.coin5Sprite.scale.set(1.05);      // Macht die Münze kleiner 
         this.coin5Sprite.zIndex = 900;         // Münze über Player und über Plattform
 
         coin5Container.addChild(this.coin5Sprite);

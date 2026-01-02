@@ -595,9 +595,9 @@ export class Controller {
             //Sprite synchronisieren
             if (gumba.sprite) {
                 gumba.sprite.x = gumba.x;
-                gumba.sprite.y = gumba.y;
-                gumba.sprite.scale.x = 0.06 * gumba.direction; // Spiegeln
-            }
+                gumba.sprite.y = gumba.y -7;
+                gumba.sprite.scale.x = 1 * gumba.direction; // Spiegeln, hier 0.06 zu 1 geändert. 
+            } 
 
             // Player Kollision prüfen mit Gumbas
             if (this.collision.collisionUp(this.player, gumba)) {

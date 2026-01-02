@@ -11,18 +11,18 @@ export class GumbasRenderer{
 
     // Methode, um das Leben-Sprite zu erstellen, falls man Leben wieder einsammeln kann
     createGumbaSprite(x, y) {
-        const sprite = PIXI.Sprite.from("gumba");
-        //  const sheet = PIXI.Assets.get('gumba').data.animations;
-        //  const sprite = PIXI.AnimatedSprite.fromFrames(sheet["minidahm_frame"]); //name der frames
-        //  sprite.animationSpeed = 1 / 10; 
-        //  sprite.play();
+        //const sprite = PIXI.Sprite.from("gumba");
+         const sheet = PIXI.Assets.get('gumba').data.animations;
+         const sprite = PIXI.AnimatedSprite.fromFrames(sheet["minidahm_frame"]); //name der frames
+         sprite.animationSpeed = 1 / 10; 
+         sprite.play();
     
         // Position
         sprite.x = x;
-        sprite.y = y;
+        sprite.y = y-7;
 
         sprite.anchor.set(0.5);      // Zentriert die Gegner
-        sprite.scale.set(0.06);      // Macht den Gengner kleiner 
+        sprite.scale.set(1);      // Macht den Gengner kleiner 
         sprite.zIndex = 900;         // Münze über Player und über Plattform
 
 

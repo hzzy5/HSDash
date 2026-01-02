@@ -101,8 +101,8 @@ export class Renderer {
             life: "assets/bilder_lvl1/life.png",
             blackheart: "assets/bilder_lvl1/blackheart.png",
             spike: "assets/bilder/stacheln2.png",
-            gumba: "assets/bilder/gumba.png",
-            //gumba: "assets/bilder/minidahm_anim.json",
+            //gumba: "assets/bilder/gumba.png",
+            gumba: "assets/bilder/minidahm_anim.json",
             goalPole: "assets/bilder/ziel.png",
 
             //SPRITESHEETS, JSON

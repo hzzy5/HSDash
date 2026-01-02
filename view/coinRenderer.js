@@ -23,7 +23,7 @@ export class CoinRenderer {
       sprite.y = y;
 
       sprite.anchor.set(0.5);      // Zentriert die Münze
-      sprite.scale.set(2.5);      // Macht die Münze kleiner 
+      sprite.scale.set(1.1);      // Macht die Münze kleiner 
       sprite.zIndex = 900;         // Münze über Player und über Plattform
 
       this.world.addChild(sprite);
@@ -43,7 +43,7 @@ export class CoinRenderer {
           sprite.y = y;
     
           sprite.anchor.set(0.5);      // Zentriert die Münze
-          sprite.scale.set(3);      // Macht die Münze kleiner 
+          sprite.scale.set(1.25);      // Macht die Münze kleiner 
           sprite.zIndex = 900;         // Münze über Player und über Plattform
     
           this.world.addChild(sprite);
