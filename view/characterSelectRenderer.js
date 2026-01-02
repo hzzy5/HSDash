@@ -91,7 +91,7 @@ export class CharacterSelectRederer {
 
         const player1 = PIXI.Sprite.from("sebastian");
         player1.anchor.set(0.5);
-        player1.scale.set(4);
+        player1.scale.set(2);
         player1.x = bg1.width / 2; //innerhalb playerFrame1
         player1.y = bg1.height / 2;
         playerFrame1.addChild(player1);

@@ -184,8 +184,8 @@ export class Controller {
         
         //SoundButton
         this.buttonMusikAus = this.renderer.createSprite("soundAus");
-        this.buttonMusikAus.width *= 2.5;
-        this.buttonMusikAus.height *= 2.5;
+        this.buttonMusikAus.width *= 1.5;
+        this.buttonMusikAus.height *= 1.5;
         this.renderer.renderSprite(this.buttonMusikAus, 0, 0);
         //damit den Sprite wie einen Button nutzten kann
         //interaktivität sicherstellen
@@ -680,13 +680,13 @@ export class Controller {
     changeButtonPicture(){
         if (this.musicPlays){
             this.buttonMusikAus = this.renderer.createSprite("soundAus");
-            this.buttonMusikAus.width *= 2.5;
-            this.buttonMusikAus.height *= 2.5;
+            this.buttonMusikAus.width *= 1.5;
+            this.buttonMusikAus.height *= 1.5;
             this.renderer.renderSprite(this.buttonMusikAus, 0, 0);
         }else{
             this.buttonMusikAus = this.renderer.createSprite("soundAn");
-            this.buttonMusikAus.width *= 2.5;
-            this.buttonMusikAus.height *= 2.5;
+            this.buttonMusikAus.width *= 1.5;
+            this.buttonMusikAus.height *= 1.5;
             this.renderer.renderSprite(this.buttonMusikAus, 0, 0);
         }
 
