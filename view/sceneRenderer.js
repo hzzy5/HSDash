@@ -11,6 +11,78 @@ export class SceneRenderer {
         //Referenz auf den background view, damit dieselbe PIXI.app genutzt wird.
         this.background = container;
         this.screen = screen;
+
+        //Objekt speichert Position und Geschwindigkeit für die jeweilige Ebene 
+        this.scene = [
+            {
+                id: "sky",
+                y: -150,
+                speed: -0.3,
+                sprite: null //Referenz auf das PIXI.TilingSprite wird später gesetzt
+            },
+
+            {
+                id: "clouds",
+                y: -10,
+                speed: -0.6,
+            },
+
+            {
+                id: "city",
+                y: -100,
+                speed: -0.8,
+                sprite: null
+            },
+
+            {
+                id: "carsR",
+                y: -105,
+                speed: 0.4, //fahren nach rechts
+                sprite: null
+            },
+
+            {
+                id: "carsL",
+                y: -105,
+                speed: -1.5,
+                sprite: null
+            },
+
+            {
+                id: "hsd",
+                y: -95,
+                speed: -0.87,
+                sprite: null
+            },
+
+            {
+                id: "lampen2",
+                y: -90,
+                speed: -0.95,
+                sprite: null
+            },
+
+            {
+                id: "ground",
+                y: -100,
+                speed: -1,
+                sprite: null
+            },
+
+            {
+                id: "lampen1",
+                y: -105,
+                speed: -0.95,
+                sprite: null
+            },
+
+            {
+                id: "trees",
+                y: -105,
+                speed: -1,
+                sprite: null
+            },
+        ]
     }
 
     //Methode, um aus Tiling Sprites (= sich wiederholende Bilder) den Hintergrund zusammenzubauen. 
@@ -24,20 +96,6 @@ export class SceneRenderer {
         sprite.tileScale.set(2);
         this.background.addChild(sprite); 
         return sprite;
-    }
-
-    //Methode, um eine Plattform zu erzeugen.
-    createPlatform(x, y, width, height, color = 0x8b4513) {
-        const gfx = new PIXI.Graphics();
-        gfx.beginFill(color);
-        gfx.drawRect(0, 0, width, height);
-        gfx.endFill();
-        gfx.x = x;
-        gfx.y = y;
-        // ensure platforms render above background layers
-        try { gfx.zIndex = 500; } catch (e) {}
-        this.background.addChild(gfx);
-        return { x, y, width, height }; //Rückgabe als Collider für die Kollisionserkennung
     }
 
     //Methode, um die Grenzen des Spielfeldes zu erzeugen.
@@ -56,51 +114,19 @@ export class SceneRenderer {
     //Methode, die die Szene initialisiert
     createBackground() {
         //Hintergrund aufbauen
-        this.sky = this.createTilingSprite("sky");
-        this.sky.y = -150;
-        
-        this.clouds = this.createTilingSprite("clouds");
-        this.clouds.y = -10;
-        
-        this.city = this.createTilingSprite("city");
-        this.city.y = -100;
-        this.carsR = this.createTilingSprite("carsR");
-        this.carsR.y = -105;
-        
-        this.carsL = this.createTilingSprite("carsL");
-        this.carsL.y = -105;
-        
-        this.hsd = this.createTilingSprite("hsd");
-        this.hsd.y = -95;
-        
-        this.lampen2 = this.createTilingSprite("lampen2");
-        this.lampen2.y = -90;
-
-        this.ground = this.createTilingSprite("ground");
-        this.ground.y = -100;
-        
-        this.trees = this.createTilingSprite("trees");
-        this.trees.y = -105;
-        
-        this.lampen1 = this.createTilingSprite("lampen1");
-        this.lampen1.y = -105;
+        for (const layer of this.scene) {
+            let sprite = this.createTilingSprite(layer.id);
+            layer.sprite = sprite;  //Referenz auf das TilingSprite im Array speichern
+            sprite.y = layer.y;
+        }
     }
 
     //Methode, die den Hintergrund bewegt. Durch die verschiedenen Geschwindigkeiten wird ein Tiefeneffekt erzeugt.
     scrollBackground(camera) {
         //Die x-Position wird immer dorthin gesetzt, wo die Kamera ist und mit einer Geschwidigkeit multipliziert.  
-        this.sky.tilePosition.x = camera *-0.3;
-        this.clouds.tilePosition.x = camera *-0.6;
-        this.city.tilePosition.x = camera * -0.8;       //*-0.95;
-
-        this.carsR.tilePosition.x = camera *0.4;
-        this.carsL.tilePosition.x = camera *-1.5;
-
-        this.hsd.tilePosition.x = camera * -0.87;       //*-1.11;
-        this.ground.tilePosition.x = camera * -1;    //*-1.15;
-        this.trees.tilePosition.x = camera * -1;     //*-1.15;
-        this.lampen1.tilePosition.x = camera * -0.95;   //*-1.2;
-        this.lampen2.tilePosition.x = camera * -0.95;   //*-1.15;
+        for (const layer of this.scene) {
+            layer.sprite.tilePosition.x = camera* layer.speed
+        }
     }
 
 
