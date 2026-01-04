@@ -476,8 +476,6 @@ export class Controller {
           }
         }
 
-        //HIER DIE 5 COINS ERGÄNZEN DIE ES EINZUSAMMELN GIBT, QUASI GENAU WIE OBEN
-
         for (const coin5 of this.coins5) {
             if (coin5.collected) continue;
  
@@ -520,7 +518,7 @@ export class Controller {
         }
 
         //wenn der Player ausserhalb des Spiels ist (ins loch gefallen oder so), stirbt er
-        //800 scheint zu funktionieren, später nochmal testen wenn levelaufbau fertig, und verschiedene Bildschirmgrößen lol
+        //800 scheint zu funktionieren, später nochmal testen wenn levelaufbau fertig, und verschiedene Bildschirmgrößen 
         if(this.player.y > 800){
             this.collectedLifes = 0;
             this.hudRenderer.LifeHud(this.collectedLifes);
