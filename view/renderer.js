@@ -73,6 +73,7 @@ export class Renderer {
         //Objekt mit alias: src
         const assets = {
             //SZENE
+            //Level1
             lampen1: "assets/bilder_lvl1/00_lampen1.png",
             trees: "assets/bilder_lvl1/01_Trees.png",
             ground: "assets/bilder_lvl1/02_Ground.png",
@@ -83,6 +84,16 @@ export class Renderer {
             city: "assets/bilder_lvl1/07_City_back.png",
             clouds: "assets/bilder_lvl1/08_clouds.png",
             sky: "assets/bilder_lvl1/09_Sky.png",
+
+            //Level2
+            deko: "assets/bilder_lvl2/01_Deko.png",
+            etage1: "assets/bilder_lvl2/02_Boden_E1.png",
+            etage0: "assets/bilder_lvl2/03_Boden_E0.png",
+            lampen3: "assets/bilder_lvl2/04_Lampen.png",
+            wand: "assets/bilder_lvl2/05_Wand_background.png",
+            dach: "assets/bilder_lvl2/06_Dach.png",
+            clouds2: "assets/bilder_lvl2/07_clouds.png",
+            sky2: "assets/bilder_lvl2/08_Sky.png",
 
 
             //SPIELELEMENTE

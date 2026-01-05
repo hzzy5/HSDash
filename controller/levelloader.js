@@ -43,6 +43,7 @@ export class LevelLoader {
         this.goal = goal;
 
         this.levels = levels;
+        this.levelSprites = []; //Array aus allen Sprite-Objekten, die in einem Level liegen
 
         this.TILE_SIZE = 32; //Konstante
 
@@ -77,53 +78,94 @@ export class LevelLoader {
                 posY = y * this.TILE_SIZE;
 
                 if (char === 'x') {
-                    let tile = this.blockRenderer.createTile(posX, posY, "brownStone");
-                    if (tile) this.collision.addCollider(tile);
+                    let tileSprite = this.blockRenderer.createTile(posX, posY, "brownStone");
+                    if (tileSprite) {
+                        this.collision.addCollider(tileSprite);
+                        this.levelSprites.push(tileSprite);
+                    }
                 }
 
                 else if (char === 'o') {
                     let coin = new Coin(posX, posY);
                     coin.sprite = this.coinRenderer.createCoinSprite(posX, posY);
                     this.coins.push(coin);
+                    this.levelSprites.push(coin.sprite);
                 }
 
                 else if (char === '5') {
                     let coin5 = new Coin(posX, posY);
                     coin5.sprite = this.coinRenderer.create5CoinSprite(posX, posY);
                     this.coins5.push(coin5);
+                    this.levelSprites.push(coin5.sprite);
                 }
 
                 else if (char === '-') {
-                    let tile = this.blockRenderer.createInvisibleTile(posX, posY);
-                    if (tile) this.collision.addCollider(tile);
+                    let tileSprite = this.blockRenderer.createInvisibleTile(posX, posY);
+                    if (tileSprite) {
+                        this.collision.addCollider(tileSprite);
+                        this.levelSprites.push(tileSprite);
+                    }
                 }
                 
                 else if (char === 'l') {
                     let life = new Life(posX, posY);
                     life.sprite = this.lifesRenderer.createLifeSprite(posX, posY);
                     this.lifes.push(life);
+                    this.levelSprites.push(life.sprite);
                 }
 
                 else if (char === 's') {
                     let spike = new Spikes(posX, posY);
                     spike.sprite = this.spikesRenderer.createSpikeSprite(posX, posY);
                     this.spikes.push(spike);
+                    this.levelSprites.push(spike.sprite);
                 }
 
                 else if (char === 'g') {
                     let gumba = new Gumbas(posX, posY);
                     gumba.sprite = this.gumbaRenderer.createGumbaSprite(posX, posY);
                     this.gumbas.push(gumba);
+                    this.levelSprites.push(gumba.sprite);
                 }
 
                 else if (char === 'z') {
                     let goalPole = new Goal(posX, posY);
                     goalPole.sprite = this.goalRenderer.createGoalSprite(goalPole);
                     this.goal.push(goalPole);
+                    this.levelSprites.push(goalPole.sprite);
                 }
             }
         }      
     }
+
+
+    //Methode, um das alte Level zu entfernen
+    clearLevel() {
+        let anz = 0;
+        // Sprites entfernen
+        this.levelSprites.forEach(sprite => {
+            if (sprite && !sprite.destroyed) {
+                sprite.destroy();
+                anz++;
+            } else {
+                console.warn("Kein destroy():", obj);
+            }    
+        });
+        console.log("Sprites zerstört: " + anz); 
+        
+        this.levelSprites.length = 0;
+        
+        //Model-Arrays leeren
+        this.coins.length = 0;
+        this.coins5.length = 0;
+        this.lifes.length = 0;
+        this.spikes.length = 0;
+        this.gumbas.length = 0;
+        this.goal.length = 0;
+        this.collision.clear();
+    }
+
+
 
 } //end class
 

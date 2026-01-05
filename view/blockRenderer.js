@@ -56,10 +56,6 @@ export class BlockRenderer {
 
     //Methode um ein unsichtbaren 32x32-Tile zu erzeugen. 
     createInvisibleTile(x, y) {
-        //Ins Bild passen 48x25 Tiles
-        const tileX = VIRTUAL_WIDTH / TILE_SIZE;
-        const tileY = VIRTUAL_HEIGHT / TILE_SIZE;
-
         const gfx = new PIXI.Graphics();
 
         gfx.x = x;
@@ -67,7 +63,8 @@ export class BlockRenderer {
         
         this.world.addChild(gfx);
         
-        return { x, y, width: TILE_SIZE, height: TILE_SIZE};
+        //return { x, y, width: TILE_SIZE, height: TILE_SIZE};
+        return gfx;
     }
 
     //Methode um verschiedene Blöcke zu erstellen
@@ -99,7 +96,8 @@ export class BlockRenderer {
         
         this.world.addChild(gfx);
         
-        return { x, y, width: TILE_SIZE, height: TILE_SIZE};
+        // return { x, y, width: TILE_SIZE, height: TILE_SIZE};
+        return gfx;
     }
 
 } //end class

@@ -42,4 +42,12 @@ export class Collision {
       return this.colliders;
     }
 
+    //Methode, um alle Kollisionsblöcke zu entfernen
+    clear() {
+      this.colliders.forEach(collider => {
+          if (collider.destroy) collider.destroy();
+      });
+      this.colliders.length = 0;
+    }
+
 }

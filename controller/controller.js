@@ -26,6 +26,7 @@ import { CharacterSelectRederer } from "../view/characterSelectRenderer.js";
 
 
 //CONTROLLER
+import { LevelLoader } from "./levelloader.js";
 import { SoundController } from "./soundcontroller.js";
 
 // Einfache Input-Verfolgung und zentralisierte Update-Funktion
@@ -55,6 +56,12 @@ export class Controller {
     gumbas = []; //Liste aller Gumbas, die es im Level gibt
     goal = []; //max. 1 Ziel
 
+    //CONTROLLER
+    levelloader;
+    //SOUND
+    sound;
+    buttonMusikAus;
+    musicPlays;
 
     leftBound;
     rightBound;
@@ -72,23 +79,14 @@ export class Controller {
     coins5 = []; //Liste aller 5Coins im Level
     lifes = []; //Liste aller Leben die man einsammeln kann im Level
 
-    //SOUND
-    sound;
-    buttonMusikAus;
-    musicPlays;
-
-    //STARTSCREEN / GAMESTATE
+    //SCREEN / GAMESTATE
     gameStarted = false;
-
-    //GAMEOVERSCREEN / GAMESTATE
     isGameOver = false;
-
-    //WINSCREEN / GAMESTATE
     isGameWin = false;
 
-
-
-     
+    //LEVEL
+    currentLevelIndex = 0;
+    unlockedLevel = 1; //Anzahl der freigeschalteten Level, d.h. Lvl1 = 1, Lvl1 & 2 = 2
 
 
     //methode um das ganze Spiel zu initialisieren. Hier werden die Methoden aus der View usw aufgerufen. 
@@ -106,7 +104,7 @@ export class Controller {
         await this.playerRenderer.initAnimations(); //Player-Animation laden
         
         this.sceneRenderer = new SceneRenderer(this.renderer.background, this.renderer.screen);
-        await this.sceneRenderer.createBackground(); //Szene erstellen
+        //await this.sceneRenderer.createBackground(); //Szene erstellen
                 
         this.coinRenderer = new CoinRenderer(this.renderer.world, this.renderer.ticker);
         this.hudRenderer = new HudRenderer(this.renderer.hud, this.renderer.screen);
@@ -126,37 +124,12 @@ export class Controller {
           this.renderer.screen
         );
         
-        //Startscreen sofort anzeigen
-        this.startScreenRenderer.show();
 
         //SELECT CHARACTER SCREEN
         this.characterSelectRenderer = new CharacterSelectRederer(
           this.renderer.ui, 
           this.renderer.screen
         );
-
-        //SPIEL STARTEN, wenn auf den Button geklickt wird
-        this.startScreenRenderer.createStartButton(() => { 
-          this.startScreenRenderer.hide();
-          //Wechseln zum Charakterauswahl Screen
-          this.characterSelectRenderer.show();
-
-          //Wenn der Spieler einen Charakter ausgewählt hat
-          this.characterSelectRenderer.createButton((selectedPlayer) => {
-            this.setPlayer(selectedPlayer);
-            this.selectedPlayer = selectedPlayer; //Auswahl speichern
-            this.gameStarted = true; //Spiel ist gestartet
-          
-            this.characterSelectRenderer.hide();
-
-            this.sound.backroundMusic();
-            this.musicPlays = true;
-            
-            this.renderer.startGameLoop((dt) => this.gameLoop(dt));
-          });
-        });
-        
-      
 
         //GAMEOVER SCREEN
         this.gameOverScreenRenderer = new GameOverScreenRenderer(
@@ -165,9 +138,8 @@ export class Controller {
         );
 
         this.gameOverScreenRenderer.createStartButton(() => {
-            this.restartGame();
+          this.restartGame();
         });
-
 
         //GAMEWIN
         this.gameWinScreenRenderer = new GameWinScreenRenderer(
@@ -176,7 +148,27 @@ export class Controller {
             this.collected5Coins
         );
 
+        this.gameWinScreenRenderer.createButton(() => {
+         this.loadNextLevel();
+        //this.restartGame(); //HIER METHODE SPÄTER ÄNDERN
+        //this.levelloader.loadLevel(this.levelloader.levels[1]);
+      });
 
+
+
+        //CONTROLLER:
+        this.levelloader = new LevelLoader(this.renderer, this.playerRenderer, 
+                                           this.sceneRenderer,
+                                           this.collision,
+                                           this.coinRenderer, this.coins, this.coins5,
+                                           this.lifesRenderer, this.lifes, 
+                                           this.spikeRenderer, this.spikes, 
+                                           this.gumbaRenderer, this.gumbas,
+                                           this.goalRenderer, this.goal,
+                                           this.blockRenderer,); 
+
+        //Zu Beginn erstes Level laden
+        await this.loadLevel(this.currentLevelIndex);                                   
 
         //SOUND:
         this.sound = new SoundController(); //SoundController initialisieren 
@@ -236,7 +228,33 @@ export class Controller {
         
         
     }
-    /*vllt iwie optimieren: nur zeichnen, wenn etwas geändert wurde.*/
+
+    //=== START GAME ============================================================================================
+    startGame() {
+        //Startscreen sofort anzeigen
+        this.startScreenRenderer.show();
+
+        //SPIEL STARTEN, wenn auf den Button geklickt wird
+        this.startScreenRenderer.createStartButton(() => { 
+          this.startScreenRenderer.hide();
+          //Wechseln zum Charakterauswahl Screen
+          this.characterSelectRenderer.show();
+
+          //Wenn der Spieler einen Charakter ausgewählt hat
+          this.characterSelectRenderer.createButton((selectedPlayer) => {
+            this.setPlayer(selectedPlayer);
+            this.selectedPlayer = selectedPlayer; //Auswahl speichern
+            this.gameStarted = true; //Spiel ist gestartet
+          
+            this.characterSelectRenderer.hide();
+
+            this.sound.backroundMusic();
+            this.musicPlays = true;
+            
+            this.renderer.startGameLoop((dt) => this.gameLoop(dt));
+          });
+        }); 
+    }
     
 
     //=== GAMELOOP ============================================================================================
@@ -692,11 +710,12 @@ export class Controller {
 
     //=== LEVEL COMPLETED? ============================================================================================
     levelCompleted() {
-      if (!this.goal) return;
+      if (!this.goal.length) return;
       const goal = this.goal[0];
       
       //Wenn man das Ziel erreicht hat
       if (this.collision.collision(this.player, goal)) {
+        this.unlockNextLevel();
         this.gameWon();
       }
     }
@@ -709,19 +728,18 @@ export class Controller {
         this.isGameOver = true; 
 
         this.sound.playerDies();
+        
+        // this.gameOverScreenRenderer.createStartButton(() => {
+        //   this.restartGame();
+        // });
   
         this.gameOverScreenRenderer.show();
+        
     }
 
     //=== WiN ============================================================================================
     gameWon() {
-      //Endscreen erzeugen
-      this.gameWinScreenRenderer.createButton(() => {
-            this.restartGame(); //HIER METHODE SPÄTER ÄNDERN
-      });
-
       console.log("Spiel gewonnen"); 
-
       this.sound.levelWon();
 
       this.renderer.ticker.stop();
@@ -729,6 +747,71 @@ export class Controller {
       //Screen anzeigen lassen 
       this.isGameWin = true;
       this.gameWinScreenRenderer.show(); 
+      
+      // //Endscreen erzeugen
+      // this.gameWinScreenRenderer.createButton(() => {
+      //    this.loadNextLevel();
+      //   //this.restartGame(); //HIER METHODE SPÄTER ÄNDERN
+      //   //this.levelloader.loadLevel(this.levelloader.levels[1]);
+      // });
+    }
+
+
+    //=== LOAD LEVEL ============================================================================================
+    //Genutzt, um das erste Level zu laden
+    loadLevel(level) {
+      if (level >= this.unlockedLevels) {
+        console.warn("Level noch gesperrt:", level);
+        return;
+      }
+
+      //Hintergrund wechseln  
+      console.log(this.levelloader.levels[level].background);  
+      this.sceneRenderer.setBackground(this.levelloader.levels[level].background);
+
+      //Altes Level entfernen
+      this.levelloader.clearLevel();
+      console.warn("level laden: " + this.currentLevelIndex, this.levelloader.levelSprites.length);
+      this.currentLevelIndex = level;
+      
+      //Reseten und neues Level starten
+      this.restartGame(); //sicherheitshalber
+      this.levelloader.loadLevel(this.levelloader.levels[level]);
+    }
+
+    //Nächstes Level
+    loadNextLevel() {
+      this.levelloader.clearLevel();
+      this.restartGame();
+      this.currentLevelIndex += 1;
+      console.log(this.currentLevelIndex)
+
+      if (this.currentLevelIndex >= this.unlockedLevels) {
+        console.warn("Level noch gesperrt:", this.currentLevelIndex);
+        return;
+    }
+      
+      if (this.currentLevelIndex < this.levelloader.levels.length) {
+        //Hintergrund wechseln  
+        console.log(this.levelloader.levels[this.currentLevelIndex ].background);  
+        this.sceneRenderer.setBackground(this.levelloader.levels[this.currentLevelIndex ].background);
+        console.log("debug");
+        
+        //Level laden
+        this.levelloader.loadLevel(this.levelloader.levels[this.currentLevelIndex]);
+        console.warn("next level laden: " + this.currentLevelIndex);
+      } else {
+        console.log("Alle Level geschafft!");
+        this.renderer.ticker.stop(); // oder Endscreen
+      }
+    }
+
+    //=== UNLOCK LEVEL ============================================================================================
+    unlockNextLevel() {
+      const nextLevel = this.currentLevelIndex + 1;
+      if (nextLevel < this.levelloader.levels.length) {
+        this.unlockedLevels = Math.max(this.unlockedLevels, nextLevel + 1);
+      }
     }
     
 

@@ -6,19 +6,20 @@ import { LevelLoader } from "./controller/levelloader.js";
 window.onload = async function() {
     let controller = new Controller();
     await controller.initController(); //warten bis alles initialisiert ist, bevor man die app startet.
+    await controller.startGame();
 
     //Damit gleiche Renderer- & Collision - Instanzen genutzt werden
-    let levelloader = new LevelLoader(controller.renderer, controller.playerRenderer, 
-                                      controller.sceneRenderer,
-                                      controller.collision,
-                                      controller.coinRenderer, controller.coins, controller.coins5,
-                                      controller.lifesRenderer, controller.lifes, 
-                                      controller.spikeRenderer, controller.spikes, 
-                                      controller.gumbaRenderer, controller.gumbas,
-                                      controller.goalRenderer, controller.goal,
-                                      controller.blockRenderer,); 
+    // let levelloader = new LevelLoader(controller.renderer, controller.playerRenderer, 
+    //                                   controller.sceneRenderer,
+    //                                   controller.collision,
+    //                                   controller.coinRenderer, controller.coins, controller.coins5,
+    //                                   controller.lifesRenderer, controller.lifes, 
+    //                                   controller.spikeRenderer, controller.spikes, 
+    //                                   controller.gumbaRenderer, controller.gumbas,
+    //                                   controller.goalRenderer, controller.goal,
+    //                                   controller.blockRenderer,); 
 
-    await levelloader.loadLevel(levelloader.levels[0]);
+    // await levelloader.loadLevel(levelloader.levels[0]);
     
 
     /////////////////////////hier!!!!
