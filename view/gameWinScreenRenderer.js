@@ -84,6 +84,7 @@ export class GameWinScreenRenderer {
         let coin1 = new PIXI.Sprite(this.collected5Coins >= 1 ? coinFilledTex : coinEmptyTex);
         let coin2 = new PIXI.Sprite(this.collected5Coins >= 2 ? coinFilledTex : coinEmptyTex);
         let coin3 = new PIXI.Sprite(this.collected5Coins >= 3 ? coinFilledTex : coinEmptyTex);
+        console.log(this.collected5Coins);
 
         //Anker und Scale
         [coin1, coin2, coin3].forEach((coin, i) => {

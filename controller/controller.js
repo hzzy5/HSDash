@@ -79,13 +79,17 @@ export class Controller {
     coins5 = []; //Liste aller 5Coins im Level
     lifes = []; //Liste aller Leben die man einsammeln kann im Level
 
+    totalCoins = this.coins.length;  
+    collectedCoins = 0;
+    collected5Coins = 0;
+
     //SCREEN / GAMESTATE
     gameStarted = false;
     isGameOver = false;
     isGameWin = false;
 
     //LEVEL
-    currentLevelIndex = 0;
+    currentLevelIndex = 0; //beim ersten Level starten!!!
     unlockedLevel = 1; //Anzahl der freigeschalteten Level, d.h. Lvl1 = 1, Lvl1 & 2 = 2
 
 
@@ -145,7 +149,7 @@ export class Controller {
         this.gameWinScreenRenderer = new GameWinScreenRenderer(
             this.renderer.ui,
             this.renderer.screen,
-            this.collected5Coins
+            this.collected5Coins //wird zu früh übergeben! Iwie coin anzeige und overlay trennen
         );
 
         this.gameWinScreenRenderer.createButton(() => {
@@ -746,6 +750,7 @@ export class Controller {
       
       //Screen anzeigen lassen 
       this.isGameWin = true;
+      this.gameWinScreenRenderer.getCollected5Coins(this.collected5Coins);
       this.gameWinScreenRenderer.show(); 
       
       // //Endscreen erzeugen

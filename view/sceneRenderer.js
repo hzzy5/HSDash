@@ -101,7 +101,7 @@ export class SceneRenderer {
         this.gebauede4 = [
             {
                 id: "sky2",
-                y: -10,
+                y: 10,
                 speed: -0.3,
                 sprite: null, //Referenz auf das PIXI.TilingSprite wird später gesetzt
                 scale: 1.6
@@ -109,50 +109,50 @@ export class SceneRenderer {
             {
                 id: "clouds", //hier clouds aus lvl1. idk was besser ist
                 y: 0,
-                speed: -0.6,
+                speed: -0.9,
                 sprite: null,
                 scale: 2
             },
             {
                 id: "dach",
-                y: 50,
-                speed: -0.8,
+                y: 60,
+                speed: -1,
                 sprite: null,
                 scale: 1.6
             },
             
             {
                 id: "etage1",
-                y: 50,
-                speed: -0.9, //
+                y: 60,
+                speed: -1, //
                 sprite: null, 
                 scale: 1.6
             },
             {
                 id: "etage0",
-                y: 50,
-                speed: -0.8, //
+                y: 60,
+                speed: -1, //
                 sprite: null, 
                 scale: 1.6
             },
             {
                 id: "wand", //
-                y: 49,
-                speed: -0.8,
+                y: 59,
+                speed: -1,
                 sprite: null,
                 scale: 1.6
             },
             {
                 id: "lampen3", 
-                y: 49,
-                speed: -0.9, //
+                y: 59,
+                speed: -1, //
                 sprite: null,
                 scale: 1.6
             },
             {
                 id: "deko",
-                y: 53,
-                speed: -0.8,
+                y: 63,
+                speed: -1,
                 sprite: null, 
                 scale: 1.6
             },
