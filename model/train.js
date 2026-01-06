@@ -4,8 +4,10 @@ export class Trains{
         this.y = y;
         this.width = width;
         this.height = height;
-        this.speed = 70; //evt anpassen
-        this.direction = -1 //startet nach links
+        this.speed = 90; //evt anpassen
+        //die beiden bilden zusammen den richtungsvektor
+        this.directionX = -1 //startet nach links
+        this.directionY = 0;
 
         this.alive = true; //Gumba lebt
         this.sprite = null;       // wird später vom Renderer gesetzt
@@ -19,20 +21,35 @@ export class Trains{
         //console.log("Zug erstellt!");
     }
 
+    calculateDirection(playerX, playerY){
+        this.directionX = playerX - this.x;
+        this.directionY = playerY - this.y;
+
+        //diese x und y Werte vom Richtungs Vektor normieren
+
+        //länge Vektor bestimmen
+        let laengeVektor = Math.sqrt(this.directionX * this.directionX + this.directionY * this.directionY);
+
+        //Einzelnen Werte des Vektors normieren
+        this.directionX = this.directionX / laengeVektor;
+        this.directionY = this.directionY / laengeVektor;
+    }
+
     //Methode, die die Position bei Bewegungen verändert
     move (dt) {
-        this.x += this.direction * this.speed * dt;
+        this.x += this.directionX * this.speed * dt;
+        this.y += this.directionY * this.speed * dt;
         this.updateHitbox();
     }
 
     //Methode, die die Position des Players updatet. Wird im Controller aufgerufen
     //direction, true = rechts, false = links
     reverse() {
-        this.direction *= -1;
+        this.directioX *= -1;
         
     } 
 
-    //wenn gumba stirbt
+    //falls zug auch sterben soll
     dies(){
         this.alive = false;
         //unsichtbar machen, für neustart einfacher

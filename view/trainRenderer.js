@@ -30,4 +30,11 @@ export class TrainRenderer{
         //console.log("Sprite hinzugefügt!");
         return sprite;
     }
+
+    positionTrainSprite(sprite, x, y, directionX){
+        sprite.x = x;
+        sprite.y = y-7;
+
+        sprite.scale.x = 0.15 * directionX;
+    }
 }

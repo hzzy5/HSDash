@@ -672,9 +672,11 @@ export class Controller {
                 let train = new Trains(dbbro.x, dbbro.y);
 
                 train.sprite = this.trainRenderer.createTrainSprite(dbbro.x, dbbro.y);
+                train.calculateDirection(this.player.x, this.player.y);
+                //train.sprite.visible = true;
                 this.trains.push(train);
                 //console.log("Geworfen!");
-                dbbro.throwTimer = 15;
+                dbbro.throwTimer = 10;
                 dbbro.justThrew = true;
             }else{
                 //Wurftimer aktualisieren
@@ -685,23 +687,23 @@ export class Controller {
 
         //alle Spikes durchgehen die auf dem Spielfeld liegen und sehen ob sie berührt wurden
         for (const train of this.trains) {
+            train.move(dt);
+            //Sprite synchronisieren
+            if (train.sprite) {
+                //train.sprite.visible= true;
+                //train.sprite.x = train.x;
+                //train.sprite.y = train.y -7;
+                //train.sprite.scale.x = 0.15 * train.directionX; // Spiegeln, hier 0.06 zu 1 geändert. 
+                this.trainRenderer.positionTrainSprite(train.sprite, train.x, train.y, train.directionX);
+                //console.log("Zug bewegt sich!");
+            } 
+
             // Kollision prüfen mit Spikes
-            
             if (this.collision.collision(this.player, train)) {
                 if (this.player.invincible) break;
                 console.log("train berührt!");
                 this.playerGotHit();
             }
-
-            train.move(dt);
-            //Sprite synchronisieren
-            if (train.sprite) {
-                //train.sprite.visible= true;
-                train.sprite.x = train.x;
-                train.sprite.y = train.y -7;
-                train.sprite.scale.x = 0.15 * train.direction; // Spiegeln, hier 0.06 zu 1 geändert. 
-                //console.log("Zug bewegt sich!");
-            } 
         }
     }
     
