@@ -7,6 +7,7 @@ import { levels } from "../model/levels.js";
 import { Life } from "../model/life.js";
 import { Spikes } from "../model/spikes.js";
 import { Gumbas } from "../model/gumbas.js";
+import { DBBro } from "../model/dbbro.js";
 import { Goal } from "../model/goal.js";
 
 //VIEW
@@ -17,12 +18,13 @@ import { Goal } from "../model/goal.js";
 // import { LifesRenderer } from "../view/lifesRenderer.js";
 // import { SpikesRenderer } from "../view/spikesRenderer.js";
 // import { GumbasRenderer } from "../view/gumbasRenderer.js";
+// import { DBBroRenderer } from "../view/dbbroRenderer.js";
 // import { GoalRenderer } from "../view/goalRenderer.js";
 
 
 export class LevelLoader {
 
-    constructor(renderer, playerRenderer, sceneRenderer, collision, coinRenderer, coins, coins5, lifesRenderer, lifes, spikesRenderer, spikes,  gumbaRenderer, gumbas, goalRenderer, goal, blockRenderer) {
+    constructor(renderer, playerRenderer, sceneRenderer, collision, coinRenderer, coins, coins5, lifesRenderer, lifes, spikesRenderer, spikes,  gumbaRenderer, gumbas, dbbroRenderer, dbbros, goalRenderer, goal, blockRenderer) {
         this.renderer = renderer;
         this.playerRenderer = playerRenderer;
         this.coinRenderer = coinRenderer;
@@ -30,6 +32,7 @@ export class LevelLoader {
         this.lifesRenderer = lifesRenderer;
         this.spikesRenderer = spikesRenderer;
         this.gumbaRenderer = gumbaRenderer;
+        this.dbbroRenderer = dbbroRenderer;
         this.goalRenderer = goalRenderer;
         this.blockRenderer = blockRenderer
 
@@ -40,6 +43,7 @@ export class LevelLoader {
         this.lifes = lifes;
         this.spikes = spikes;
         this.gumbas = gumbas;
+        this.dbbros = dbbros;
         this.goal = goal;
 
         this.levels = levels;
@@ -58,6 +62,7 @@ export class LevelLoader {
         this.blocks.add('l'); //leben
         this.blocks.add('s'); //stacheln
         this.blocks.add('g'); //gumba
+        this.blocks.add('b'); //DB-Bros
         this.blocks.add('z'); //Ziel
     }
 
@@ -128,6 +133,13 @@ export class LevelLoader {
                     this.levelSprites.push(gumba.sprite);
                 }
 
+                else if (char === 'b') {
+                    let dbbro = new DBBro(posX, posY);
+                    dbbro.sprite = this.dbbroRenderer.createDBBroSprite(posX, posY);
+                    this.dbbros.push(dbbro);
+                    this.levelSprites.push(dbbro.sprite);
+                }
+
                 else if (char === 'z') {
                     let goalPole = new Goal(posX, posY);
                     goalPole.sprite = this.goalRenderer.createGoalSprite(goalPole);
@@ -161,6 +173,7 @@ export class LevelLoader {
         this.lifes.length = 0;
         this.spikes.length = 0;
         this.gumbas.length = 0;
+        this.dbbros.length = 0;
         this.goal.length = 0;
         this.collision.clear();
     }

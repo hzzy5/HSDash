@@ -6,6 +6,7 @@ import { Life } from "../model/life.js";
 import { Spikes } from "../model/spikes.js";
 import { Gumbas } from "../model/gumbas.js";
 import { Goal } from "../model/goal.js";
+import { DBBro } from "../model/dbbro.js";
 
 //VIEW
 import { Renderer } from "../view/renderer.js"; 
@@ -18,6 +19,7 @@ import { StartScreenRenderer } from "../view/startScreenRenderer.js";
 import { LifesRenderer } from "../view/lifesRenderer.js";
 import { SpikesRenderer } from "../view/spikesRenderer.js";
 import { GumbasRenderer } from "../view/gumbasRenderer.js";
+import { DBBroRenderer } from "../view/dbbroRenderer.js";
 import { GoalRenderer } from "../view/goalRenderer.js";
 import { BlockRenderer } from "../view/blockRenderer.js";
 import { GameOverScreenRenderer } from "../view/gameOverScreenRenderer.js";
@@ -42,6 +44,7 @@ export class Controller {
     lifesRenderer;
     spikeRenderer;
     gumbaRenderer;
+    dbbroRenderer;
     goalRenderer;
     blockRenderer;
     characterSelectRenderer;
@@ -54,6 +57,7 @@ export class Controller {
     collision;
     spikes = []; //Liste aller Stacheln, die es im Level gibt
     gumbas = []; //Liste aller Gumbas, die es im Level gibt
+    dbbros = []; //Liste aller Hammerbrüder, die es gibt; derzeit nur einer aber evt zum erweitern
     goal = []; //max. 1 Ziel
 
     //CONTROLLER
@@ -116,6 +120,7 @@ export class Controller {
         this.lifesRenderer = new LifesRenderer(this.renderer.world, this.renderer.ticker);
         this.spikeRenderer = new SpikesRenderer(this.renderer.world, this.renderer.ticker);
         this.gumbaRenderer = new GumbasRenderer(this.renderer.world, this.renderer.ticker);
+        this.dbbroRenderer = new DBBroRenderer(this.renderer.world, this.renderer.ticker);
         this.goalRenderer = new GoalRenderer(this.renderer.world);
         this.blockRenderer = new BlockRenderer(this.renderer.world);
 
@@ -168,6 +173,7 @@ export class Controller {
                                            this.lifesRenderer, this.lifes, 
                                            this.spikeRenderer, this.spikes, 
                                            this.gumbaRenderer, this.gumbas,
+                                           this.dbbroRenderer, this.dbbros,
                                            this.goalRenderer, this.goal,
                                            this.blockRenderer,); 
 
@@ -270,6 +276,7 @@ export class Controller {
       this.checkCoinCollection();//Münzeneinsammlung prüfen
       this.checkLifesCollection(); //Lebeneinsammlung prüfen
       this.checkEnemies(dt);
+      this.checkEndBoss(dt);
       this.player.updateInvincibility(dt);
       this.playerRenderer.setInvincibleBlink(this.player.invincible);
       this.levelCompleted(); //Ziel erreicht?
@@ -635,6 +642,19 @@ export class Controller {
             }
           }
 
+    }
+
+    //=== CHECK ENDBOSS ============================================================================================
+    checkEndBoss(dt){
+        //alle Brüder durchgehen die auf dem Spielfeld liegen und sehen ob sie berührt wurden
+        for (const dbbro of this.dbbros) {
+            // Kollision prüfen mit Spikes
+            if (this.player.invincible) continue;
+            if (this.collision.collision(this.player, dbbro)) {
+              console.log("dbbro berührt!");
+              this.playerGotHit();
+            }
+          }
     }
     
     //=== RESTART ============================================================================================
