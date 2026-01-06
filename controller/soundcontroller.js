@@ -95,6 +95,7 @@ export class SoundController{
 
         if(this.shouldSoundBeOn){
             this.backroundmusicLevel.play();
+            this.musicplaying = true;
         }
     }
 

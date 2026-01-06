@@ -149,7 +149,7 @@ export class Player {
         this.characterId = characterId;
     }
 
-  //für 3 sek nach einem Treffer unbesiegbar
+  //für 2 sek nach einem Treffer unbesiegbar
   updateInvincibility(dt){
     if(!this.invincible) return;
 

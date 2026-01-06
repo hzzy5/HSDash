@@ -7,6 +7,7 @@ import { Spikes } from "../model/spikes.js";
 import { Gumbas } from "../model/gumbas.js";
 import { Goal } from "../model/goal.js";
 import { DBBro } from "../model/dbbro.js";
+import { Trains } from "../model/train.js";
 
 //VIEW
 import { Renderer } from "../view/renderer.js"; 
@@ -20,6 +21,7 @@ import { LifesRenderer } from "../view/lifesRenderer.js";
 import { SpikesRenderer } from "../view/spikesRenderer.js";
 import { GumbasRenderer } from "../view/gumbasRenderer.js";
 import { DBBroRenderer } from "../view/dbbroRenderer.js";
+import { TrainRenderer } from "../view/trainRenderer.js";
 import { GoalRenderer } from "../view/goalRenderer.js";
 import { BlockRenderer } from "../view/blockRenderer.js";
 import { GameOverScreenRenderer } from "../view/gameOverScreenRenderer.js";
@@ -45,6 +47,7 @@ export class Controller {
     spikeRenderer;
     gumbaRenderer;
     dbbroRenderer;
+    trainRenderer;
     goalRenderer;
     blockRenderer;
     characterSelectRenderer;
@@ -58,6 +61,7 @@ export class Controller {
     spikes = []; //Liste aller Stacheln, die es im Level gibt
     gumbas = []; //Liste aller Gumbas, die es im Level gibt
     dbbros = []; //Liste aller Hammerbrüder, die es gibt; derzeit nur einer aber evt zum erweitern
+    trains = []; //Liste der Züge die der Hammerbruder wirft
     goal = []; //max. 1 Ziel
 
     //CONTROLLER
@@ -121,6 +125,7 @@ export class Controller {
         this.spikeRenderer = new SpikesRenderer(this.renderer.world, this.renderer.ticker);
         this.gumbaRenderer = new GumbasRenderer(this.renderer.world, this.renderer.ticker);
         this.dbbroRenderer = new DBBroRenderer(this.renderer.world, this.renderer.ticker);
+        this.trainRenderer = new TrainRenderer(this.renderer.world, this.renderer.ticker);
         this.goalRenderer = new GoalRenderer(this.renderer.world);
         this.blockRenderer = new BlockRenderer(this.renderer.world);
 
@@ -648,13 +653,56 @@ export class Controller {
     checkEndBoss(dt){
         //alle Brüder durchgehen die auf dem Spielfeld liegen und sehen ob sie berührt wurden
         for (const dbbro of this.dbbros) {
-            // Kollision prüfen mit Spikes
-            if (this.player.invincible) continue;
-            if (this.collision.collision(this.player, dbbro)) {
+            if(!dbbro.alive) continue; //wenn nicht mehr Leben dann zum nächsten gehen
+            // Player Kollision prüfen mit dbbro
+            if (this.collision.collisionUp(this.player, dbbro)) {
+                console.log("dbbro besiegt!");
+                this.sound.gumbaDies();
+                dbbro.dies();
+                continue;
+            } else if (this.collision.collision(this.player, dbbro)) {
+              //if (this.player.invincible) break; //kommt mit hier rein sonst wird teimer nicht geupdatet
               console.log("dbbro berührt!");
               this.playerGotHit();
             }
-          }
+
+            //Wurf
+            if(dbbro.throwTimer == 0){
+                console.log("Bereit zu werfen!");
+                let train = new Trains(dbbro.x, dbbro.y);
+
+                train.sprite = this.trainRenderer.createTrainSprite(dbbro.x, dbbro.y);
+                this.trains.push(train);
+                //console.log("Geworfen!");
+                dbbro.throwTimer = 15;
+                dbbro.justThrew = true;
+            }else{
+                //Wurftimer aktualisieren
+                dbbro.updateThrowTimer(dt);
+            }
+
+        }
+
+        //alle Spikes durchgehen die auf dem Spielfeld liegen und sehen ob sie berührt wurden
+        for (const train of this.trains) {
+            // Kollision prüfen mit Spikes
+            
+            if (this.collision.collision(this.player, train)) {
+                if (this.player.invincible) break;
+                console.log("train berührt!");
+                this.playerGotHit();
+            }
+
+            train.move(dt);
+            //Sprite synchronisieren
+            if (train.sprite) {
+                //train.sprite.visible= true;
+                train.sprite.x = train.x;
+                train.sprite.y = train.y -7;
+                train.sprite.scale.x = 0.15 * train.direction; // Spiegeln, hier 0.06 zu 1 geändert. 
+                //console.log("Zug bewegt sich!");
+            } 
+        }
     }
     
     //=== RESTART ============================================================================================
@@ -687,6 +735,18 @@ export class Controller {
             gumba.alive = true;
             gumba.sprite.visible = true;
         }
+
+        //DBBros zurückk zum Leben
+        for (const dbbro of this.dbbros) {
+            dbbro.alive = true;
+            dbbro.sprite.visible = true;
+        }
+
+        for (const train of this.trains) {
+            //train.alive = true;
+            train.sprite.visible = false;
+        }
+        this.trains = [];
 
         //coins alle anzeigen
         for (const coin of this.coins) {

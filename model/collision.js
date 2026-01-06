@@ -20,7 +20,7 @@ export class Collision {
       if(!collision) return false;
 
       //fällt der Player?
-      if (player.vy <= 0) return false;
+      if (player.prevVy <= 0) return false;
 
       //war player oberhalb des Gegners?
       const playerBottom = player.y + player.height;
