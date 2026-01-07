@@ -26,8 +26,8 @@ export class Collision {
       const playerBottom = player.y + player.height;
       const enemyTop = enemy.y;
 
-      //10 ist Toleranzwert
-      return playerBottom - 10 <= enemyTop;
+      //10 ist Toleranzwert >>Hier habe ich was geändert und es scheint zu funktionieren
+      return playerBottom - 20 <= enemyTop; 
 
     }
 

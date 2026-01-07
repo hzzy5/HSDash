@@ -86,7 +86,12 @@ export class Renderer {
             sky: "assets/bilder_lvl1/09_Sky.png",
 
             //Level2
-            deko: "assets/bilder_lvl2/01_Deko.png",
+            //deko: "assets/bilder_lvl2/01_Deko.png",
+            dekoMuellE0: "assets/bilder_lvl2/01_Muell_E0.png",
+            dekoMuellE1: "assets/bilder_lvl2/01_Muell_E1.png",
+            dekoPlakateE0: "assets/bilder_lvl2/01_Plakate_E0.png",
+            dekoPlakateE1: "assets/bilder_lvl2/01_Plakate_E1.png",
+            dekoTischeE1: "assets/bilder_lvl2/01_Tische_E1.png",
             etage1: "assets/bilder_lvl2/02_Boden_E1.png",
             etage0: "assets/bilder_lvl2/03_Boden_E0.png",
             lampen3: "assets/bilder_lvl2/04_Lampen.png",

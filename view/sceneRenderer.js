@@ -150,12 +150,42 @@ export class SceneRenderer {
                 scale: 1.6
             },
             {
-                id: "deko",
+                id: "dekoTischeE1",
+                y: 73,
+                speed: -1.033,
+                sprite: null, 
+                scale: 1.6
+            },
+            {
+                id: "dekoMuellE0",
+                y: 63,
+                speed: -1.015,
+                sprite: null, 
+                scale: 1.6
+            },
+            {
+                id: "dekoMuellE1",
+                y: 63,
+                speed: -1.015,
+                sprite: null, 
+                scale: 1.6
+            },
+            {
+                id: "dekoPlakateE0",
                 y: 63,
                 speed: -1,
                 sprite: null, 
                 scale: 1.6
             },
+            {
+                id: "dekoPlakateE1",
+                y: 63,
+                speed: -1,
+                sprite: null, 
+                scale: 1.6
+            },
+
+            
         ];
     }
 

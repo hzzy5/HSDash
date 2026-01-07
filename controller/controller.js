@@ -626,7 +626,7 @@ export class Controller {
 
             //Sprite synchronisieren
             if (gumba.sprite) {
-                gumba.sprite.x = gumba.x;
+                gumba.sprite.x = gumba.x+32;
                 gumba.sprite.y = gumba.y -7;
                 gumba.sprite.scale.x = 1 * gumba.direction; // Spiegeln, hier 0.06 zu 1 geändert. 
             } 

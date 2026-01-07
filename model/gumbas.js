@@ -1,5 +1,5 @@
 export class Gumbas{
-    constructor(x, y, width = 32, height = 32) {
+    constructor(x, y, width = 62, height = 32) {
         this.x = x;
         this.y = y;
         this.width = width;
