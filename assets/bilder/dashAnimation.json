@@ -1,0 +1,63 @@
+{"frames": {
+
+"playerdash.png":
+{
+	"frame": {"x":0,"y":0,"w":120,"h":140},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":140},
+	"sourceSize": {"w":120,"h":140}
+},
+"playerdash2.png":
+{
+	"frame": {"x":0,"y":140,"w":120,"h":140},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":140},
+	"sourceSize": {"w":120,"h":140}
+},
+"playerdash3.png":
+{
+	"frame": {"x":0,"y":280,"w":120,"h":140},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":140},
+	"sourceSize": {"w":120,"h":140}
+},
+"playerdash4.png":
+{
+	"frame": {"x":0,"y":420,"w":120,"h":140},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":140},
+	"sourceSize": {"w":120,"h":140}
+},
+"playerdash5.png":
+{
+	"frame": {"x":0,"y":560,"w":120,"h":140},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":140},
+	"sourceSize": {"w":120,"h":140}
+},
+"playerdash6.png":
+{
+	"frame": {"x":0,"y":700,"w":120,"h":140},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":140},
+	"sourceSize": {"w":120,"h":140}
+}},
+"animations": {
+	"playerdash": ["playerdash2.png","playerdash3.png","playerdash4.png","playerdash5.png","playerdash6.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "dashAnimation.png",
+	"format": "RGBA8888",
+	"size": {"w":120,"h":840},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:a4e0c9d0fa538ca35fd9bf75c823e9bd:ec0144a6ef81e5298af71b76b66d3715:120370f0d6a4c202493b054877feefbc$"
+}
+}
