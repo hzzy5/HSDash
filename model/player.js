@@ -19,8 +19,8 @@ export class Player {
     const scale = refH / 800; // Basis-Referenzhöhe 800px
 
     //Etwas kleiner setzen. Besser für das Spielgefühl 
-    this.height = 120;
-    this.width = 60;
+    this.height = 170;
+    this.width = 50;
 
     // Default Geschwindigkeit (px/s) — skaliert mit Fenstergröße
     this.speed = Math.max(80, Math.round(220 * scale));
@@ -51,10 +51,10 @@ export class Player {
     this.airDashAvailable = true;
 
     // Hilfskoordinaten für Kollisionen 
-    this.x1 = this.x - this.width / 2;
-    this.x2 = this.x + this.width / 2;
-    this.y1 = this.y - this.height;
-    this.y2 = this.y;
+    this.x1 = this.x + this.width / 2;
+    this.x2 = this.x - this.width / 2;
+    this.y1 = this.y;
+    this.y2 = this.y + this.height
 
     //wenn man getroffen wird 3 sek invincible
     this.invincible = false;
@@ -120,10 +120,10 @@ export class Player {
   //Anpassen an das Spritesheet: Pivot Point unten in der Mitte
   updateHitbox () {
     //D.h. auf die Schuhe des Players fokussieren
-    this.x1 = this.x - this.width / 2;
-    this.x2 = this.x + this.width / 2;
-    this.y1 = this.y - this.height;
-    this.y2 = this.y;
+    this.x1 = this.x - (this.width / 2);
+    this.x2 = this.x + (this.width / 2);
+    this.y1 = this.y;
+    this.y2 = this.y + this.height
   } 
 
   //Methode, die den Zustand eines Spielers setzt, z.B. idle, run, jump, ...

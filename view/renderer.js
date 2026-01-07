@@ -119,12 +119,12 @@ export class Renderer {
             goalPole: "assets/bilder/ziel.png",
 
             //SPRITESHEETS, JSON
-            idleAnimation: "assets/bilder/idleSprite.json",
-            walkAnimation: "assets/bilder/walkSprite.json",
-            runAnimation: "assets/bilder/runSprite.json",
-            jumpAnimation: "assets/bilder/jumpSprite.json",
-            fallAnimation: "assets/bilder/fallSprite.json",
-            dashAnimation: "assets/bilder/dashSprite.json",
+            idleAnimation: "assets/bilder/idleAnimation.json",
+            walkAnimation: "assets/bilder/runAnimation.json",
+            runAnimation: "assets/bilder/runAnimation.json",
+            jumpAnimation: "assets/bilder/jumpAnimation.json",
+            fallAnimation: "assets/bilder/fallAnimation.json",
+            dashAnimation: "assets/bilder/dashAnimation.json",
             
             
             //SOUND

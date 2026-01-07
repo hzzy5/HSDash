@@ -1,0 +1,31 @@
+{"frames": {
+
+"playerfall1.png":
+{
+	"frame": {"x":0,"y":0,"w":120,"h":140},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":140},
+	"sourceSize": {"w":120,"h":140}
+},
+"playerfall2.png":
+{
+	"frame": {"x":0,"y":140,"w":120,"h":140},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":140},
+	"sourceSize": {"w":120,"h":140}
+}},
+"animations": {
+	"playerfall": ["playerfall1.png","playerfall2.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "fallAnimation.png",
+	"format": "RGBA8888",
+	"size": {"w":120,"h":280},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:1fc699593c5fe6c97c19d0c61cc7f330:a77744163e8885b2bccf75e5049add5a:dcffd8682197f5c95a89a38024abe980$"
+}
+}

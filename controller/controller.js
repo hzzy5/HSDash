@@ -451,8 +451,8 @@ export class Controller {
             }
             // Hilfe Koordinaten syncen
             this.player.updateHitbox();
-            // this.player.y1 = this.player.y;
-            // this.player.y2 = this.player.y + this.player.height;
+            this.player.y1 = this.player.y;
+            this.player.y2 = this.player.y + this.player.height;
           }
         }
       }
@@ -486,7 +486,7 @@ export class Controller {
         }
       }
 
-      this.playerRenderer.renderPlayer(this.player.x, this.player.y); //player rendern
+      this.playerRenderer.renderPlayer(this.player.x, this.player.y, this.player.x1, this.player.x2, this.player.y1, this.player.y2); //player rendern
       this.playerRenderer.updatePlayerAnimation(this.player.getState(), this.player.facing); //Player-animation abspielen
     }
 

@@ -1,6 +1,9 @@
 /*Spezifische View-Klasse, die für die Darstellung des Players zuständig ist.*/
 import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs"; 
 
+const HITBOX_WIDTH = 20;
+const HITBOX_HEIGHT = 30;
+
 export class PlayerRenderer {
 
     constructor(container) {
@@ -26,40 +29,40 @@ export class PlayerRenderer {
          this.world.sortableChildren = true;
          this.world.addChild(this.hitboxDebug);
 
-        this.CHARACTER_ANIMATIONS = {
-            sebastian: {
-                idle: "sebastian_idleRight",
-                walk: "sebastian_walkRight",
-                run: "sebastian_runRight",
-                jump: "sebastian_jumpRight",
-                fall: "sebastian_fallRight",
-                dash: "sebastian_dashRight"
-            },
+        // this.CHARACTER_ANIMATIONS = {
+        //     sebastian: {
+        //         idle: "sebastian_idleRight",
+        //         walk: "sebastian_walkRight",
+        //         run:  "sebastian_runRight",
+        //         jump: "sebastian_jumpRight",
+        //         fall: "sebastian_fallRight",
+        //         dash: "sebastian_dashRight"
+        //     },
 
-            dennis: {
-                idle: "dennis_idleRight",
-                walk: "dennis_walkRight",
-                run: "dennis_runRight",
-                jump: "dennis_jumpRight",
-                fall: "dennis_fallRight",
-                dash: "dennis_dashRight"
-            }
-        };
+        //     dennis: {
+        //         idle: "dennis_idleRight",
+        //         walk: "dennis_walkRight",
+        //         run:  "dennis_runRight",
+        //         jump: "dennis_jumpRight",
+        //         fall: "dennis_fallRight",
+        //         dash: "dennis_dashRight"
+        //     }
+        // };
     }
 
     //Metehode, um das Sprite zu positioniert
     renderPlayer(x, y) {
         if(this.currentAnimation) {
-            this.currentAnimation.position.set(x,y);
+            this.currentAnimation.position.set(x+HITBOX_WIDTH,y-HITBOX_HEIGHT);
         }
         
         //Sicherheitshalber die anderen Animationen auch positionieren, damit man keine doppelten Sprites sieht
         this.animations.forEach(a => {
-            if (a) a.position.set(x, y);
+            if (a) a.position.set(x+HITBOX_WIDTH,y-HITBOX_HEIGHT);
         });
         
         //DEBUG
-        //this.drawHitbox(x1, y1, w, h);
+        //this.drawHitbox(x, y, 50, 170);
     }
 
     //Methode, um den Player zu erstellen 
@@ -83,7 +86,8 @@ export class PlayerRenderer {
         //Wenn es noch keine idle-animation gibt
             const sheet1 = PIXI.Assets.get('idleAnimation').data.animations;
             // create an animated sprite
-            this.idleAnimation = PIXI.AnimatedSprite.fromFrames(sheet1["sonic_sprite_sheet_idleRight"]);
+            this.idleAnimation = PIXI.AnimatedSprite.fromFrames(sheet1["playermodelgro"]);
+            this.idleAnimation.scale.set(1.5);
             this.idleAnimation.animationSpeed = 1 / 6; //6 fps
             this.idleAnimation.anchor.set(0.5, 0); //pivot point ist mittig (0.5) unten (1)
             this.idleAnimation.loop = true;
@@ -93,7 +97,8 @@ export class PlayerRenderer {
         //WALK
             const sheet2 = PIXI.Assets.get('walkAnimation').data.animations;
             // create an animated sprite
-            this.walkAnimation = PIXI.AnimatedSprite.fromFrames(sheet2["sonic_sprite_sheet_walkRight"]);
+            this.walkAnimation = PIXI.AnimatedSprite.fromFrames(sheet2["playermodelgro"]);
+            this.walkAnimation.scale.set(1.5);
             this.walkAnimation.animationSpeed = 1 / 6; 
             this.walkAnimation.anchor.set(0.5, 0);
             this.walkAnimation.loop = true;
@@ -103,8 +108,9 @@ export class PlayerRenderer {
         //RUN
             const sheet3 = PIXI.Assets.get('runAnimation').data.animations;
             // create an animated sprite
-            this.runAnimation = PIXI.AnimatedSprite.fromFrames(sheet3["sonic_sprite_sheet_RunRight"]);
-            this.runAnimation.animationSpeed = 1 / 6; 
+            this.runAnimation = PIXI.AnimatedSprite.fromFrames(sheet3["playermodelgro"]);
+            this.runAnimation.scale.set(1.5);
+            this.runAnimation.animationSpeed = 1 / 4; 
             this.runAnimation.anchor.set(0.5, 0);
             this.runAnimation.loop = true; 
             this.runAnimation.name = "run";
@@ -114,7 +120,8 @@ export class PlayerRenderer {
         //Wenn es noch keine jump-animation gibt
             const sheet4 = PIXI.Assets.get('jumpAnimation').data.animations;
             // create an animated sprite
-            this.jumpAnimation = PIXI.AnimatedSprite.fromFrames(sheet4["sonic_sprite_sheet_jumpRight"]);
+            this.jumpAnimation = PIXI.AnimatedSprite.fromFrames(sheet4["playerjump"]);
+            this.jumpAnimation.scale.set(1.6);
             this.jumpAnimation.animationSpeed = 1 / 6; 
             this.jumpAnimation.anchor.set(0.5, 0);
             this.jumpAnimation.loop = false;
@@ -124,7 +131,8 @@ export class PlayerRenderer {
         //FALL
             const sheet5 = PIXI.Assets.get('fallAnimation').data.animations;
             // create an animated sprite
-            this.fallAnimation = PIXI.AnimatedSprite.fromFrames(sheet5["sonic_sprite_sheet_fallRight"]);
+            this.fallAnimation = PIXI.AnimatedSprite.fromFrames(sheet5["playerfall"]);
+            this.fallAnimation.scale.set(1.6);
             this.fallAnimation.animationSpeed = 1 / 6; 
             this.fallAnimation.anchor.set(0.5, 0);
             this.fallAnimation.loop = false; 
@@ -134,7 +142,8 @@ export class PlayerRenderer {
         //DASH
             const sheet6 = PIXI.Assets.get('dashAnimation').data.animations;
             // create an animated sprite
-            this.dashAnimation = PIXI.AnimatedSprite.fromFrames(sheet6["sonic_sprite_sheet_dashRight"]);
+            this.dashAnimation = PIXI.AnimatedSprite.fromFrames(sheet6["playerdash"]);
+            this.dashAnimation.scale.set(1.5);
             this.dashAnimation.animationSpeed = 1 / 6; 
             this.dashAnimation.anchor.set(0.5, 0);
             this.dashAnimation.loop = false;
