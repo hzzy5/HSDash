@@ -19,7 +19,7 @@ export class TrainRenderer{
     
         // Position
         sprite.x = x;
-        sprite.y = y-7;
+        sprite.y = y;
 
         sprite.anchor.set(0.5);      // Zentriert die Gegner
         sprite.scale.set(0.1);      // Macht den Gengner kleiner 
@@ -33,8 +33,36 @@ export class TrainRenderer{
 
     positionTrainSprite(sprite, x, y, directionX){
         sprite.x = x;
-        sprite.y = y-7;
+        sprite.y = y;
 
-        sprite.scale.x = 0.15 * directionX;
+        sprite.scale.x = 0.1 * directionX; //damit es in die richtige rich tugn gespiegelt ist, wird dann allerdings auch wenn man unter dem steht immer schmaller
+        //brauchen eine Version mit nur + oder - 1 
+    }
+
+    //Sprite und neuer Richtungsvektor werden übergeben
+    rotateTrainSprite(sprite, vectorXNew, vectorYNew){
+        //Startvektor
+        //let vectorXStart = -1;
+        let vectorYStart = 0;
+        //theorethisch braucht man y-Werte gar nciht 
+        //Durch Skalarprodukt beider Vektoren den Cosinus des Winkels dazwischen berechnen
+        // vectorXStart = -1 bei links
+        // vectorXStart = 1 bei rechts
+        //darauf basierend mit arccos den Winkel berechenen
+
+        if(vectorXNew < 0 && vectorYNew > 0){//unten links
+            let newAngle = -1 * vectorXNew + vectorYStart * vectorYNew;
+            sprite.rotation = Math.acos(newAngle) * -1;
+        }else if(vectorXNew > 0 && vectorYNew > 0){ //unten rechts
+            let newAngle = 1 * vectorXNew + vectorYStart * vectorYNew;
+            sprite.rotation = Math.acos(newAngle);
+        }else if(vectorXNew < 0 && vectorYNew < 0){ //oben links
+            let newAngle = -1 * vectorXNew + vectorYStart * vectorYNew;
+            sprite.rotation = Math.acos(newAngle);
+        }else if(vectorXNew > 0 && vectorYNew < 0){ //oben rechts
+            let newAngleNegativeX = 1 * vectorXNew + vectorYStart * vectorYNew;
+            sprite.rotation = Math.acos(newAngleNegativeX) * -1;
+        }
+
     }
 }

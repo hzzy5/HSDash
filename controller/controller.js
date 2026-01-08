@@ -673,6 +673,7 @@ export class Controller {
 
                 train.sprite = this.trainRenderer.createTrainSprite(dbbro.x, dbbro.y);
                 train.calculateDirection(this.player.x, this.player.y);
+                this.trainRenderer.rotateTrainSprite(train.sprite, train.directionX, train.directionY);
                 //train.sprite.visible = true;
                 this.trains.push(train);
                 //console.log("Geworfen!");

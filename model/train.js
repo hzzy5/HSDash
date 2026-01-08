@@ -56,7 +56,7 @@ export class Trains{
         this.sprite.visible = false;
     }
 
-    // Update der Hitbox (falls Sprite Position verändert würde)
+    // Update der Hitbox (falls Sprite Position verändert wurde)
     updateHitbox() {
         this.x1 = this.x;
         this.y1 = this.y;
