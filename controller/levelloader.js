@@ -141,8 +141,9 @@ export class LevelLoader {
                 }
 
                 else if (char === 'z') {
-                    let goalPole = new Goal(posX, posY);
-                    goalPole.sprite = this.goalRenderer.createGoalSprite(goalPole);
+                    const goal = level.goal; //Ziel je nach Level holen
+                    let goalPole = new Goal(posX, posY, goal.width, goal.height, goal.offsetY);
+                    goalPole.sprite = this.goalRenderer.createGoalSprite(goalPole, goal.type);
                     this.goal.push(goalPole);
                     this.levelSprites.push(goalPole.sprite);
                 }

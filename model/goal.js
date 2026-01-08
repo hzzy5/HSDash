@@ -1,7 +1,7 @@
 export class Goal{
-    constructor(x, y, width = 10*0.15, height = 2900*0.15) {
+    constructor(x, y, width, height, offsetY) {
         this.x = x;
-        this.y = y+45;
+        this.y = y + offsetY;
         this.width = width; //schmaler machen!
         this.height = height;
         this.sprite = null;       // wird später vom Renderer gesetzt

@@ -121,7 +121,8 @@ export class Renderer {
             gumba: "assets/bilder/minidahm_anim.json",
             dbBruder: "assets/bilder/DB-Bruder.png",
             zug: "assets/bilder/Bahn.png",
-            goalPole: "assets/bilder/Ziel_lvl1.png",
+            zielGebäude4: "assets/bilder/Ziel_lvl1.png",
+            zielFahrstuhl: "assets/bilder/fahrstuhlAnimation.json",
 
             //SPRITESHEETS, JSON
             idleAnimation: "assets/bilder/idleAnimation.json",

@@ -1,0 +1,105 @@
+{"frames": {
+
+"frame_001.png":
+{
+	"frame": {"x":0,"y":0,"w":62,"h":101},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":62,"h":101},
+	"sourceSize": {"w":62,"h":101},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"frame_002.png":
+{
+	"frame": {"x":0,"y":101,"w":62,"h":101},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":62,"h":101},
+	"sourceSize": {"w":62,"h":101},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"frame_003.png":
+{
+	"frame": {"x":0,"y":202,"w":62,"h":101},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":62,"h":101},
+	"sourceSize": {"w":62,"h":101},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"frame_004.png":
+{
+	"frame": {"x":0,"y":303,"w":62,"h":101},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":62,"h":101},
+	"sourceSize": {"w":62,"h":101},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"frame_005.png":
+{
+	"frame": {"x":0,"y":404,"w":62,"h":101},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":62,"h":101},
+	"sourceSize": {"w":62,"h":101},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"frame_006.png":
+{
+	"frame": {"x":0,"y":505,"w":62,"h":101},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":62,"h":101},
+	"sourceSize": {"w":62,"h":101},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"frame_007.png":
+{
+	"frame": {"x":0,"y":606,"w":62,"h":101},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":62,"h":101},
+	"sourceSize": {"w":62,"h":101},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"frame_008.png":
+{
+	"frame": {"x":0,"y":707,"w":62,"h":101},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":62,"h":101},
+	"sourceSize": {"w":62,"h":101},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"frame_009.png":
+{
+	"frame": {"x":0,"y":808,"w":62,"h":101},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":62,"h":101},
+	"sourceSize": {"w":62,"h":101},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"frame_010.png":
+{
+	"frame": {"x":0,"y":909,"w":62,"h":101},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":62,"h":101},
+	"sourceSize": {"w":62,"h":101},
+	"anchor": {"x":0.5,"y":0.5}
+}},
+"animations": {
+	"frame": ["frame_001.png","frame_002.png","frame_003.png","frame_004.png","frame_005.png","frame_006.png","frame_007.png","frame_008.png","frame_009.png","frame_010.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "fahrstuhlAnimation.png",
+	"format": "RGBA8888",
+	"size": {"w":62,"h":1010},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:0d9e220db7b5025be9e7fe42414a0e3e:0fc225c6762a46fb5d84066322e89603:ddfddf402932b68d5a20884dcbdc3d88$"
+}
+}
