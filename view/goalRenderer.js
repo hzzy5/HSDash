@@ -19,8 +19,8 @@ export class GoalRenderer{
         sprite.x = goal.x;
         sprite.y = goal.y;
 
-        sprite.anchor.set(0.5 , 0);      //Ankerpunkt ist unten in der Mitte
-        sprite.scale.set(0.15);      
+        sprite.anchor.set(0.4 , 0);      //Ankerpunkt ist unten in der Mitte
+        sprite.scale.set(2);      
         sprite.zIndex = 900;       
 
         this.world.addChild(sprite);
