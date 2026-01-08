@@ -4,6 +4,12 @@ export var levels = [
     {
         name: "level01",
         background: "campus",
+        goal:  {
+            type: "zielGebäude4",
+            width: 1280, 
+            height: 720,
+            offsetY: 40,
+        },
         //ggf. weitere Eigenschaften
         map: [
 
@@ -40,6 +46,12 @@ export var levels = [
     {
         name: "level02",
         background: "gebäude 4",
+        goal:  {
+            type: "zielFahrstuhl",
+            width: 122,
+            height: 202,
+            offsetY: 21,
+        },
         //ggf. weitere Eigenschaften
         map: [
             "                                                                                                                                                                                                                   ",

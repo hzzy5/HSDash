@@ -32,6 +32,8 @@ export class GoalRenderer{
         switch (type) {
             case "zielGebäude4": 
                 this.currentGoal = PIXI.Sprite.from("zielGebäude4"); 
+                this.currentGoal.scale.set(2);
+                this.currentGoal.zIndex = 999;
                 break;
 
             case "zielFahrstuhl":
