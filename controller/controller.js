@@ -27,6 +27,7 @@ import { BlockRenderer } from "../view/blockRenderer.js";
 import { GameOverScreenRenderer } from "../view/gameOverScreenRenderer.js";
 import { GameWinScreenRenderer } from "../view/gameWinScreenRenderer.js"
 import { CharacterSelectRederer } from "../view/characterSelectRenderer.js";
+import { LevelmapRenderer } from "../view/levelmapRenderer.js";
 
 
 //CONTROLLER
@@ -51,6 +52,7 @@ export class Controller {
     goalRenderer;
     blockRenderer;
     characterSelectRenderer;
+    levelmapRenderer;
 
     //MODEL
     player;
@@ -166,7 +168,10 @@ export class Controller {
          this.loadNextLevel();
         //this.restartGame(); //HIER METHODE SPÄTER ÄNDERN
         //this.levelloader.loadLevel(this.levelloader.levels[1]);
+
       });
+
+      this.levelmapRenderer = new LevelmapRenderer(this.renderer.ui, this.renderer.ticker);
 
 
 
@@ -252,17 +257,16 @@ export class Controller {
         //SPIEL STARTEN, wenn auf den Button geklickt wird
         this.startScreenRenderer.createStartButton(() => { 
           this.startScreenRenderer.hide();
-          //Wechseln zum Charakterauswahl Screen
-          this.characterSelectRenderer.show();
 
-          //Wenn der Spieler einen Charakter ausgewählt hat
-          this.characterSelectRenderer.createButton((selectedPlayer) => {
-            this.setPlayer(selectedPlayer);
-            this.selectedPlayer = selectedPlayer; //Auswahl speichern
+          this.levelmapRenderer.show();
+
+          //Level auswählen
+          this.levelmapRenderer.showMap(this.levelloader.levels, (levelIndex) => {
+            this.levelmapRenderer.hide();
+            //this.loadLevel(levelIndex);
+          
             this.gameStarted = true; //Spiel ist gestartet
           
-            this.characterSelectRenderer.hide();
-
             this.sound.backroundMusic();
             this.musicPlays = true;
             

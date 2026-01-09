@@ -124,6 +124,8 @@ export class Renderer {
             zielGebäude4: "assets/bilder/Ziel_lvl1.png",
             zielFahrstuhl: "assets/bilder/fahrstuhlAnimation.json",
 
+            lockMap: "assets/bilder/lock3.png",
+
             //SPRITESHEETS, JSON
             idleAnimation: "assets/bilder/idleAnimation.json",
             walkAnimation: "assets/bilder/runAnimation.json",
