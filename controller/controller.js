@@ -678,6 +678,7 @@ export class Controller {
             if (this.collision.collisionUp(this.player, dbbro)) {
                 console.log("dbbro besiegt!");
                 this.sound.gumbaDies();
+                this.sound.bossfightWon();
                 dbbro.dies();
                 this.sound.switchBackToMaintheme();
                 continue;
@@ -697,6 +698,9 @@ export class Controller {
                 this.trainRenderer.rotateTrainSprite(train.sprite, train.directionX, train.directionY);
                 //train.sprite.visible = true;
                 this.trains.push(train);
+                if(distancenear){
+                  this.sound.dbbroThrows();
+                }
                 //console.log("Geworfen!");
                 dbbro.throwTimer = 10;
                 dbbro.justThrew = true;

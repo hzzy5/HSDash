@@ -28,6 +28,12 @@ export class SoundController{
     //Gumba stirbt
     gumbadies;
 
+    //DBBruder wirft
+    dbbrothrows;
+
+    //DbBruder wurde besiegt
+    dbbrodies;
+
     //Level gewonnen
     levelwon;
 
@@ -85,6 +91,16 @@ export class SoundController{
         this.gumbadies = new Howl({
             src: ["../assets/audio/gumba-dies.mp3"],
             volume: 1
+        });
+
+        this.dbbrothrows = new Howl({
+            src: ["../assets/audio/dbbro-throws.mp3"],
+            volume: 0.3
+        });
+
+        this.dbbrodies = new Howl({
+            src: ["../assets/audio/bossfight-won.mp3"],
+            volume: 0.5
         });
 
         this.playerdies = new Howl({
@@ -198,6 +214,20 @@ export class SoundController{
     gumbaDies(){
         if(this.shouldSoundBeOn){
             this.gumbadies.play();
+        
+        }
+    }
+
+    dbbroThrows(){
+        if(this.shouldSoundBeOn){
+            this.dbbrothrows.play();
+        
+        }
+    }
+
+    bossfightWon(){
+        if(this.shouldSoundBeOn){
+            this.dbbrodies.play();
         
         }
     }
