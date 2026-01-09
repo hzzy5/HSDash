@@ -151,7 +151,7 @@ export class Controller {
         );
 
 
-      this.levelSelectRenderer = new LevelSelectRenderer(this.renderer.ui, this.renderer.ticker);
+      this.levelSelectRenderer = new LevelSelectRenderer(this.renderer.ui, this.renderer.screen, this.renderer.ticker);
 
 
 

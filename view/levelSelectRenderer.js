@@ -2,9 +2,10 @@ import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs
 
 export class LevelSelectRenderer {
 
-    constructor(uiContainer, ticker) {
+    constructor(uiContainer, screen, ticker) {
         // UI-Container von außen
         this.ui = uiContainer;
+        this.screen = screen;
         this.ticker = ticker;
 
         // eigener Startscreen-Container
@@ -29,12 +30,22 @@ export class LevelSelectRenderer {
 
     showMap(levels, onSelectLevel, onBack) {
         this.container.removeChildren();
+        // =========================
+        // BACKGROUND
+        // =========================
+        const background = PIXI.Sprite.from("vorschau");
+        background.width = this.screen.width;
+        background.height = background.texture.height*2;
+        background.y = 30;
+
+        background.scale.set(2.25);
+        this.container.addChild(background); 
 
         // =========================
         // OVERLAY
         // =========================
         const overlay = new PIXI.Graphics();
-        overlay.beginFill(0x0b1a2a, 0.65);
+        overlay.beginFill(0x0b1a2a, 0.75);
         overlay.drawRect(0, 0, window.innerWidth, window.innerHeight);
         overlay.endFill();
         this.container.addChild(overlay);

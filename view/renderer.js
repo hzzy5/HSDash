@@ -22,7 +22,7 @@ export class Renderer {
         await this.app.init({
             width: window.innerWidth,
             height: window.innerHeight,
-            backgroundColor: 0x4682b4, 
+            backgroundColor: 0x3a7fbe, 
             antialias: true, // Kanten glätten -> sonst Linien gezackt
             resizeTo: window // Automatisch an Fenstergröße anpassen
         }); 
@@ -103,9 +103,10 @@ export class Renderer {
 
             //SPIELELEMENTE
             //player: "assets/bilder/player4.png",
-            sebastian: "assets/bilder_lvl1/playermodel.png",
-            dennis: "assets/bilder_lvl1/playermodel2.png",
-            blueFrame: "assets/bilder/rahmen.png",
+            // sebastian: "assets/bilder_lvl1/playermodel.png",
+            // dennis: "assets/bilder_lvl1/playermodel2.png",
+            // blueFrame: "assets/bilder/rahmen.png",
+            vorschau: "assets/bilder_lvl1/Vorschau.png",
 
             //coin: "assets/bilder/coin.png",
             coin: "assets/bilder/coin_anim.json",
