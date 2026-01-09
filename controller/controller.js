@@ -663,11 +663,22 @@ export class Controller {
         //alle Brüder durchgehen die auf dem Spielfeld liegen und sehen ob sie berührt wurden
         for (const dbbro of this.dbbros) {
             if(!dbbro.alive) continue; //wenn nicht mehr Leben dann zum nächsten gehen
+
+            //ist Player in der Nähe?
+            let distancenear = dbbro.isPlayerClose(this.player.x);
+            if(distancenear){
+              this.sound.switchToBosstheme();
+            }else{
+              this.sound.switchBackToMaintheme();
+            }
+            //console.log(distancenear);
+
             // Player Kollision prüfen mit dbbro
             if (this.collision.collisionUp(this.player, dbbro)) {
                 console.log("dbbro besiegt!");
                 this.sound.gumbaDies();
                 dbbro.dies();
+                this.sound.switchBackToMaintheme();
                 continue;
             } else if (this.collision.collision(this.player, dbbro)) {
               //if (this.player.invincible) break; //kommt mit hier rein sonst wird teimer nicht geupdatet

@@ -45,4 +45,13 @@ export class DBBro{
         }
     }
 
+    isPlayerClose(playerX){
+        let distance = this.x - playerX;
+        if(distance < 1000 && distance > -1000){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 }

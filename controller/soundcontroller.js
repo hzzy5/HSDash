@@ -37,6 +37,10 @@ export class SoundController{
     //wird die hintergrundmusik gerade abgespielt?
     musicplaying = false;
 
+    bosstheme;
+
+    bossmusicplaying = false;
+
     async init() {
         //springen
         this.jumpsound = new Howl({
@@ -47,6 +51,12 @@ export class SoundController{
         //hintergrundmusik
         this.backroundmusicLevel = new Howl({
             src: ["../assets/audio/hintergrundmusik-level.mp3"],
+            volume: 0.3,
+            loop: true
+        });
+
+        this.bosstheme = new Howl({
+            src: ["../assets/audio/bosstheme.mp3"],
             volume: 0.3,
             loop: true
         });
@@ -94,8 +104,10 @@ export class SoundController{
             
 
         if(this.shouldSoundBeOn){
-            this.backroundmusicLevel.play();
-            this.musicplaying = true;
+            if(!this.musicplaying){
+                this.backroundmusicLevel.play();
+                this.musicplaying = true;
+            }
         }
     }
 
@@ -103,10 +115,10 @@ export class SoundController{
         if(this.shouldSoundBeOn){
             this.jumpsound.play();
             //falls Hintergrundmusik doch noch nicht beim Start des Levels abgespielt wurde
-            if(!this.musicplaying){
-                this.backroundmusicLevel.play();
-                this.musicplaying = true;
-            }
+            //if(!this.musicplaying){
+                //this.backroundmusicLevel.play();
+                //this.musicplaying = true;
+            //}
         }
     }
 
@@ -115,6 +127,35 @@ export class SoundController{
             if(!this.musicplaying){
                 this.backroundmusicLevel.play();
                 this.musicplaying = true;
+            }
+        }
+    }
+
+    switchToBosstheme(){
+        if(this.shouldSoundBeOn){
+            if(this.musicplaying && !this.bossmusicplaying){ //
+                this.backroundmusicLevel.pause();
+                //this.backroundmusicLevel.pause();
+                //this.backroundmusicLevel.fade(1, 0, 2000);
+                this.musicplaying = false;
+                this.bosstheme.play();
+                //this.bosstheme.fade(0, 1, 2000);
+                this.bossmusicplaying = true;
+                console.log("Bosstheme gestartet");
+            }
+        }
+    }
+
+    switchBackToMaintheme(){
+        if(this.shouldSoundBeOn){
+            if(this.bossmusicplaying && !this.musicplaying){//&& !this.musicplaying
+                this.bosstheme.pause();
+                //this.bosstheme.fade(1, 0, 2000);
+                this.bossmusicplaying = false;
+                this.backroundmusicLevel.play();
+                //this.backroundmusicLevel.fade(0, 1, 2000);
+                this.musicplaying = true;
+                console.log("zurück zu anderer Musik");
             }
         }
     }
@@ -178,11 +219,15 @@ export class SoundController{
     switchOnOff(){
         this.shouldSoundBeOn = !this.shouldSoundBeOn;
         if(this.shouldSoundBeOn){
-            this.backroundmusicLevel.play();
+            this.backroundMusic();
+
         }else{
             this.jumpsound.pause();
             this.coincollected.pause();
             this.backroundmusicLevel.pause();
+            this.musicplaying = false;
+            this.bosstheme.pause();
+            this.bossmusicplaying = false;
         }
     }
 }
