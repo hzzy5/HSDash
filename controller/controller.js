@@ -280,9 +280,15 @@ export class Controller {
           }
       );
 
-      this.gameOverScreenRenderer.createStartButton(() => {
-          this.restartGame();
-      });
+      this.gameOverScreenRenderer.createStartButton(
+        //restart
+        () => {this.restartGame();},
+        //start
+        () => {
+          this.gameOverScreenRenderer.hide();
+          this.startScreenRenderer.show();
+        }
+    );
     
     }
 

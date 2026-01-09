@@ -1,5 +1,8 @@
 import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs";
 
+const BTNWIDTH = 350;
+const BTNHEIGHT = 70;
+
 export class GameOverScreenRenderer {
 
     constructor(uiContainer) {
@@ -26,7 +29,7 @@ export class GameOverScreenRenderer {
         this.container.visible = false;
     }
 
-    createStartButton(onStart) {
+    createStartButton(restart, start) {
 
         // =========================
         // OVERLAY
@@ -72,7 +75,7 @@ export class GameOverScreenRenderer {
 
 
         // =========================
-        // START BUTTON CONTAINER
+        // RESTART BUTTON CONTAINER
         // =========================
         const btnContainer = new PIXI.Container();
         this.container.addChild(btnContainer);
@@ -80,7 +83,7 @@ export class GameOverScreenRenderer {
         // Button-Grafik
         const btn = new PIXI.Graphics();
         btn.beginFill(0x333333, 0.9);
-        btn.drawRoundedRect(0, 0, 260, 70, 14);
+        btn.drawRoundedRect(0, 0, BTNWIDTH, BTNHEIGHT, 14);
         btn.endFill();
 
         btn.eventMode = "static";
@@ -90,14 +93,14 @@ export class GameOverScreenRenderer {
         btn.on("pointerover", () => {
             btn.clear();
             btn.beginFill(0x999999, 1);
-            btn.drawRoundedRect(0, 0, 260, 70, 14);
+            btn.drawRoundedRect(0, 0, BTNWIDTH, BTNHEIGHT, 14);
             btn.endFill();
         });
 
         btn.on("pointerout", () => {
             btn.clear();
             btn.beginFill(0x333333, 0.9);
-            btn.drawRoundedRect(0, 0, 260, 70, 14);
+            btn.drawRoundedRect(0, 0, BTNWIDTH, BTNHEIGHT, 14);
             btn.endFill();
         });
 
@@ -111,17 +114,69 @@ export class GameOverScreenRenderer {
         });
 
         text.anchor.set(0.5);
-        text.x = 130; // Hälfte von 260
-        text.y = 35;  // Hälfte von 70
+        text.x = BTNWIDTH/2; // Hälfte von 260
+        text.y = BTNHEIGHT/2;  // Hälfte von 70
         btn.addChild(text);
 
         // Button-Position
-        btnContainer.x = window.innerWidth / 2 - 130;
-        btnContainer.y = window.innerHeight / 2 + 40;
+        btnContainer.x = window.innerWidth / 2 - BTNWIDTH/2;
+        btnContainer.y = window.innerHeight / 2 + BTNHEIGHT/2;
 
         // Click-Event
         btn.on("pointertap", () => {
-            onStart();
+            restart();
+        });
+
+
+        // =========================
+        // START MENU CONTAINER
+        // =========================
+
+        // Button-Grafik
+        const btn2 = new PIXI.Graphics();
+        btn2.beginFill(0x333333, 0.9);
+        btn2.drawRoundedRect(0, 100, BTNWIDTH, BTNHEIGHT, 14);
+        btn2.endFill();
+
+        btn2.eventMode = "static";
+        btn2.cursor = "pointer";
+
+        // Hover-Effekt
+        btn2.on("pointerover", () => {
+            btn2.clear();
+            btn2.beginFill(0x999999, 1);
+            btn2.drawRoundedRect(0, 100, BTNWIDTH, BTNHEIGHT, 14);
+            btn2.endFill();
+        });
+
+        btn2.on("pointerout", () => {
+            btn2.clear();
+            btn2.beginFill(0x333333, 0.9);
+            btn2.drawRoundedRect(0, 100, BTNWIDTH, BTNHEIGHT, 14);
+            btn2.endFill();
+        });
+
+        btnContainer.addChild(btn2);
+
+        // Button-Text
+        const text2 = new PIXI.Text("ZUM START", {
+            fontFamily: "Press Start 2P",
+            fontSize: 24,
+            fill: 0xffffff
+        });
+
+        text2.anchor.set(0.5);
+        text2.x = BTNWIDTH/2; // Hälfte von 260
+        text2.y = BTNHEIGHT/2 + 100;  // Hälfte von 70
+        btn2.addChild(text2);
+
+        // Button-Position
+        btnContainer.x = window.innerWidth / 2 - BTNWIDTH/2;
+        btnContainer.y = window.innerHeight / 2 + BTNHEIGHT/2;
+
+        // Click-Event
+        btn2.on("pointertap", () => {
+            start();
         });
     }
 }
