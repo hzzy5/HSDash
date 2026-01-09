@@ -1,5 +1,8 @@
 import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs";
 
+const BTNWIDTH = 350;
+const BTNHEIGHT = 70;
+
 export class GameWinScreenRenderer {
 
     constructor(uiContainer,screen, coins5) {
@@ -27,7 +30,7 @@ export class GameWinScreenRenderer {
         this.container.visible = false;
     }
 
-    createButton(onStart) {
+    createButton(restart, next, start) {
 
         // =========================
         // OVERLAY
@@ -36,6 +39,7 @@ export class GameWinScreenRenderer {
         overlay.beginFill(0x005000, 0.55);
         overlay.drawRect(0, 0, window.innerWidth, window.innerHeight);
         overlay.endFill();
+        overlay.eventMode = "none";
         this.container.addChild(overlay);
 
         // =========================
@@ -106,59 +110,159 @@ export class GameWinScreenRenderer {
 
 
         // =========================
-        // START BUTTON CONTAINER
+        // NEUSTART BUTTON
         // =========================
         const btnContainer = new PIXI.Container();
         this.container.addChild(btnContainer);
 
         // Button-Grafik
-        const btn = new PIXI.Graphics();
-        btn.beginFill(0x333333, 0.9);
-        btn.drawRoundedRect(0, 0, 260, 70, 14);
-        btn.endFill();
+        const btn1 = new PIXI.Graphics();
+        btn1.beginFill(0x333333, 0.9);
+        btn1.drawRoundedRect(0, 0, BTNWIDTH, BTNHEIGHT, 14);
+        btn1.endFill();
 
         //Button reagiert auf Events
-        btn.eventMode = "static";
-        btn.cursor = "pointer"; //Mauszeiger
+        btn1.eventMode = "static";
+        btn1.cursor = "pointer"; //Mauszeiger
 
         // Hover-Effekt
-        btn.on("pointerover", () => {
-            btn.clear();
-            btn.beginFill(0x999999, 1);
-            btn.drawRoundedRect(0, 0, 260, 70, 14);
-            btn.endFill();
+        btn1.on("pointerover", () => {
+            btn1.clear();
+            btn1.beginFill(0x999999, 1);
+            btn1.drawRoundedRect(0, 0, BTNWIDTH, BTNHEIGHT, 14);
+            btn1.endFill();
         });
 
-        btn.on("pointerout", () => {
-            btn.clear();
-            btn.beginFill(0x333333, 0.9);
-            btn.drawRoundedRect(0, 0, 260, 70, 14);
-            btn.endFill();
+        btn1.on("pointerout", () => {
+            btn1.clear();
+            btn1.beginFill(0x333333, 0.9);
+            btn1.drawRoundedRect(0, 0, BTNWIDTH, BTNHEIGHT, 14);
+            btn1.endFill();
         });
 
-        btnContainer.addChild(btn);
+        btnContainer.addChild(btn1);
 
         // Button-Text
         const text = new PIXI.Text("NEUSTART", {
             fontFamily: "Press Start 2P",
-            fontSize: 24,
+            fontSize: 20,
             fill: 0xffffff
         });
 
         text.anchor.set(0.5);
-        text.x = 130; // Hälfte von 260
-        text.y = 35;  // Hälfte von 70
-        btn.addChild(text);
-
-        // Button-Position
-        btnContainer.x = window.innerWidth / 2 - 130;
-        btnContainer.y = window.innerHeight / 2 + 40;
+        text.x = BTNWIDTH /2; // Hälfte von 260
+        text.y = BTNHEIGHT/2;  // Hälfte von 70
+        btn1.addChild(text);
 
         // Click-Event
-        btn.on("pointertap", () => {
-            onStart();
+        btn1.on("pointertap", () => {
+            restart();
         });
+
+
+        // =========================
+        // NEXT LEVEL BUTTON 
+        // =========================
+        // Button-Grafik
+        const btn2 = new PIXI.Graphics();
+        btn2.beginFill(0x333333, 0.9);
+        btn2.drawRoundedRect(0, 100, BTNWIDTH, BTNHEIGHT, 14);
+        btn2.endFill();
+
+        //Button reagiert auf Events
+        btn2.eventMode = "static";
+        btn2.cursor = "pointer"; //Mauszeiger
+
+        // Hover-Effekt
+        btn2.on("pointerover", () => {
+            btn2.clear();
+            btn2.beginFill(0x999999, 1);
+            btn2.drawRoundedRect(0, 100, BTNWIDTH, BTNHEIGHT, 14);
+            btn2.endFill();
+        });
+
+        btn2.on("pointerout", () => {
+            btn2.clear();
+            btn2.beginFill(0x333333, 0.9);
+            btn2.drawRoundedRect(0, 100, BTNWIDTH, BTNHEIGHT, 14);
+            btn2.endFill();
+        });
+
+        btnContainer.addChild(btn2);
+
+        // Button-Text
+        const text2 = new PIXI.Text("NÄCHSTES LEVEL", {
+            fontFamily: "Press Start 2P",
+            fontSize: 20,
+            fill: 0xffffff
+        });
+
+        text2.anchor.set(0.5);
+        text2.x = BTNWIDTH/2; // Hälfte von 400
+        text2.y = 100 + BTNHEIGHT/2;  // Hälfte von 70
+        btn2.addChild(text2);
+        console.log(btn2.x);
+
+         // Click-Event
+        btn2.on("pointertap", () => {
+            next();
+        });
+
+
+        // =========================
+        // START BUTTON 
+        // =========================
+        // Button-Grafik
+        const btn3 = new PIXI.Graphics();
+        btn3.beginFill(0x333333, 0.9);
+        btn3.drawRoundedRect(0, 200, BTNWIDTH, BTNHEIGHT, 14);
+        btn3.endFill();
+
+        //Button reagiert auf Events
+        btn3.eventMode = "static";
+        btn3.cursor = "pointer"; //Mauszeiger
+
+        // Hover-Effekt
+        btn3.on("pointerover", () => {
+            btn3.clear();
+            btn3.beginFill(0x999999, 1);
+            btn3.drawRoundedRect(0, 200, BTNWIDTH, BTNHEIGHT, 14);
+            btn3.endFill();
+        });
+
+        btn3.on("pointerout", () => {
+            btn3.clear();
+            btn3.beginFill(0x333333, 0.9);
+            btn3.drawRoundedRect(0, 200, BTNWIDTH, BTNHEIGHT, 14);
+            btn3.endFill();
+        });
+
+        btnContainer.addChild(btn3);
+
+        // Button-Text
+        const text3 = new PIXI.Text("ZUM START", {
+            fontFamily: "Press Start 2P",
+            fontSize: 20,
+            fill: 0xffffff
+        });
+
+        text3.anchor.set(0.5);
+        text3.x = BTNWIDTH/2; // Hälfte von 400
+        text3.y = 200 + BTNHEIGHT/2;  // Hälfte von 70
+        btn3.addChild(text3);
+
+         // Click-Event
+        btn3.on("pointertap", () => {
+            start();
+        });
+
+        //=====================================================
+
+        // Button-Position
+        btnContainer.x = window.innerWidth / 2 - BTNWIDTH/2;
+        btnContainer.y = window.innerHeight / 2 + BTNHEIGHT/2;
     }
+
 
     //Methode, um die eingesammelten Starcoins abzufragen
     getCollected5Coins(coins) {

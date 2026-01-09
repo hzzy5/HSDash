@@ -97,6 +97,7 @@ export class Controller {
     gameStarted = false;
     isGameOver = false;
     isGameWin = false;
+    gameLoopRunning = false;
 
     //LEVEL
     currentLevelIndex = 0; //beim ersten Level starten!!!
@@ -118,7 +119,6 @@ export class Controller {
         await this.playerRenderer.initAnimations(); //Player-Animation laden
         
         this.sceneRenderer = new SceneRenderer(this.renderer.background, this.renderer.screen);
-        //await this.sceneRenderer.createBackground(); //Szene erstellen
                 
         this.coinRenderer = new CoinRenderer(this.renderer.world, this.renderer.ticker);
         this.hudRenderer = new HudRenderer(this.renderer.hud, this.renderer.screen);
@@ -131,19 +131,9 @@ export class Controller {
         this.goalRenderer = new GoalRenderer(this.renderer.world);
         this.blockRenderer = new BlockRenderer(this.renderer.world);
 
-
-        //this.startScreenRenderer = new StartScreenRenderer(this.renderer.ui);
-
         //STARTSCREEN
         this.startScreenRenderer = new StartScreenRenderer(
           this.renderer.ui,
-          this.renderer.screen
-        );
-        
-
-        //SELECT CHARACTER SCREEN
-        this.characterSelectRenderer = new CharacterSelectRederer(
-          this.renderer.ui, 
           this.renderer.screen
         );
 
@@ -153,10 +143,6 @@ export class Controller {
             this.renderer.screen
         );
 
-        this.gameOverScreenRenderer.createStartButton(() => {
-          this.restartGame();
-        });
-
         //GAMEWIN
         this.gameWinScreenRenderer = new GameWinScreenRenderer(
             this.renderer.ui,
@@ -164,12 +150,6 @@ export class Controller {
             this.collected5Coins //wird zu früh übergeben! Iwie coin anzeige und overlay trennen
         );
 
-        this.gameWinScreenRenderer.createButton(() => {
-         this.loadNextLevel();
-        //this.restartGame(); //HIER METHODE SPÄTER ÄNDERN
-        //this.levelloader.loadLevel(this.levelloader.levels[1]);
-
-      });
 
       this.levelSelectRenderer = new LevelSelectRenderer(this.renderer.ui, this.renderer.ticker);
 
@@ -186,9 +166,7 @@ export class Controller {
                                            this.dbbroRenderer, this.dbbros,
                                            this.goalRenderer, this.goal,
                                            this.blockRenderer,); 
-
-        //Zu Beginn erstes Level laden
-        await this.loadLevel(this.currentLevelIndex);                                   
+                                
 
         //SOUND:
         this.sound = new SoundController(); //SoundController initialisieren 
@@ -212,36 +190,6 @@ export class Controller {
             this.changeButtonPicture();
         });
         
-      
-        // === SPIELELEMENTE ===
-        //Player als Sprite erstellen
-        // this.playerSprite = this.playerRenderer.createSprite("playerJumpJSON");
-        // this.playerRenderer.renderPlayer(this.playerSprite, this.player.x, this.player.y);
-
-        //Größen synchronisieren
-        // this.player.setWidthAndHeight(this.playerSprite.width, this.playerSprite.height);
-
-        //=== SPIELGRENZEN ===
-        this.leftBound = { x: -10, y: 0, width: 10, height: window.innerHeight };
-        this.collision.addCollider(this.leftBound);
-        this.leftBound = this.sceneRenderer.createBound(this.leftBound.x, this.leftBound.y, this.leftBound.width, this.leftBound.height);
-
-        // this.rightBound = { x: window.innerWidth, y: 0, width: 10, height: window.innerHeight };
-        // this.collision.addCollider(this.rightBound);
-        // this.rightBound = this.sceneRenderer.createBound(this.rightBound.x, this.rightBound.y, this.rightBound.width, this.rightBound.height);
-
-        //=== MÜNZEN ===
-        this.totalCoins = this.coins.length;  
-        this.collectedCoins = 0;
-        this.collected5Coins = 0;
-        this.hudRenderer.createCoinHud();
-
-        //=== LEBEN ===
-        this.collectedLifes = 2; //Startwert 2 Leben
-        this.totalLifes = this.lifes.length;
-        this.hudRenderer.LifeHud(this.collectedLifes);
-
-
         //=== ABFRAGEN ===
         document.addEventListener("keydown", (e) => this.keyIsDown(e));
         document.addEventListener("keyup", (e) => this.keyIsUp(e));  
@@ -257,20 +205,26 @@ export class Controller {
         //SPIEL STARTEN, wenn auf den Button geklickt wird
         this.startScreenRenderer.createStartButton(() => { 
           this.startScreenRenderer.hide();
-
+        
           this.levelSelectRenderer.show();
 
           //Level auswählen
           this.levelSelectRenderer.showMap(
             //Beim Klick wird das Level geladen
-            this.levelloader.levels, (levelIndex) => {
+            this.levelloader.levels, 
+            async (levelIndex) => {
               this.levelSelectRenderer.hide();
-              //this.loadLevel(levelIndex);
+              await this.loadLevel(levelIndex);
               
-              this.gameStarted = true; //Spiel ist gestartet
+              this.setGameState("gameStarted") //Spiel ist gestartet
               this.sound.backroundMusic();
               this.musicPlays = true;
-              this.renderer.startGameLoop((dt) => this.gameLoop(dt)); //gameloop!
+              
+              //Sicher gehen, dass die Gameloop nur einmal gestartet wird 
+              if (!this.gameLoopRunning) {
+                this.renderer.startGameLoop((dt) => this.gameLoop(dt)); //gameloop!
+                this.gameLoopRunning = true; 
+              }
             }, 
             //OnBack, zurück zum Startscreen
             ()=> {
@@ -278,13 +232,63 @@ export class Controller {
               this.startScreenRenderer.show();
             });
         }); 
+
     }
     
+
+    //=== SET STATE ============================================================================================
+    //gameStarted, isGameOver, isGameWin
+    //Wichtig hierbei ist es, die anderen States zurückzusetzen, damit die gameLoop korrekt funktioniert
+    setGameState(state) {
+      switch(state) {
+        case "gameStarted": 
+        this.gameStarted = true;
+        this.isGameOver = false;
+        this.isGameWin = false;
+        break;
+
+        case "isGameOver": 
+        this.gameStarted = false;
+        this.isGameOver = true;
+        this.isGameWin = false;
+        break;
+
+        case "isGameWin": 
+        this.gameStarted = false;
+        this.isGameOver = false;
+        this.isGameWin = true;
+        break;
+      } 
+    }
+
+
+
+    //=== NAVIGATE ============================================================================================
+    navigateThroughGame() {
+      this.gameWinScreenRenderer.createButton(
+          //restart: Aktuelles Level neustarten
+          () => {this.restartGame();}, 
+          //next: Neues Level laden
+          () => {this.loadNextLevel();},
+          //start: zum Startmenü
+          () => {
+            this.gameWinScreenRenderer.hide(); 
+            this.startScreenRenderer.show();
+          }
+      );
+
+      this.gameOverScreenRenderer.createStartButton(() => {
+          this.restartGame();
+      });
+    
+    }
 
     //=== GAMELOOP ============================================================================================
     //Methode, die alle Update-Funktionen pro Frame aufurft. 
     gameLoop(dt) {
       if (!this.gameStarted) return; //Wenn das Spiel nicht gestartet ist, nichts updaten
+      if (this.isGameOver || this.isGameWin) return;
+
       //Spieler updaten (Sprung, Dash, Bewegung)
       this.updatePlayer(dt);
       this.checkCoinCollection();//Münzeneinsammlung prüfen
@@ -737,7 +741,7 @@ export class Controller {
     restartGame(){
         console.log("Spiel wird neu gestartet");
 
-        this.isGameOver = false;
+        this.setGameState("gameStarted"); 
 
         this.gameOverScreenRenderer.hide();
         this.gameWinScreenRenderer.hide();
@@ -835,9 +839,9 @@ export class Controller {
 
     //=== GAMEOVER ============================================================================================
     gameOver(){
-        this.renderer.ticker.stop();
+        //this.renderer.ticker.stop();
 
-        this.isGameOver = true; 
+        this.setGameState("isGameOver"); 
 
         this.sound.playerDies();
         
@@ -854,10 +858,10 @@ export class Controller {
       console.log("Spiel gewonnen"); 
       this.sound.levelWon();
 
-      this.renderer.ticker.stop();
+      //this.renderer.ticker.stop();
       
       //Screen anzeigen lassen 
-      this.isGameWin = true;
+      this.setGameState("isGameWin");
       this.gameWinScreenRenderer.getCollected5Coins(this.collected5Coins);
       this.gameWinScreenRenderer.show(); 
       
@@ -886,6 +890,9 @@ export class Controller {
       this.levelloader.clearLevel();
       console.warn("level laden: " + this.currentLevelIndex, this.levelloader.levelSprites.length);
       this.currentLevelIndex = level;
+
+      //HUD laden
+      this.loadHUD();
       
       //Reseten und neues Level starten
       this.restartGame(); //sicherheitshalber
@@ -916,6 +923,24 @@ export class Controller {
       } else {
         console.log("Alle Level geschafft!");
         this.renderer.ticker.stop(); // oder Endscreen
+      }
+    }
+
+    //HUD laden
+    loadHUD() {
+      if (!this.gameLoopRunning) {
+        //=== MÜNZEN ===
+        this.totalCoins = this.coins.length;  
+        this.collectedCoins = 0;
+        this.collected5Coins = 0;
+        this.hudRenderer.createCoinHud();
+
+        //=== LEBEN ===
+        this.collectedLifes = 2; //Startwert 2 Leben
+        this.totalLifes = this.lifes.length;
+        this.hudRenderer.LifeHud(this.collectedLifes);
+
+        //HIER noch die Einstellungen
       }
     }
 
