@@ -37,9 +37,15 @@ export class LevelSelectRenderer {
         background.width = this.screen.width;
         background.height = background.texture.height*2;
         background.y = 30;
-
         background.scale.set(2.25);
-        this.container.addChild(background); 
+        
+        const background2 = PIXI.Sprite.from("sky");
+        background2.width = this.screen.width;
+        background2.height = background.texture.height*2;
+        background2.y = -300;
+        background2.scale.set(2.25);
+
+        this.container.addChild(background2, background); 
 
         // =========================
         // OVERLAY
