@@ -25,4 +25,12 @@ export class DBBroRenderer{
         this.world.addChild(sprite);
         return sprite;
     }
+
+    mirrorSprite(sprite, left){
+        if(left){
+            sprite.scale.x = 0.15;
+        }else{
+            sprite.scale.x = -0.15;
+        }
+    }
 }

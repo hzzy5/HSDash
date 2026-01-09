@@ -54,4 +54,13 @@ export class DBBro{
         }
     }
 
+    wherePlayer(playerX){
+        let distance = this.x - playerX;
+        if(distance > 0){//Spieler ist links
+            return true;
+        }else{ //Spieler ist rechts
+            return false;
+        }
+    }
+
 }

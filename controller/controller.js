@@ -671,7 +671,8 @@ export class Controller {
             }else{
               this.sound.switchBackToMaintheme();
             }
-            //console.log(distancenear);
+            //Sprite in Richtugn Player drehen
+            this.dbbroRenderer.mirrorSprite(dbbro.sprite, dbbro.wherePlayer(this.player.x));
 
             // Player Kollision prüfen mit dbbro
             if (this.collision.collisionUp(this.player, dbbro)) {

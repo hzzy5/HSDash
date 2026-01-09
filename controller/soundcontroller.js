@@ -115,7 +115,8 @@ export class SoundController{
         if(this.shouldSoundBeOn){
             this.jumpsound.play();
             //falls Hintergrundmusik doch noch nicht beim Start des Levels abgespielt wurde
-            //if(!this.musicplaying){
+            //wird dann allerdings auch immer wieder abgespielt wenn bosskampf musik läuft haha
+            //if(!this.musicplaying && !this.bossmusicplaying){
                 //this.backroundmusicLevel.play();
                 //this.musicplaying = true;
             //}
@@ -133,13 +134,12 @@ export class SoundController{
 
     switchToBosstheme(){
         if(this.shouldSoundBeOn){
-            if(this.musicplaying && !this.bossmusicplaying){ //
+            if(this.musicplaying && !this.bossmusicplaying){
                 this.backroundmusicLevel.pause();
-                //this.backroundmusicLevel.pause();
-                //this.backroundmusicLevel.fade(1, 0, 2000);
+                this.backroundmusicLevel.fade(0.3, 0, 1000);
                 this.musicplaying = false;
                 this.bosstheme.play();
-                //this.bosstheme.fade(0, 1, 2000);
+                this.bosstheme.fade(0, 0.3, 1000);
                 this.bossmusicplaying = true;
                 console.log("Bosstheme gestartet");
             }
@@ -148,12 +148,12 @@ export class SoundController{
 
     switchBackToMaintheme(){
         if(this.shouldSoundBeOn){
-            if(this.bossmusicplaying && !this.musicplaying){//&& !this.musicplaying
+            if(this.bossmusicplaying && !this.musicplaying){
                 this.bosstheme.pause();
-                //this.bosstheme.fade(1, 0, 2000);
+                this.bosstheme.fade(0.3, 0, 1000);
                 this.bossmusicplaying = false;
                 this.backroundmusicLevel.play();
-                //this.backroundmusicLevel.fade(0, 1, 2000);
+                this.backroundmusicLevel.fade(0, 0.3, 1000);
                 this.musicplaying = true;
                 console.log("zurück zu anderer Musik");
             }
