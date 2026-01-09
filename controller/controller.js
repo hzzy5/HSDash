@@ -27,7 +27,7 @@ import { BlockRenderer } from "../view/blockRenderer.js";
 import { GameOverScreenRenderer } from "../view/gameOverScreenRenderer.js";
 import { GameWinScreenRenderer } from "../view/gameWinScreenRenderer.js"
 import { CharacterSelectRederer } from "../view/characterSelectRenderer.js";
-import { LevelmapRenderer } from "../view/levelmapRenderer.js";
+import { LevelSelectRenderer } from "../view/levelSelectRenderer.js";
 
 
 //CONTROLLER
@@ -52,7 +52,7 @@ export class Controller {
     goalRenderer;
     blockRenderer;
     characterSelectRenderer;
-    levelmapRenderer;
+    levelSelectRenderer;
 
     //MODEL
     player;
@@ -171,7 +171,7 @@ export class Controller {
 
       });
 
-      this.levelmapRenderer = new LevelmapRenderer(this.renderer.ui, this.renderer.ticker);
+      this.levelSelectRenderer = new LevelSelectRenderer(this.renderer.ui, this.renderer.ticker);
 
 
 
@@ -258,20 +258,25 @@ export class Controller {
         this.startScreenRenderer.createStartButton(() => { 
           this.startScreenRenderer.hide();
 
-          this.levelmapRenderer.show();
+          this.levelSelectRenderer.show();
 
           //Level auswählen
-          this.levelmapRenderer.showMap(this.levelloader.levels, (levelIndex) => {
-            this.levelmapRenderer.hide();
-            //this.loadLevel(levelIndex);
-          
-            this.gameStarted = true; //Spiel ist gestartet
-          
-            this.sound.backroundMusic();
-            this.musicPlays = true;
-            
-            this.renderer.startGameLoop((dt) => this.gameLoop(dt));
-          });
+          this.levelSelectRenderer.showMap(
+            //Beim Klick wird das Level geladen
+            this.levelloader.levels, (levelIndex) => {
+              this.levelSelectRenderer.hide();
+              //this.loadLevel(levelIndex);
+              
+              this.gameStarted = true; //Spiel ist gestartet
+              this.sound.backroundMusic();
+              this.musicPlays = true;
+              this.renderer.startGameLoop((dt) => this.gameLoop(dt)); //gameloop!
+            }, 
+            //OnBack, zurück zum Startscreen
+            ()=> {
+              this.levelSelectRenderer.hide();
+              this.startScreenRenderer.show();
+            });
         }); 
     }
     

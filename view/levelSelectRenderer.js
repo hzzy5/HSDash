@@ -1,6 +1,6 @@
 import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs";
 
-export class LevelmapRenderer {
+export class LevelSelectRenderer {
 
     constructor(uiContainer, ticker) {
         // UI-Container von außen
@@ -27,7 +27,7 @@ export class LevelmapRenderer {
     }
 
 
-    showMap(levels, onSelectLevel) {
+    showMap(levels, onSelectLevel, onBack) {
         this.container.removeChildren();
 
         // =========================
@@ -54,9 +54,53 @@ export class LevelmapRenderer {
         });
 
         title.anchor.set(0.5);
-        title.x = window.innerWidth / 2;
+        title.x = window.innerWidth / 2+20;
         title.y = 200;
         this.container.addChild(title);
+
+
+        // =========================
+        // ZURÜCK BUTTON
+        // =========================
+        const back = new PIXI.Text("❰", {
+            fontFamily: "Press Start 2P",
+            fontWeight: 900,
+            fontSize: 42,
+            fill: 0xf7f7f7,
+            dropShadow: true,
+            dropShadowColor: 0x000000,
+            dropShadowBlur: 8,
+            dropShadowDistance: 4
+        });
+
+        back.anchor.set(0.5);
+        back.alpha = 0.9; 
+        back.x = window.innerWidth / 4;
+        back.y = 191;
+
+        back.eventMode = "static";
+        back.cursor = "pointer";
+
+        back.on("pointerover", () => {
+            back.scale.set(1.1);
+            back.alpha = 1;
+            back.style.fill = 0xffffff;
+        });
+
+        back.on("pointerout", () => {
+            back.scale.set(1);
+            back.alpha = 0.9;
+            back.style.fill = 0xf7f7f7;
+        });
+
+
+        //Beim Klick zurück zur Startseite
+        back.on("pointertap", () => {
+            onBack();
+        });
+
+
+        this.container.addChild(back);
 
         // =========================
         // LEVEL BUTTONS
