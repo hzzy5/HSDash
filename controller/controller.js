@@ -56,7 +56,6 @@ export class Controller {
 
     //MODEL
     player;
-    selectedPlayer;
     enemy;
     enemySprite;
     collision;
@@ -151,7 +150,7 @@ export class Controller {
         );
 
 
-      this.levelSelectRenderer = new LevelSelectRenderer(this.renderer.ui, this.renderer.screen, this.renderer.ticker);
+        this.levelSelectRenderer = new LevelSelectRenderer(this.renderer.ui, this.renderer.screen, this.renderer.ticker);
 
 
 
@@ -189,6 +188,9 @@ export class Controller {
             this.musicPlays = !this.musicPlays;
             this.changeButtonPicture();
         });
+        
+        //=== NAVIGATE ===
+        this.navigateThroughGame();
         
         //=== ABFRAGEN ===
         document.addEventListener("keydown", (e) => this.keyIsDown(e));
@@ -265,11 +267,12 @@ export class Controller {
 
     //=== NAVIGATE ============================================================================================
     navigateThroughGame() {
+
       this.gameWinScreenRenderer.createButton(
           //restart: Aktuelles Level neustarten
           () => {this.restartGame();}, 
           //next: Neues Level laden
-          () => {this.loadNextLevel();},
+          () => {this.loadLevel(this.currentLevelIndex+1);},
           //start: zum Startmenü
           () => {
             this.gameWinScreenRenderer.hide(); 
@@ -333,17 +336,6 @@ export class Controller {
       this.keys[k] = false;
     }
 
-    
-
-    //=== UPDATE PLAYER ============================================================================================
-    setPlayer(selected) {
-      this.selectedPlayer = selected; //controller
-      this.player.characterId = selected; //model
-      this.playerRenderer.setCharacter(selected); //view
-      
-      console.log(this.selectedPlayer); //funktioniert
-      console.log(this.player.characterId);
-    }
 
     //=== UPDATE PLAYER ============================================================================================
     // Wird vom Renderer-Ticker mit dt (Sekunden) aufgerufen
@@ -863,7 +855,7 @@ export class Controller {
       //Screen anzeigen lassen 
       this.setGameState("isGameWin");
       this.gameWinScreenRenderer.getCollected5Coins(this.collected5Coins);
-      this.gameWinScreenRenderer.show(); 
+      this.gameWinScreenRenderer.show(this.collected5Coins); 
       
       // //Endscreen erzeugen
       // this.gameWinScreenRenderer.createButton(() => {
@@ -877,56 +869,36 @@ export class Controller {
     //=== LOAD LEVEL ============================================================================================
     //Genutzt, um das erste Level zu laden
     loadLevel(level) {
-      if (level >= this.unlockedLevels) {
-        console.warn("Level noch gesperrt:", level);
-        return;
-      }
-
-      //Hintergrund wechseln  
-      console.log(this.levelloader.levels[level].background);  
-      this.sceneRenderer.setBackground(this.levelloader.levels[level].background);
-
-      //Altes Level entfernen
-      this.levelloader.clearLevel();
-      console.warn("level laden: " + this.currentLevelIndex, this.levelloader.levelSprites.length);
+      let nextlevel = this.levelloader.levels[level];
       this.currentLevelIndex = level;
-
-      //HUD laden
-      this.loadHUD();
-      
-      //Reseten und neues Level starten
-      this.restartGame(); //sicherheitshalber
-      this.levelloader.loadLevel(this.levelloader.levels[level]);
-    }
-
-    //Nächstes Level
-    loadNextLevel() {
-      this.levelloader.clearLevel();
-      this.restartGame();
-      this.currentLevelIndex += 1;
       console.log(this.currentLevelIndex)
-
-      if (this.currentLevelIndex >= this.unlockedLevels) {
-        console.warn("Level noch gesperrt:", this.currentLevelIndex);
-        return;
-    }
       
-      if (this.currentLevelIndex < this.levelloader.levels.length) {
-        //Hintergrund wechseln  
-        console.log(this.levelloader.levels[this.currentLevelIndex ].background);  
-        this.sceneRenderer.setBackground(this.levelloader.levels[this.currentLevelIndex ].background);
-        console.log("debug");
-        
-        //Level laden
-        this.levelloader.loadLevel(this.levelloader.levels[this.currentLevelIndex]);
-        console.warn("next level laden: " + this.currentLevelIndex);
+      //Wenn man es noch ein nächstes Level gibt 
+       if (this.currentLevelIndex < this.levelloader.levels.length) {
+        //und freigeschaltet ist
+        if (this.levelloader.levels[this.currentLevelIndex].unlocked) {
+          this.levelloader.clearLevel();
+          this.restartGame();
+          
+          //Hintergrund wechseln  
+          console.log(this.levelloader.levels[this.currentLevelIndex ].background);  
+          this.sceneRenderer.setBackground(this.levelloader.levels[this.currentLevelIndex ].background);
+
+          //HUD laden
+          this.loadHUD();
+          
+          //Level laden
+          this.levelloader.loadLevel(this.levelloader.levels[this.currentLevelIndex]);
+        }
+        //Sonst Endscreen einblenden
       } else {
         console.log("Alle Level geschafft!");
-        this.renderer.ticker.stop(); // oder Endscreen
+        //this.renderer.ticker.stop(); // oder Endscreen
       }
     }
 
-    //HUD laden
+
+    //=== HUD ANZEIGEN ============================================================================================
     loadHUD() {
       if (!this.gameLoopRunning) {
         //=== MÜNZEN ===
@@ -947,8 +919,11 @@ export class Controller {
     //=== UNLOCK LEVEL ============================================================================================
     unlockNextLevel() {
       const nextLevel = this.currentLevelIndex + 1;
+      //Wenn es noch ein nächstes Level gibt, dann dieses freischalten.
       if (nextLevel < this.levelloader.levels.length) {
         this.unlockedLevels = Math.max(this.unlockedLevels, nextLevel + 1);
+        this.levelloader.levels[nextLevel].unlocked = true;
+
       }
     }
     

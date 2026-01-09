@@ -20,10 +20,16 @@ export class GameWinScreenRenderer {
 
         // initial unsichtbar
         this.container.visible = false;
+
+        //Starcoin-Array
+        this.starCoin = [];
     }
 
-    show() {
+    show(collected) {
         this.container.visible = true;
+
+        //Bei jeder neuen Anzeige die Starcoins neu anzeigen lassen
+        this.updateStarcoins(collected);
     }
 
     hide() {
@@ -31,7 +37,7 @@ export class GameWinScreenRenderer {
     }
 
     createButton(restart, next, start) {
-       
+        this.container.removeChildren();
         // =========================
         // OVERLAY
         // =========================
@@ -81,17 +87,18 @@ export class GameWinScreenRenderer {
         // =========================
         //Anzahl der eingesammelten starcoins 
         //Texturen vorbereiten
-        const coinFilledTex = PIXI.Texture.from("coin5HUD");
-        const coinEmptyTex = PIXI.Texture.from("coin5empty");
+        this.coinFilledTex = PIXI.Texture.from("coin5HUD");
+        this.coinEmptyTex = PIXI.Texture.from("coin5empty");
 
-        //Coins erzeugen: Wenn Index größer der eingesammelten Münzen ist, 5Coin anzeigen, sonst leer.
-        let coin1 = new PIXI.Sprite(this.collected5Coins >= 1 ? coinFilledTex : coinEmptyTex);
-        let coin2 = new PIXI.Sprite(this.collected5Coins >= 2 ? coinFilledTex : coinEmptyTex);
-        let coin3 = new PIXI.Sprite(this.collected5Coins >= 3 ? coinFilledTex : coinEmptyTex);
-        console.log(this.collected5Coins);
+        
+        let coin1 = new PIXI.Sprite(this.coinEmptyTex);
+        let coin2 = new PIXI.Sprite(this.coinEmptyTex);
+        let coin3 = new PIXI.Sprite(this.coinEmptyTex);
+        this.starCoin.push(coin1, coin2, coin3);
+        console.log(this.starCoin);
 
         //Anker und Scale
-        [coin1, coin2, coin3].forEach((coin, i) => {
+        this.starCoin.forEach((coin, i) => {
             coin.anchor.set(0.5);
             coin.scale.set(i === 1 ? 2 : 1.4); //Wenn es die zweite Münze ist, größer skalieren, sonst normal. 
             coin.zIndex = 900;
@@ -269,9 +276,15 @@ export class GameWinScreenRenderer {
         this.collected5Coins = coins;
     }
 
+    updateStarcoins(collected) {
+        this.collected5Coins = collected;
 
-    // showResults() {
+        //Coins erzeugen: Wenn Index größer der eingesammelten Münzen ist, 5Coin anzeigen, sonst leer.
+        this.starCoin.forEach((coin, index) => {
+            coin.texture = index < collected ? this.coinFilledTex: this.coinEmptyTex;
+        });
+}
 
-    // }
+
 
 } //end class
