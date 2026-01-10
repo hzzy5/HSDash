@@ -92,7 +92,7 @@ export class PauseScreen {
 
         // Button-Grafik
         const btn1 = new PIXI.Graphics();
-        btn1.beginFill(0x333333, 0.9);
+        btn1.beginFill(0xb2beca, 0.85);
         btn1.drawRoundedRect(0, 0, BTNWIDTH, BTNHEIGHT, 14);
         btn1.endFill();
 
@@ -103,14 +103,14 @@ export class PauseScreen {
         // Hover-Effekt
         btn1.on("pointerover", () => {
             btn1.clear();
-            btn1.beginFill(0x999999, 1);
+            btn1.beginFill(0xbecedc, 1);
             btn1.drawRoundedRect(0, 0, BTNWIDTH, BTNHEIGHT, 14);
             btn1.endFill();
         });
 
         btn1.on("pointerout", () => {
             btn1.clear();
-            btn1.beginFill(0x333333, 0.9);
+            btn1.beginFill(0xb2beca, 0.85);
             btn1.drawRoundedRect(0, 0, BTNWIDTH, BTNHEIGHT, 14);
             btn1.endFill();
         });
@@ -140,7 +140,7 @@ export class PauseScreen {
         // =========================
         // Button-Grafik
         const btn2 = new PIXI.Graphics();
-        btn2.beginFill(0x333333, 0.9);
+        btn2.beginFill(0xb2beca, 0.85);
         btn2.drawRoundedRect(0, 100, BTNWIDTH, BTNHEIGHT, 14);
         btn2.endFill();
 
@@ -151,14 +151,14 @@ export class PauseScreen {
         // Hover-Effekt
         btn2.on("pointerover", () => {
             btn2.clear();
-            btn2.beginFill(0x999999, 1);
+            btn2.beginFill(0xbecedc, 1);
             btn2.drawRoundedRect(0, 100, BTNWIDTH, BTNHEIGHT, 14);
             btn2.endFill();
         });
 
         btn2.on("pointerout", () => {
             btn2.clear();
-            btn2.beginFill(0x333333, 0.9);
+            btn2.beginFill(0xb2beca, 0.85);
             btn2.drawRoundedRect(0, 100, BTNWIDTH, BTNHEIGHT, 14);
             btn2.endFill();
         });
@@ -209,7 +209,7 @@ export class PauseScreen {
 
         // Button-Grafik
         const toggleBtn = new PIXI.Graphics();
-        toggleBtn.beginFill(0x333333, 0.9);
+        toggleBtn.beginFill(0xb2beca, 0.85);
         toggleBtn.drawRoundedRect(BTNWIDTH-TOOGLEWIDTH, 200, TOOGLEWIDTH, TOOGLEHEIGHT, 24);
         toggleBtn.endFill();
 
@@ -220,14 +220,14 @@ export class PauseScreen {
         // Hover-Effekt
         toggleBtn.on("pointerover", () => {
             toggleBtn.clear();
-            toggleBtn.beginFill(0x999999, 0.9);
+            toggleBtn.beginFill(0xbecedc, 1);
             toggleBtn.drawRoundedRect(BTNWIDTH-TOOGLEWIDTH, 200, TOOGLEWIDTH, TOOGLEHEIGHT, 24);
             toggleBtn.endFill();
         });
 
         toggleBtn.on("pointerout", () => {
             toggleBtn.clear();
-            toggleBtn.beginFill(0x333333, 0.9);
+            toggleBtn.beginFill(0xb2beca, 0.85);
             toggleBtn.drawRoundedRect(BTNWIDTH-TOOGLEWIDTH, 200, TOOGLEWIDTH, TOOGLEHEIGHT, 24);
             toggleBtn.endFill();
         });
@@ -237,7 +237,7 @@ export class PauseScreen {
         //Knopf
         this.knob = new PIXI.Graphics();
         this.knob.clear();
-        this.knob.beginFill(0xffffff);
+        this.knob.beginFill(0x52a2eb);
         this.knob.drawRoundedRect(0, 0, 50, TOOGLEHEIGHT-10, 20);
         this.knob.endFill();
 
