@@ -1,3 +1,4 @@
+//Model-Klasse für die Stacheln
 export class Spikes{
     constructor(x, y, width = 32, height = 32) {
         this.x = x;
@@ -14,7 +15,7 @@ export class Spikes{
         this.y2 = y + height;
     }
 
-    // Update der Hitbox (falls Sprite Position verändert würde)
+    // Update der Hitbox (falls Sprite Position verändern würde)
     updateHitbox() {
         this.x1 = this.x;
         this.y1 = this.y;

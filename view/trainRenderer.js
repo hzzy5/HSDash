@@ -1,4 +1,4 @@
-/*Spezifische View-Klasse, die für die Darstellung der Stacheln zuständig ist.*/
+/*Spezifische View-Klasse, die für die Darstellung der Züge zuständig ist.*/
 import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs"; 
 
 
@@ -9,59 +9,59 @@ export class TrainRenderer{
         this.ticker = ticker;
     }
 
-    // Methode, um das Leben-Sprite zu erstellen, falls man Leben wieder einsammeln kann
+    // Methode, um das Zug-Sprite zu erstellen
     createTrainSprite(x, y) {
         const sprite = PIXI.Sprite.from("zug");
-        //const sheet = PIXI.Assets.get('gumba').data.animations;
-        //const sprite = PIXI.AnimatedSprite.fromFrames(sheet["minidahm_frame"]); //name der frames
-        //sprite.animationSpeed = 1 / 10; 
-        ///sprite.play();
-    
+
         // Position
         sprite.x = x;
         sprite.y = y;
 
-        sprite.anchor.set(0.5);      // Zentriert die Gegner
-        sprite.scale.set(0.5);      // Macht den Gengner kleiner 
-        sprite.zIndex = 901;         // Münze über Player und über Plattform
+        sprite.anchor.set(0.5);      // Zentriert die Züge
+        sprite.scale.set(0.5);      // Macht die Züge kleiner 
+        sprite.zIndex = 901;         // Züge über Player und über Plattform
 
 
         this.world.addChild(sprite);
-        //console.log("Sprite hinzugefügt!");
         return sprite;
     }
 
+    //Zug-Sprite positionieren
     positionTrainSprite(sprite, x, y, directionX){
-        sprite.x = x;
-        sprite.y = y;
+        if(sprite){
+            sprite.x = x;
+            sprite.y = y;
 
-        sprite.scale.x = 0.5 * directionX; //damit es in die richtige rich tugn gespiegelt ist, wird dann allerdings auch wenn man unter dem steht immer schmaller
-        //brauchen eine Version mit nur + oder - 1 
+            sprite.scale.x = 0.5 * directionX; //damit es in die richtige richtung gespiegelt ist, 
+            //wird dann allerdings auch wenn man direkt unter oder direkt über dem DBBro steht immer schmaler beim y wert
+        }
     }
 
+    //das Zugsprite rotieren in Richtung Spieler
     //Sprite und neuer Richtungsvektor werden übergeben
     rotateTrainSprite(sprite, vectorXNew, vectorYNew){
         //Startvektor
         //let vectorXStart = -1;
-        let vectorYStart = 0;
-        //theorethisch braucht man y-Werte gar nciht 
+        //let vectorYStart = 0;
+        //theorethisch braucht man y-Werte gar nciht , da dieser bei der Berechnung immer 0 ist 
         //Durch Skalarprodukt beider Vektoren den Cosinus des Winkels dazwischen berechnen
         // vectorXStart = -1 bei links
         // vectorXStart = 1 bei rechts
-        //darauf basierend mit arccos den Winkel berechenen
+        //dann mit arccos den Winkel daraus berechenen
+        //dann Sprite um diesen Winkel drehen
 
         if(vectorXNew < 0 && vectorYNew > 0){//unten links
-            let newAngle = -1 * vectorXNew + vectorYStart * vectorYNew;
+            let newAngle = -1 * vectorXNew ;//+ vectorYStart * vectorYNew
             sprite.rotation = Math.acos(newAngle) * -1;
         }else if(vectorXNew > 0 && vectorYNew > 0){ //unten rechts
-            let newAngle = 1 * vectorXNew + vectorYStart * vectorYNew;
+            let newAngle = 1 * vectorXNew ;//+ vectorYStart * vectorYNew
             sprite.rotation = Math.acos(newAngle);
         }else if(vectorXNew < 0 && vectorYNew < 0){ //oben links
-            let newAngle = -1 * vectorXNew + vectorYStart * vectorYNew;
+            let newAngle = -1 * vectorXNew ; //+ vectorYStart * vectorYNew
             sprite.rotation = Math.acos(newAngle);
         }else if(vectorXNew > 0 && vectorYNew < 0){ //oben rechts
-            let newAngleNegativeX = 1 * vectorXNew + vectorYStart * vectorYNew;
-            sprite.rotation = Math.acos(newAngleNegativeX) * -1;
+            let newAngle = 1 * vectorXNew ; //+ vectorYStart * vectorYNew
+            sprite.rotation = Math.acos(newAngle) * -1;
         }
 
     }

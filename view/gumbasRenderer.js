@@ -1,4 +1,4 @@
-/*Spezifische View-Klasse, die für die Darstellung der Stacheln zuständig ist.*/
+/*Spezifische View-Klasse, die für die Darstellung der Gumbas zuständig ist.*/
 import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs"; 
 
 
@@ -9,7 +9,7 @@ export class GumbasRenderer{
         this.ticker = ticker;
     }
 
-    // Methode, um das Leben-Sprite zu erstellen, falls man Leben wieder einsammeln kann
+    // Methode, um das Gumba-Sprite zu erstellen
     createGumbaSprite(x, y) {
         //const sprite = PIXI.Sprite.from("gumba");
          const sheet = PIXI.Assets.get('gumba').data.animations;
@@ -21,12 +21,20 @@ export class GumbasRenderer{
         sprite.x = x;
         sprite.y = y-7;
 
-        sprite.anchor.set(0.5);      // Zentriert die Gegner
-        sprite.scale.set(1);      // Macht den Gengner kleiner 
-        sprite.zIndex = 900;         // Münze über Player und über Plattform
+        sprite.anchor.set(0.5);      // Zentriert die Gumbas
+        sprite.scale.set(1);      // Gumba jetzt gerade einfach in der Größe lassen wie das Bild
+        sprite.zIndex = 900;         // Gumba über Player und über Plattform
 
 
         this.world.addChild(sprite);
         return sprite;
+    }
+
+    updateSprite(sprite, gumbaX, gumbaY, gumbaDirection){
+        if (sprite) {
+            sprite.x = gumbaX+32;
+            sprite.y = gumbaY -7;
+            sprite.scale.x = 1 * gumbaDirection; // Spiegeln, hier 0.06 zu 1 geändert. Weil Skalierung derzeit 1 ist 
+        } 
     }
 }

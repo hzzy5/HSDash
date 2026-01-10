@@ -1,3 +1,4 @@
+//Model-Klasse für die Gumbas
 export class Gumbas{
     constructor(x, y, width = 62, height = 32) {
         this.x = x;
@@ -10,7 +11,7 @@ export class Gumbas{
         this.alive = true; //Gumba lebt
         this.sprite = null;       // wird später vom Renderer gesetzt
 
-        // Hitbox-Helfer, kp ob das wiklich nötig ist 
+        // Hitbox-Helfer, 
         this.x1 = x;
         this.y1 = y;
         this.x2 = x + width;
@@ -23,8 +24,8 @@ export class Gumbas{
         this.updateHitbox();
     }
 
-    //Methode, die die Position des Players updatet. Wird im Controller aufgerufen
-    //direction, true = rechts, false = links
+    //Methode, wenn Gumba umdreht. Wird im Controller aufgerufen
+    //direction, 1 = rechts, -1 = links
     reverse() {
         this.direction *= -1;
         
@@ -37,7 +38,7 @@ export class Gumbas{
         this.sprite.visible = false;
     }
 
-    // Update der Hitbox (falls Sprite Position verändert würde)
+    // Update der Hitbox 
     updateHitbox() {
         this.x1 = this.x;
         this.y1 = this.y;

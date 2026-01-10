@@ -332,10 +332,10 @@ export class Controller {
       this.updatePlayer(dt);
       this.checkCoinCollection();//Münzeneinsammlung prüfen
       this.checkLifesCollection(); //Lebeneinsammlung prüfen
-      this.checkEnemies(dt);
-      this.checkEndBoss(dt);
-      this.player.updateInvincibility(dt);
-      this.playerRenderer.setInvincibleBlink(this.player.invincible);
+      this.checkEnemies(dt); //Gegner überprüfen, Kollision mit Player? + Weiterlaufen der Gumbas
+      this.checkEndBoss(dt); //Endgegner überprüfen, Kollision mit Player? + Weiterlaufen der Züge, werfen
+      this.player.updateInvincibility(dt); //Unbesiegbarkeit des Spieler überprüfen
+      this.playerRenderer.setInvincibleBlink(this.player.invincible); //Flackern während der Spieler unbesiegbar ist 
       this.levelCompleted(); //Ziel erreicht?
       
       //Hintergrund scrollen
@@ -611,16 +611,20 @@ export class Controller {
     //=== PLAYER GETROFFEN ============================================================================================
     //wenn man getroffen wird Leben updaten
     playerGotHit(){
+        //wenn spieler unbesiegbar nichts passiert
         if (this.player.invincible) return;
 
+        //Player für 2 sek unbesiegbar machen, sodaass dieser nicht dierekt wieder getroffen wird
         this.player.invincible = true;
         this.player.invincibleTimer = 2;
-
+        //Leben abzeihen
         this.collectedLifes--;
         //Sound effect
         this.sound.playerGotHit();
         this.lifesRenderer.showFloatingText("-1", this.player.x, this.player.y - 20);
+        //Lebensanzeige updaten
         this.hudRenderer.LifeHud(this.collectedLifes);
+        //falls keine Leben mehr
         if(this.collectedLifes <= 0){
             console.log("Du bist gestorben! :)");
             this.gameOver();
@@ -631,8 +635,9 @@ export class Controller {
     checkEnemies(dt) {
         //alle Spikes durchgehen die auf dem Spielfeld liegen und sehen ob sie berührt wurden
         for (const spike of this.spikes) {
-          // Kollision prüfen mit Spikes
+          //wenn Spieler unbesiegbar egal
           if (this.player.invincible) continue;
+          // Kollision prüfen mit Spikes
           if (this.collision.collision(this.player, spike)) {
             console.log("Stacheln berührt!");
             this.playerGotHit();
@@ -650,7 +655,7 @@ export class Controller {
             for (const c of this.collision.colliders) {
                 if (this.collision.collision(gumba, c)) {
 
-                    // an Kante setzen
+                    // Gumba neben collider setzen, dann umdrehen
                     if (gumba.direction > 0) {
                         gumba.x = c.x - gumba.width;
                     } else {
@@ -664,22 +669,19 @@ export class Controller {
             }
 
             //Sprite synchronisieren
-            if (gumba.sprite) {
-                gumba.sprite.x = gumba.x+32;
-                gumba.sprite.y = gumba.y -7;
-                gumba.sprite.scale.x = 1 * gumba.direction; // Spiegeln, hier 0.06 zu 1 geändert. 
-            } 
+            this.gumbaRenderer.updateSprite(gumba.sprite, gumba.x, gumba.y, gumba.direction);
 
             // Player Kollision prüfen mit Gumbas
+            //springt der Player von oben auf den Gumba?
             if (this.collision.collisionUp(this.player, gumba)) {
                 console.log("Gumba besiegt!");
                 this.sound.gumbaDies();
                 gumba.dies();
                 continue;
             }
-        
+            //wenn spieler unbesiegbar ist, dann ist Berührung egal
             if (this.player.invincible) continue;
-
+            //ansonsten wird Kollision als Treffer gewertet und ein Leben abgezogen, falls man nicht vorher auf den Gumba draufgesprungen ist
             if(this.collision.collision(this.player, gumba)){
                 console.log("Gumba berührt!");
                 this.playerGotHit();
@@ -696,15 +698,17 @@ export class Controller {
 
             //ist Player in der Nähe?
             let distancenear = dbbro.isPlayerClose(this.player.x);
+            //Musik ändern zu Bossmusik, wenn Player in der Nähe
             if(distancenear){
               this.sound.switchToBosstheme();
-            }else{
+            }else{ //ansonsten wenn es nicht bereits läuft zur normalen Hintergrundmusik
               this.sound.switchBackToMaintheme();
             }
             //Sprite in Richtugn Player drehen
             this.dbbroRenderer.mirrorSprite(dbbro.sprite, dbbro.wherePlayer(this.player.x));
 
             // Player Kollision prüfen mit dbbro
+            //ist der Player auf den dbbro gesprungen?
             if (this.collision.collisionUp(this.player, dbbro)) {
                 console.log("dbbro besiegt!");
                 this.sound.gumbaDies();
@@ -712,49 +716,47 @@ export class Controller {
                 dbbro.dies();
                 this.sound.switchBackToMaintheme();
                 continue;
-            } else if (this.collision.collision(this.player, dbbro)) {
-              //if (this.player.invincible) break; //kommt mit hier rein sonst wird teimer nicht geupdatet
+            } else if (this.collision.collision(this.player, dbbro)) { //gab es ansonsten trotzdem eine Kollision mit dem Spielr?
+              
               console.log("dbbro berührt!");
               this.playerGotHit();
             }
 
             //Wurf
-            if(dbbro.throwTimer == 0){
+            if(dbbro.throwTimer == 0){ //Timer abgelaufen? neuer Wurf
                 console.log("Bereit zu werfen!");
-                let train = new Trains(dbbro.x, dbbro.y);
 
+                //neuer Zug zum Werfen
+                let train = new Trains(dbbro.x, dbbro.y);
                 train.sprite = this.trainRenderer.createTrainSprite(dbbro.x, dbbro.y);
+                //Richtung berechenen
                 train.calculateDirection(this.player.x, this.player.y);
+                //Bild auch in die Richtung drehen
                 this.trainRenderer.rotateTrainSprite(train.sprite, train.directionX, train.directionY);
-                //train.sprite.visible = true;
                 this.trains.push(train);
+                //wenn spieler in der Nähe noch ein Sound zum Werfen abspielen
                 if(distancenear){
                   this.sound.dbbroThrows();
                 }
                 //console.log("Geworfen!");
-                dbbro.throwTimer = 10;
+                //timer neu setzen
+                dbbro.throwTimer = 10; //10 fürs zweite level sehr gut
                 dbbro.justThrew = true;
             }else{
-                //Wurftimer aktualisieren
+                //ansonsten Wurftimer aktualisieren
                 dbbro.updateThrowTimer(dt);
             }
 
         }
 
-        //alle Spikes durchgehen die auf dem Spielfeld liegen und sehen ob sie berührt wurden
+        //alle Züge durchgehen die auf dem Spielfeld liegen und sehen ob sie berührt wurden + Bewegung des Zuges darstellen
         for (const train of this.trains) {
+            //Bewegung
             train.move(dt);
             //Sprite synchronisieren
-            if (train.sprite) {
-                //train.sprite.visible= true;
-                //train.sprite.x = train.x;
-                //train.sprite.y = train.y -7;
-                //train.sprite.scale.x = 0.15 * train.directionX; // Spiegeln, hier 0.06 zu 1 geändert. 
-                this.trainRenderer.positionTrainSprite(train.sprite, train.x, train.y, train.directionX);
-                //console.log("Zug bewegt sich!");
-            } 
-
-            // Kollision prüfen mit Spikes
+            this.trainRenderer.positionTrainSprite(train.sprite, train.x, train.y, train.directionX);
+               
+            // Kollision prüfen mit Zügen und Player
             if (this.collision.collision(this.player, train)) {
                 if (this.player.invincible) break;
                 console.log("train berührt!");

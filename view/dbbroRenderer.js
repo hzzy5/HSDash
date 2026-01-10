@@ -9,7 +9,7 @@ export class DBBroRenderer{
         this.ticker = ticker;
     }
 
-    // Methode, um das Stacheln-Sprite zu erstellen
+    // Methode, um das DBBro-Sprite zu erstellen
     createDBBroSprite(x, y) {
         const sprite = PIXI.Sprite.from("dbBruder");
     
@@ -26,6 +26,7 @@ export class DBBroRenderer{
         return sprite;
     }
 
+    //Sprite umdrehen - in Richtung Spieler
     mirrorSprite(sprite, left){
         if(left){
             sprite.scale.x = 0.15;
