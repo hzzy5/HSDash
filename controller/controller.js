@@ -855,11 +855,11 @@ export class Controller {
 
     //=== LEVEL COMPLETED? ============================================================================================
     levelCompleted() {
-      if (!this.goal.length) return;
-      const goal = this.goal[0];
+      if (!this.levelloader.goal) return;
+      //const goal = this.goal[0];
       
       //Wenn man das Ziel erreicht hat
-      if (this.collision.collision(this.player, goal)) {
+      if (this.collision.collision(this.player, this.levelloader.goal)) {
         this.unlockNextLevel();
         this.gameWon();
       }
