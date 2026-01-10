@@ -1,3 +1,4 @@
+//Model-Klasse für die Münzen und 5Coins
 export class Coin {
 
     constructor(x, y, width = 32, height = 32) {

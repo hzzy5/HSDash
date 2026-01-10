@@ -1,4 +1,4 @@
-/*Spezifische View-Klasse, die für die Darstellung der Münzen zuständig ist.*/
+/*Spezifische View-Klasse, die für die Darstellung der Münzen und 5Coins zuständig ist.*/
 import * as PIXI from "https://cdn.jsdelivr.net/npm/pixi.js@8.14.0/dist/pixi.mjs"; 
 
 
@@ -23,7 +23,7 @@ export class CoinRenderer {
       sprite.y = y;
 
       sprite.anchor.set(0.5);      // Zentriert die Münze
-      sprite.scale.set(1.1);      // Macht die Münze kleiner 
+      sprite.scale.set(1.1);      // Macht die Münze größer 
       sprite.zIndex = 900;         // Münze über Player und über Plattform
 
       this.world.addChild(sprite);
@@ -42,9 +42,9 @@ export class CoinRenderer {
           sprite.x = x;
           sprite.y = y;
     
-          sprite.anchor.set(0.5);      // Zentriert die Münze
-          sprite.scale.set(1.25);      // Macht die Münze kleiner 
-          sprite.zIndex = 900;         // Münze über Player und über Plattform
+          sprite.anchor.set(0.5);      // Zentriert den 5Coin
+          sprite.scale.set(1.25);      // Macht den 5Coin größer 
+          sprite.zIndex = 900;         // 5Coin über Player und über Plattform
     
           this.world.addChild(sprite);
           return sprite;
@@ -82,7 +82,7 @@ export class CoinRenderer {
         this.ticker.add(update);
     }
 
-    //Dasselbe für 5Coins
+    //Dasselbe für 5Coins nur in blau
     showFloatingTextFor5Coin(msg, x, y) {
         const t = new PIXI.Text(msg, {
             fill: 0x5ed2ff,

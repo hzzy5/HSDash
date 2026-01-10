@@ -47,7 +47,7 @@ export class HudRenderer {
         this.coinSprite.y = 42.5;
 
         this.coinSprite.anchor.set(0.5);      // Zentriert die Münze
-        this.coinSprite.scale.set(1.2);      // Macht die Münze kleiner 
+        this.coinSprite.scale.set(1.2);      // Macht die Münze größer
         this.coinSprite.zIndex = 900;         // Münze über Player und über Plattform
 
         coinContainer.addChild(this.coinSprite);
@@ -87,9 +87,9 @@ export class HudRenderer {
         this.coin5Sprite.x = this.screen.width - 187;
         this.coin5Sprite.y = 108;
 
-        this.coin5Sprite.anchor.set(0.5);      // Zentriert die Münze
-        this.coin5Sprite.scale.set(1.05);      // Macht die Münze kleiner 
-        this.coin5Sprite.zIndex = 900;         // Münze über Player und über Plattform
+        this.coin5Sprite.anchor.set(0.5);      // Zentriert den 5Coin
+        this.coin5Sprite.scale.set(1.05);      // Macht den 5Coin größer
+        this.coin5Sprite.zIndex = 900;         // 5Coin über Player und über Plattform
 
         coin5Container.addChild(this.coin5Sprite);
 
@@ -132,9 +132,9 @@ export class HudRenderer {
         this.heartSprite1.x = window.innerWidth / 2 -35;
         this.heartSprite1.y = 39;
 
-        this.heartSprite1.anchor.set(0.5);      // Zentriert die Münze
-        this.heartSprite1.scale.set(2);      // Macht die Münze kleiner 
-        this.heartSprite1.zIndex = 900;         // Münze über Player und über Plattform
+        this.heartSprite1.anchor.set(0.5);      // Zentriert das Herz
+        this.heartSprite1.scale.set(2);      // Macht das Herz größer
+        this.heartSprite1.zIndex = 900;         // Herz über Player und über Plattform
 
         this.hud.addChild(this.heartSprite1);
 
@@ -142,8 +142,8 @@ export class HudRenderer {
         this.heartSprite2.x = window.innerWidth /2 +35;
         this.heartSprite2.y = 39;
 
-        this.heartSprite2.anchor.set(0.5);      // Zentriert die Münze
-        this.heartSprite2.scale.set(2);      // Macht die Münze kleiner 
+        this.heartSprite2.anchor.set(0.5);      // Zentriert das Herz
+        this.heartSprite2.scale.set(2);      // Macht das Herz größer
         this.heartSprite2.zIndex = 900;
 
         this.hud.addChild(this.heartSprite2);

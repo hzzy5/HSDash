@@ -593,7 +593,8 @@ export class Controller {
         }
 
         //wenn der Player ausserhalb des Spiels ist (ins loch gefallen oder so), stirbt er
-        //800 scheint zu funktionieren, später nochmal testen wenn levelaufbau fertig, und verschiedene Bildschirmgrößen 
+        //800 scheint zu funktionieren, später nochmal testen wenn levelaufbau fertig
+        //veraltet, man kann derzeit nicht mehr runterfallen, evt für Erweiterungen nützlich
         if(this.player.y > 800){
             this.collectedLifes = 0;
             this.hudRenderer.LifeHud(this.collectedLifes);
@@ -602,7 +603,6 @@ export class Controller {
         }
 
         if(this.collectedLifes <= 0){
-            //Message oder spiel neu starten
             console.log("Du bist gestorben! :)");
             this.gameOver();
         }
@@ -619,11 +619,9 @@ export class Controller {
         this.collectedLifes--;
         //Sound effect
         this.sound.playerGotHit();
-        //wie kommt amn an die x und y koordinaten - player Koordinaten oder so nehmen
         this.lifesRenderer.showFloatingText("-1", this.player.x, this.player.y - 20);
         this.hudRenderer.LifeHud(this.collectedLifes);
         if(this.collectedLifes <= 0){
-            //Message oder spiel neu starten
             console.log("Du bist gestorben! :)");
             this.gameOver();
         }
@@ -837,6 +835,7 @@ export class Controller {
 
     //=== MUSIC BUTTON ============================================================================================
     //wenn Musik Button angeklickt wird das Bild verändert, von "Musik aus" zu "Musik an" oder umgekehrt
+    //veraltet, es gibt keinen seperaten Musik-Button mehr außer der im PauseScreen
     changeButtonPicture(){
         if (this.musicPlays){
             this.buttonMusikAus = this.renderer.createSprite("soundAus");

@@ -9,7 +9,7 @@ export class LifesRenderer{
         this.ticker = ticker;
     }
 
-    // Methode, um das Leben-Sprite zu erstellen, falls man Leben wieder einsammeln kann
+    // Methode, um das Leben-Sprite zu erstellen
     createLifeSprite(x, y) {
         const sprite = PIXI.Sprite.from("life");
     
@@ -17,9 +17,9 @@ export class LifesRenderer{
         sprite.x = x;
         sprite.y = y;
 
-        sprite.anchor.set(0.5);      // Zentriert die Münze
-        sprite.scale.set(2);      // Macht die Münze kleiner 
-        sprite.zIndex = 900;         // Münze über Player und über Plattform
+        sprite.anchor.set(0.5);      // Zentriert das Herz
+        sprite.scale.set(2);      // Macht das Herz größer
+        sprite.zIndex = 900;         // Herz über Player und über Plattform
 
         this.world.addChild(sprite);
         return sprite;
