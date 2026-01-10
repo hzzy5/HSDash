@@ -28,6 +28,7 @@ import { GameOverScreenRenderer } from "../view/gameOverScreenRenderer.js";
 import { GameWinScreenRenderer } from "../view/gameWinScreenRenderer.js"
 import { CharacterSelectRederer } from "../view/characterSelectRenderer.js";
 import { LevelSelectRenderer } from "../view/levelSelectRenderer.js";
+import { PauseScreen } from "../view/pauseScreen.js";
 
 
 //CONTROLLER
@@ -53,6 +54,7 @@ export class Controller {
     blockRenderer;
     characterSelectRenderer;
     levelSelectRenderer;
+    pauseScreen;
 
     //MODEL
     player;
@@ -94,6 +96,7 @@ export class Controller {
 
     //SCREEN / GAMESTATE
     gameStarted = false;
+    isPaused = false; 
     isGameOver = false;
     isGameWin = false;
     gameLoopRunning = false;
@@ -151,7 +154,7 @@ export class Controller {
 
 
         this.levelSelectRenderer = new LevelSelectRenderer(this.renderer.ui, this.renderer.screen, this.renderer.ticker);
-
+        this.pauseScreen = new PauseScreen(this.renderer.ui, this.renderer.screen)
 
 
         //CONTROLLER:
@@ -172,22 +175,22 @@ export class Controller {
         await this.sound.init();
         
         //SoundButton
-        this.buttonMusikAus = this.renderer.createSprite("soundAus");
-        this.buttonMusikAus.width *= 1.5;
-        this.buttonMusikAus.height *= 1.5;
-        this.renderer.renderSprite(this.buttonMusikAus, 0, 0);
+        //this.buttonMusikAus = this.renderer.createSprite("soundAus");
+        //this.buttonMusikAus.width *= 1.5;
+        //this.buttonMusikAus.height *= 1.5;
+        //this.renderer.renderSprite(this.buttonMusikAus, 0, 0);
         //damit den Sprite wie einen Button nutzten kann
         //interaktivität sicherstellen
-        this.buttonMusikAus.eventMode = "static";
+        //this.buttonMusikAus.eventMode = "static";
         //für Cursor als Button anzeigen 
-        this.buttonMusikAus.cursor = "pointer";
+        //this.buttonMusikAus.cursor = "pointer";
         //EventListener hinzufügen
-        this.buttonMusikAus.on("pointertap", () => {
-            console.log("Button wurde angeklickt");
-            this.sound.switchOnOff();
-            this.musicPlays = !this.musicPlays;
-            this.changeButtonPicture();
-        });
+        // this.buttonMusikAus.on("pointertap", () => {
+        //     console.log("Button wurde angeklickt");
+        //     this.sound.switchOnOff();
+        //     this.musicPlays = !this.musicPlays;
+        //     this.changeButtonPicture();
+        // });
         
         //=== NAVIGATE ===
         this.navigateThroughGame();
@@ -247,18 +250,28 @@ export class Controller {
         this.gameStarted = true;
         this.isGameOver = false;
         this.isGameWin = false;
+        this.isPaused = false;
         break;
 
         case "isGameOver": 
         this.gameStarted = false;
         this.isGameOver = true;
         this.isGameWin = false;
+        this.isPaused = false;
         break;
 
         case "isGameWin": 
         this.gameStarted = false;
         this.isGameOver = false;
         this.isGameWin = true;
+        this.isPaused = false;
+        break;
+
+        case "isPaused": 
+        this.gameStarted = false;
+        this.isGameOver = false;
+        this.isGameWin = false;
+        this.isPaused = true;
         break;
       } 
     }
@@ -288,7 +301,25 @@ export class Controller {
           this.gameOverScreenRenderer.hide();
           this.startScreenRenderer.show();
         }
-    );
+      );
+
+      this.pauseScreen.createScreen(
+        //weiter
+        () => {
+          this.setGameState("gameStarted");
+          this.pauseScreen.hide();
+        },
+        //start
+        () => {
+          this.pauseScreen.hide();
+          this.startScreenRenderer.show();
+        },
+        //musik an / aus
+        () => {
+          this.sound.switchOnOff();
+          this.musicPlays = !this.musicPlays;
+        }
+      );
     
     }
 
@@ -296,7 +327,7 @@ export class Controller {
     //Methode, die alle Update-Funktionen pro Frame aufurft. 
     gameLoop(dt) {
       if (!this.gameStarted) return; //Wenn das Spiel nicht gestartet ist, nichts updaten
-      if (this.isGameOver || this.isGameWin) return;
+      if (this.isGameOver || this.isGameWin || this.isPaused) return;
 
       //Spieler updaten (Sprung, Dash, Bewegung)
       this.updatePlayer(dt);
@@ -918,7 +949,13 @@ export class Controller {
         this.totalLifes = this.lifes.length;
         this.hudRenderer.LifeHud(this.collectedLifes);
 
-        //HIER noch die Einstellungen
+        //=== PAUSE-BUTTON ===
+        this.hudRenderer.createPauseButton(
+          () => {
+            this.setGameState("isPaused");
+            this.pauseScreen.show();
+          }
+        );
       }
     }
 

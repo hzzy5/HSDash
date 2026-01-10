@@ -149,6 +149,63 @@ export class HudRenderer {
         this.hud.addChild(this.heartSprite2);
     }
 
+
+    //Methode, um den Pause Button anzuzeigen
+    createPauseButton(pause) {
+        const container = new PIXI.Container();
+        this.hud.addChild(container);
+        // Button Background
+        const bg = new PIXI.Graphics();
+        bg.clear();
+        bg.beginFill(0xffffff, 0.55);
+        bg.drawRoundedRect(0, 0, 120, 50, 12);
+        bg.endFill();
+
+        container.addChild(bg);
+
+        // Pause Icon
+        const icon = new PIXI.Text("PAUSE", {
+            fontFamily: "Press Start 2P",
+            fontSize: 18,
+            fill: 0xffffff,
+            stroke: 0x000000,
+            strokeThickness: 4,
+            letterSpacing: 4
+        });
+        
+        icon.anchor.set(0.5);
+        icon.x = 60;
+        icon.y = 25;
+        container.addChild(icon);
+
+        container.eventMode = "static";
+        container.cursor = "pointer";
+
+        container.on("pointerover", () => {
+            bg.clear();
+            bg.beginFill(0xffffff, 0.85);
+            bg.drawRoundedRect(0, 0, 120, 50, 12);
+            bg.endFill();
+        });
+        
+        container.on("pointerout", () => {
+            bg.clear();
+            bg.beginFill(0xffffff, 0.55);
+            bg.drawRoundedRect(0, 0, 120, 50, 12);
+            bg.endFill();
+        });
+            
+        container.on("pointertap", 
+            () => pause()
+        );
+
+        console.log("zeichnen");
+        // Position (HUD – oben rechts)
+        container.x = 25;
+        container.y = 10;
+    }
+
+
 } //end class
 
 
