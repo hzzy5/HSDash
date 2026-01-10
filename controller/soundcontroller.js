@@ -43,8 +43,10 @@ export class SoundController{
     //wird die hintergrundmusik gerade abgespielt?
     musicplaying = false;
 
+    //Die hintergrundMusik zum Bosskampf
     bosstheme;
 
+    //wird die Bosskampf musik gerade abgespielt?
     bossmusicplaying = false;
 
     async init() {

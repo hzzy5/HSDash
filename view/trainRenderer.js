@@ -22,7 +22,7 @@ export class TrainRenderer{
         sprite.y = y;
 
         sprite.anchor.set(0.5);      // Zentriert die Gegner
-        sprite.scale.set(0.1);      // Macht den Gengner kleiner 
+        sprite.scale.set(0.5);      // Macht den Gengner kleiner 
         sprite.zIndex = 901;         // Münze über Player und über Plattform
 
 
@@ -35,7 +35,7 @@ export class TrainRenderer{
         sprite.x = x;
         sprite.y = y;
 
-        sprite.scale.x = 0.1 * directionX; //damit es in die richtige rich tugn gespiegelt ist, wird dann allerdings auch wenn man unter dem steht immer schmaller
+        sprite.scale.x = 0.5 * directionX; //damit es in die richtige rich tugn gespiegelt ist, wird dann allerdings auch wenn man unter dem steht immer schmaller
         //brauchen eine Version mit nur + oder - 1 
     }
 
