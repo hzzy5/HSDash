@@ -172,7 +172,6 @@ export class Controller {
 
         //SOUND:
         this.sound = new SoundController(); //SoundController initialisieren 
-        await this.sound.init();
         
         //SoundButton
         //this.buttonMusikAus = this.renderer.createSprite("soundAus");
