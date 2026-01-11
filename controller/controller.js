@@ -103,7 +103,7 @@ export class Controller {
 
     //LEVEL
     currentLevelIndex = 0; //beim ersten Level starten!!!
-    unlockedLevel = 1; //Anzahl der freigeschalteten Level, d.h. Lvl1 = 1, Lvl1 & 2 = 2
+    unlockedLevels = 1; //Anzahl der freigeschalteten Level, d.h. Lvl1 = 1, Lvl1 & 2 = 2
 
 
     //methode um das ganze Spiel zu initialisieren. Hier werden die Methoden aus der View usw aufgerufen. 
@@ -916,7 +916,6 @@ export class Controller {
     //=== LOAD LEVEL ============================================================================================
     //Genutzt, um das erste Level zu laden
     loadLevel(level) {
-      let nextlevel = this.levelloader.levels[level];
       this.currentLevelIndex = level;
       console.log(this.currentLevelIndex)
       

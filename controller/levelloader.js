@@ -64,6 +64,7 @@ export class LevelLoader {
         this.blocks.add('g'); //gumba
         this.blocks.add('b'); //DB-Bros
         this.blocks.add('z'); //Ziel
+        this.blocks.add('e'); //Exit-Symbol
     }
 
     //Methode, die das Level anhand der Map anzeigt.
@@ -146,6 +147,11 @@ export class LevelLoader {
                     this.goal.sprite = this.goalRenderer.createGoalSprite(this.goal, goal.type);
                     //this.goal.push(goalPole);
                     this.levelSprites.push(this.goal.sprite);
+                }
+
+                else if (char === 'e') {
+                    let exit = this.renderer.createSprite("exit", posX, posY, 0.2);
+                    this.levelSprites.push(exit);
                 }
             }
         }      
