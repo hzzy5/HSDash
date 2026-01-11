@@ -28,7 +28,7 @@ export class LevelSelectRenderer {
     }
 
 
-    showMap(levels, onSelectLevel, onBack) {
+    showLevels(levels, onSelectLevel, onBack) {
         this.container.removeChildren();
         // =========================
         // BACKGROUND

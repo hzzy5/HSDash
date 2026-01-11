@@ -175,7 +175,6 @@ export class LevelLoader {
         this.spikes.length = 0;
         this.gumbas.length = 0;
         this.dbbros.length = 0;
-        this.goal.length = 0;
         this.collision.clear();
     }
 

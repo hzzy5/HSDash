@@ -89,7 +89,6 @@ export class GameWinScreenRenderer {
         //Texturen vorbereiten
         this.coinFilledTex = PIXI.Texture.from("coin5HUD");
         this.coinEmptyTex = PIXI.Texture.from("coin5empty");
-
         
         let coin1 = new PIXI.Sprite(this.coinEmptyTex);
         let coin2 = new PIXI.Sprite(this.coinEmptyTex);
@@ -279,11 +278,11 @@ export class GameWinScreenRenderer {
     updateStarcoins(collected) {
         this.collected5Coins = collected;
 
-        //Coins erzeugen: Wenn Index größer der eingesammelten Münzen ist, 5Coin anzeigen, sonst leer.
+        //Coins erzeugen: Wenn Index kleiner der eingesammelten Münzen ist, 5Coin anzeigen, sonst leer.
         this.starCoin.forEach((coin, index) => {
             coin.texture = index < collected ? this.coinFilledTex: this.coinEmptyTex;
         });
-}
+    }
 
 
 

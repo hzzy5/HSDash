@@ -213,7 +213,7 @@ export class Controller {
           this.levelSelectRenderer.show();
 
           //Level auswählen
-          this.levelSelectRenderer.showMap(
+          this.levelSelectRenderer.showLevels(
             //Beim Klick wird das Level geladen
             this.levelloader.levels, 
             async (levelIndex) => {
@@ -278,8 +278,9 @@ export class Controller {
 
 
     //=== NAVIGATE ============================================================================================
+    //Methode, die alle Screen einmal erstellt. Später werden sie nur noch per show() und hide() ein- bzw. ausgeblendet.
     navigateThroughGame() {
-
+      //WIN SCREEN
       this.gameWinScreenRenderer.createButton(
           //restart: Aktuelles Level neustarten
           () => {this.restartGame();}, 
@@ -292,6 +293,7 @@ export class Controller {
           }
       );
 
+      //GAMEOVER SCREEN
       this.gameOverScreenRenderer.createStartButton(
         //restart
         () => {this.restartGame();},
@@ -301,7 +303,8 @@ export class Controller {
           this.startScreenRenderer.show();
         }
       );
-
+      
+      //PAUSE SCREEN
       this.pauseScreen.createScreen(
         //weiter
         () => {
