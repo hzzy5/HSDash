@@ -283,9 +283,15 @@ export class Controller {
       //WIN SCREEN
       this.gameWinScreenRenderer.createButton(
           //restart: Aktuelles Level neustarten
-          () => {this.restartGame();}, 
+          () => {
+            this.restartGame();
+            this.setGameState("gameStarted");
+          }, 
           //next: Neues Level laden
-          () => {this.loadLevel(this.currentLevelIndex+1);},
+          () => {
+            this.loadLevel(this.currentLevelIndex+1);
+            this.setGameState("gameStarted");
+          },
           //start: zum Startmenü
           () => {
             this.gameWinScreenRenderer.hide(); 
@@ -346,6 +352,8 @@ export class Controller {
 
       //Camera bewegen
       this.cameraRenderer.updateCamera(this.player);
+
+      console.log(this.gameStarted, this.isGameOver, this.isGameWin, this.isPaused);
     }
 
     
@@ -954,8 +962,9 @@ export class Controller {
         //=== PAUSE-BUTTON ===
         this.hudRenderer.createPauseButton(
           () => {
-            this.setGameState("isPaused");
-            this.pauseScreen.show();
+            if(this.isGameOver || this.isGameWin) return;
+              this.setGameState("isPaused");
+              this.pauseScreen.show();
           }
         );
       }

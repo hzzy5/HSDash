@@ -237,7 +237,7 @@ export class PauseScreen {
         //Knopf
         this.knob = new PIXI.Graphics();
         this.knob.clear();
-        this.knob.beginFill(0x52a2eb);
+        this.knob.beginFill(0x89c6fe);
         this.knob.drawRoundedRect(0, 0, 50, TOOGLEHEIGHT-10, 20);
         this.knob.endFill();
 
@@ -288,8 +288,8 @@ export class PauseScreen {
     }
 
     //Methode wird bei jedem Klick aufgerufen, sodass die States wechseln (ON --> OFF --> ON -->...)
-    //Wenn toogle true: Musik läuft, OFF Anzeigen, Kreis links.
-    //Wenn toogle false: Musik aus, ON Anzeigen, Kreis rechts.
+    //Wenn toogle false: Musik läuft, OFF Anzeigen, Kreis links.
+    //Wenn toogle true: Musik aus, ON Anzeigen, Kreis rechts.
     toggle() {
         this.isOn = !this.isOn;
         this.updateToggle();
