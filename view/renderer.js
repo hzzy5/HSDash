@@ -120,7 +120,7 @@ export class Renderer {
             spike: "assets/bilder/stacheln2.png",
             //gumba: "assets/bilder/gumba.png",
             gumba: "assets/bilder/minidahm_anim.json",
-            dbBruder: "assets/bilder/DB-Bruder.png",
+            dbBruder: "assets/bilder/dbbrogro.png",
             zug: "assets/bilder/Zug.png",
             zielGebäude4: "assets/bilder/Ziel_lvl1.png",
             zielFahrstuhl: "assets/bilder/fahrstuhlAnimation.json",

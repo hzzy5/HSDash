@@ -18,7 +18,7 @@ export class DBBroRenderer{
         sprite.y = y -20;
 
         sprite.anchor.set(0.5);      // Zentriert die Brüder
-        sprite.scale.set(0.15);      // Macht die Brüder kleiner 
+        sprite.scale.set(1.8);      // Macht die Brüder kleiner 
         sprite.zIndex = 900;         // Brüder über Player und über Plattform
 
 
@@ -29,9 +29,9 @@ export class DBBroRenderer{
     //Sprite umdrehen - in Richtung Spieler
     mirrorSprite(sprite, left){
         if(left){
-            sprite.scale.x = 0.15;
+            sprite.scale.x = 1.8;
         }else{
-            sprite.scale.x = -0.15;
+            sprite.scale.x = -1.8;
         }
     }
 }
