@@ -61,6 +61,7 @@ export class LevelLoader {
         this.blocks.add('-'); //unsichtbarer Block
         this.blocks.add('l'); //leben
         this.blocks.add('s'); //stacheln
+        this.blocks.add('u'); //stacheln oben/up
         this.blocks.add('g'); //gumba
         this.blocks.add('b'); //DB-Bros
         this.blocks.add('z'); //Ziel
@@ -123,6 +124,13 @@ export class LevelLoader {
                 else if (char === 's') {
                     let spike = new Spikes(posX, posY);
                     spike.sprite = this.spikesRenderer.createSpikeSprite(posX, posY);
+                    this.spikes.push(spike);
+                    this.levelSprites.push(spike.sprite);
+                }
+
+                else if (char === 'u') {
+                    let spike = new Spikes(posX, posY);
+                    spike.sprite = this.spikesRenderer.createUpSpikeSprite(posX, posY);
                     this.spikes.push(spike);
                     this.levelSprites.push(spike.sprite);
                 }

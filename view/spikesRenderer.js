@@ -15,6 +15,23 @@ export class SpikesRenderer{
     
         // Position
         sprite.x = x;
+        sprite.y = y - 2;
+
+        sprite.anchor.set(0.5);      // Zentriert die Stacheln
+        sprite.scale.set(0.3);      // Macht die Stacheln kleiner 
+        sprite.zIndex = 900;         // Stacheln über Player und über Plattform
+
+
+        this.world.addChild(sprite);
+        return sprite;
+    }
+
+    // Methode, um das Stacheln-Sprite zu erstellen
+    createUpSpikeSprite(x, y) {
+        const sprite = PIXI.Sprite.from("spikeoben");
+    
+        // Position
+        sprite.x = x;
         sprite.y = y + 20;
 
         sprite.anchor.set(0.5);      // Zentriert die Stacheln

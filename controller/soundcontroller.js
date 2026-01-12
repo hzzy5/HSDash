@@ -145,8 +145,8 @@ export class SoundController{
     switchToBosstheme(){
         if(this.shouldSoundBeOn){
             if(this.musicplaying && !this.bossmusicplaying){
-                this.backroundmusicLevel.pause();
                 this.backroundmusicLevel.fade(0.3, 0, 2000);
+                this.backroundmusicLevel.pause();
                 this.musicplaying = false;
                 this.bosstheme.play();
                 this.bosstheme.fade(0, 0.3, 2000);
@@ -160,8 +160,8 @@ export class SoundController{
     switchBackToMaintheme(){
         if(this.shouldSoundBeOn){
             if(this.bossmusicplaying && !this.musicplaying){
-                this.bosstheme.pause();
                 this.bosstheme.fade(0.3, 0, 2000);
+                this.bosstheme.pause();
                 this.bossmusicplaying = false;
                 this.backroundmusicLevel.play();
                 this.backroundmusicLevel.fade(0, 0.3, 2000);
@@ -179,7 +179,6 @@ export class SoundController{
 
         }else{
             this.jumpsound.pause();
-            this.coincollected.pause();
             this.backroundmusicLevel.pause();
             this.musicplaying = false;
             this.bosstheme.pause();
