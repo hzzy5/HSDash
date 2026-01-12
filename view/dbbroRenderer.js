@@ -18,7 +18,7 @@ export class DBBroRenderer{
         sprite.y = y -20;
 
         sprite.anchor.set(0.5);      // Zentriert die Brüder
-        sprite.scale.set(1.8);      // Macht die Brüder kleiner 
+        sprite.scale.set(1.8);      // Macht die Brüder größer
         sprite.zIndex = 900;         // Brüder über Player und über Plattform
 
 
