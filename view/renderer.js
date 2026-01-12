@@ -124,6 +124,7 @@ export class Renderer {
             zug: "assets/bilder/Zug.png",
             zielGebäude4: "assets/bilder/Ziel_lvl1.png",
             zielFahrstuhl: "assets/bilder/fahrstuhlAnimation.json",
+            exit: "assets/bilder/ExitSign.png",
 
             lockMap: "assets/bilder/lock3.png",
 
@@ -184,6 +185,17 @@ export class Renderer {
         resize();
         window.addEventListener("resize", resize);
     }
+
+    //Methode, um ein beliebiges Sprite zu erstellen und in die Spielwelt einzufügen 
+    createSprite(alias, x, y, scale) {
+        let sprite = PIXI.Sprite.from(alias);
+        sprite.x = x;
+        sprite.y = y;
+        sprite.scale.set(scale);
+        //Sprite anzeigen lassen
+        this.world.addChild(sprite); 
+        return sprite;
+        }
 
 
     //Methode, den PixiJS Ticker startet. Pro Frame wird die Update-Funktion aufgerufen.

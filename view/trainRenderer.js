@@ -32,8 +32,11 @@ export class TrainRenderer{
             sprite.x = x;
             sprite.y = y;
 
-            sprite.scale.x = 0.5 * directionX; //damit es in die richtige richtung gespiegelt ist, 
-            //wird dann allerdings auch wenn man direkt unter oder direkt über dem DBBro steht immer schmaler beim y wert
+            if(directionX < 0){ //damit es in die richtige richtung gespiegelt ist
+                sprite.scale.x = - 0.5;
+            }else {
+                sprite.scale.x = 0.5;
+            }
         }
     }
 
