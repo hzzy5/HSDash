@@ -24,9 +24,10 @@ import { DBBroRenderer } from "../view/dbbroRenderer.js";
 import { TrainRenderer } from "../view/trainRenderer.js";
 import { GoalRenderer } from "../view/goalRenderer.js";
 import { BlockRenderer } from "../view/blockRenderer.js";
+import { ElevatorRenderer } from "../view/elevatorRenderer.js";
 import { GameOverScreenRenderer } from "../view/gameOverScreenRenderer.js";
 import { GameWinScreenRenderer } from "../view/gameWinScreenRenderer.js"
-import { CharacterSelectRederer } from "../view/characterSelectRenderer.js";
+//import { CharacterSelectRederer } from "../view/characterSelectRenderer.js";
 import { LevelSelectRenderer } from "../view/levelSelectRenderer.js";
 import { PauseScreen } from "../view/pauseScreen.js";
 
@@ -34,6 +35,7 @@ import { PauseScreen } from "../view/pauseScreen.js";
 //CONTROLLER
 import { LevelLoader } from "./levelloader.js";
 import { SoundController } from "./soundcontroller.js";
+
 
 // Einfache Input-Verfolgung und zentralisierte Update-Funktion
 export class Controller {
@@ -52,6 +54,7 @@ export class Controller {
     trainRenderer;
     goalRenderer;
     blockRenderer;
+    elevatorRenderer;
     characterSelectRenderer;
     levelSelectRenderer;
     pauseScreen;
@@ -66,6 +69,7 @@ export class Controller {
     dbbros = []; //Liste aller Hammerbrüder, die es gibt; derzeit nur einer aber evt zum erweitern
     trains = []; //Liste der Züge die der Hammerbruder wirft
     goal = []; //max. 1 Ziel
+    elevators = []; //Liste aller Fahrstühle
 
     //CONTROLLER
     levelloader;
@@ -80,9 +84,11 @@ export class Controller {
     keys = {};
     jumpRequested = false;
     dashRequested = false;
+    takeElevator = false;
     DEBUG = true;
     lastJumpY = null;
     lastJumpTime = 0;
+    elevatorHint = null;
 
     // Collider-Liste (vierecke mit x,y,width,height)
     colliders = []; //Für kollisionen
@@ -100,6 +106,7 @@ export class Controller {
     isGameOver = false;
     isGameWin = false;
     gameLoopRunning = false;
+    levelFinished = false;
 
     //LEVEL
     currentLevelIndex = 0; //beim ersten Level starten!!!
@@ -132,6 +139,8 @@ export class Controller {
         this.trainRenderer = new TrainRenderer(this.renderer.world, this.renderer.ticker);
         this.goalRenderer = new GoalRenderer(this.renderer.world);
         this.blockRenderer = new BlockRenderer(this.renderer.world);
+        this.elevatorRenderer = new ElevatorRenderer(this.renderer.world);
+        this.elevatorHint = this.elevatorRenderer.createElevatorHint(this.player);
 
         //STARTSCREEN
         this.startScreenRenderer = new StartScreenRenderer(
@@ -167,7 +176,8 @@ export class Controller {
                                            this.gumbaRenderer, this.gumbas,
                                            this.dbbroRenderer, this.dbbros,
                                            this.goalRenderer, this.goal,
-                                           this.blockRenderer,); 
+                                           this.blockRenderer,
+                                           this.elevatorRenderer, this.elevators); 
                                 
 
         //SOUND:
@@ -345,6 +355,7 @@ export class Controller {
       this.checkEndBoss(dt); //Endgegner überprüfen, Kollision mit Player? + Weiterlaufen der Züge, werfen
       this.player.updateInvincibility(dt); //Unbesiegbarkeit des Spieler überprüfen
       this.playerRenderer.setInvincibleBlink(this.player.invincible); //Flackern während der Spieler unbesiegbar ist 
+       this.checkElevator();
       this.levelCompleted(); //Ziel erreicht?
       
       //Hintergrund scrollen
@@ -352,8 +363,11 @@ export class Controller {
 
       //Camera bewegen
       this.cameraRenderer.updateCamera(this.player);
+      
+      //E-Taste zurücksetzen, damit Aufzugfahren nicht nachträglich passieren kann. Nur im selben Frame
+      this.takeElevator = false;
 
-      console.log(this.gameStarted, this.isGameOver, this.isGameWin, this.isPaused);
+      //console.log(this.gameStarted, this.isGameOver, this.isGameWin, this.isPaused);
     }
 
     
@@ -374,6 +388,11 @@ export class Controller {
         if (k === ' ' || k === 'arrowup') {
           this.jumpRequested = true; // Man kann nur springen wenn es einen player gibt und dieser auf dem boden ist
         } 
+
+        //E um in den Fahrstuhl einzusteigen
+        if( k === 'e') {
+          this.takeElevator = true;
+        }
     }
 
     //=== KEY UP ============================================================================================
@@ -775,6 +794,71 @@ export class Controller {
             }
         }
     }
+
+    //=== CHECK ELEVATOR ============================================================================================
+    checkElevator() {
+      let nearElevator = false;
+
+      for (const elevator of this.elevators) {
+        //Player steht noch drinne
+        if (elevator.playerInside) {
+            // prüfen ob Player weg ist, keine Kollision
+            // if (!this.collision.collisionWithElevator(this.player, elevator)) {
+            //     elevator.playerInside = false;
+            //     this.player.onElevator = false;
+            // }
+            continue;
+        }
+
+        if (elevator.state === "moving") continue;
+
+        if (this.collision.collisionWithElevator(this.player, elevator)) {
+            nearElevator = true;
+
+            // Hint anzeigen
+            this.elevatorHint.visible = true;
+            this.elevatorHint.x = this.player.x - this.elevatorHint.width / 2 + this.player.width / 2;
+            this.elevatorHint.y = this.player.y - this.elevatorHint.height - 10;
+            
+            //Aniamtion zum Öffnen des Fahrstuhls abspielen
+            //Tür öffnen, wenn noch nicht offen
+            if (elevator.state === "idle" || elevator.state === "closed") {
+                elevator.state = "open";
+                this.elevatorRenderer.open(elevator);
+            }
+            
+            //Wenn der Fahrstuhl offen ist, kann es los
+            if (elevator.state === "open") {
+                elevator.state = "ready";
+            }
+
+            // Taste E
+            if (this.takeElevator && elevator.state === "ready") {
+              this.takeElevator = false;
+              elevator.playerInside = true;
+              elevator.takeTheElevator();
+              this.player.takeTheElevator(elevator);
+              
+            }
+        }
+      
+        //States zurücksetzten, damit man sofort wieder fahren kann
+        elevator.playerInside = false;
+        this.player.onElevator = false;
+        }
+
+      if (!nearElevator) {
+        this.elevatorHint.visible = false;
+
+        for (const elevator of this.elevators) {
+            if (elevator.state === "ready" || elevator.state === "open") {
+                elevator.state = "closed";
+                this.elevatorRenderer.close(elevator);
+            }
+        }
+      }
+    }
+
     
     //=== RESTART ============================================================================================
     restartGame(){
@@ -836,6 +920,15 @@ export class Controller {
             life.sprite.visible = true;
         }
 
+        //Fahrstuhl auf anfangsposition bringen
+        for (const elevator of this.elevators) {
+          elevator.resetElevator();
+        }
+
+        //Ziel-Fahrstuhl beim zweiten Level schließen
+        if (this.currentLevelIndex === 1 && this.goalRenderer.currentGoal)
+          this.goalRenderer.resetElevator();
+
         //herzenanzahl zurück auf 2 
         this.collectedLifes = 2;
         this.hudRenderer.LifeHud(this.collectedLifes);
@@ -844,6 +937,8 @@ export class Controller {
         this.collectedCoins = 0;
         this.collected5Coins = 0;
         this.hudRenderer.updateCoinHud(this.collectedCoins, this.collected5Coins);
+
+        //this.levelFinished = false;
     }
 
     //=== MUSIC BUTTON ============================================================================================
@@ -866,14 +961,23 @@ export class Controller {
 
     //=== LEVEL COMPLETED? ============================================================================================
     levelCompleted() {
+      //if(this.levelFinished = false) return;
       if (!this.levelloader.goal) return;
       
-      //Wenn man das Ziel erreicht hat
       if (this.collision.collision(this.player, this.levelloader.goal)) {
+        //this.levelFinished = true;
         this.unlockNextLevel();
         this.gameWon();
+
+        //Wenn 2tes Level, Animation abspielen
+        if (this.currentLevelIndex === 1 && this.goalRenderer.currentGoal) {
+          this.goalRenderer.openElevator();
+        }
       }
     }
+
+    
+
 
 
     //=== GAMEOVER ============================================================================================

@@ -10,6 +10,7 @@ export class GoalRenderer{
         // this.hitboxDebug = new PIXI.Graphics();
         // this.hitboxDebug.zIndex = 9999;
         this.currentGoal;
+        this.secondLevel = false;
     }
 
     // Methode, um das Goal Pole-Sprite zu erstellen.
@@ -34,6 +35,7 @@ export class GoalRenderer{
                 this.currentGoal = PIXI.Sprite.from("zielGebäude4"); 
                 this.currentGoal.scale.set(2);
                 this.currentGoal.zIndex = 999;
+                this.secondLevel = false;
                 break;
 
             case "zielFahrstuhl":
@@ -42,14 +44,24 @@ export class GoalRenderer{
                 this.currentGoal.scale.set(1.6);
                 this.currentGoal.animationSpeed = 1/6;
                 this.currentGoal.zIndex = 0; //Player soll vor dem Fahrstuhl stehen.
-                this.openElevator(); //später im Controller
+                this.secondLevel = true;
                 break;
         }
     }
 
     openElevator() {
-        this.currentGoal.loop = true; //später false
-        this.currentGoal.play();
+        this.currentGoal.loop = false;
+        this.currentGoal.animationSpeed = 1/6;
+        this.currentGoal.gotoAndPlay(0); 
+    }
+
+    resetElevator() {
+          if (!this.secondLevel) return;
+          if (!this.currentGoal) return;
+          
+          if (this.currentGoal.totalFrames > 0) { //Beim Levelwechsel sind die Frames noch nicht vollständig geladen. Deshalb alle möglichen Laufzeitfehler abfanegn
+            this.currentGoal.gotoAndStop(0); //damit der Fahrstuhl wieder zu ist
+          }
     }
 
     // //DEBUG

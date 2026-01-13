@@ -59,6 +59,9 @@ export class Player {
     //wenn man getroffen wird 3 sek invincible
     this.invincible = false;
     this.invincibleTimer = 0;
+
+    //Elevator-Zustand
+    this.onElevator = false;
   }
   
 
@@ -161,5 +164,19 @@ export class Player {
     }
   }
 
+  //Methode, um mit dem Fahrstuhl zu fahren
+  takeTheElevator(elevator) {
+    this.onElevator = true;
+    
+    //Elevator
+    let ex = elevator.getPositionX();
+    let ey = elevator.getPositionY();
+
+    //Player 
+    this.x = ex; // achor des Fahrstuhls ist schon mittig
+    this.y = ey + this.height; // kommt eine etage runter raus
+
+    console.log(Math.round(this.x), this.y, this.state );
+  }
 
 } //end class player

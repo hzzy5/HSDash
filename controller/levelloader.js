@@ -9,6 +9,7 @@ import { Spikes } from "../model/spikes.js";
 import { Gumbas } from "../model/gumbas.js";
 import { DBBro } from "../model/dbbro.js";
 import { Goal } from "../model/goal.js";
+import { Elevator } from "../model/elevator.js";
 
 //VIEW
 // import { Renderer } from "../view/renderer.js"; 
@@ -24,7 +25,7 @@ import { Goal } from "../model/goal.js";
 
 export class LevelLoader {
 
-    constructor(renderer, playerRenderer, sceneRenderer, collision, coinRenderer, coins, coins5, lifesRenderer, lifes, spikesRenderer, spikes,  gumbaRenderer, gumbas, dbbroRenderer, dbbros, goalRenderer, goal, blockRenderer) {
+    constructor(renderer, playerRenderer, sceneRenderer, collision, coinRenderer, coins, coins5, lifesRenderer, lifes, spikesRenderer, spikes,  gumbaRenderer, gumbas, dbbroRenderer, dbbros, goalRenderer, goal, blockRenderer, elevatorRenderer, elevators) {
         this.renderer = renderer;
         this.playerRenderer = playerRenderer;
         this.coinRenderer = coinRenderer;
@@ -34,7 +35,8 @@ export class LevelLoader {
         this.gumbaRenderer = gumbaRenderer;
         this.dbbroRenderer = dbbroRenderer;
         this.goalRenderer = goalRenderer;
-        this.blockRenderer = blockRenderer
+        this.blockRenderer = blockRenderer;
+        this.elevatorRenderer = elevatorRenderer;
 
         this.collision = collision;
         //this.player;
@@ -45,6 +47,7 @@ export class LevelLoader {
         this.gumbas = gumbas;
         this.dbbros = dbbros;
         this.goal = goal;
+        this.elevators = elevators;
 
         this.levels = levels;
         this.levelSprites = []; //Array aus allen Sprite-Objekten, die in einem Level liegen
@@ -65,7 +68,9 @@ export class LevelLoader {
         this.blocks.add('g'); //gumba
         this.blocks.add('b'); //DB-Bros
         this.blocks.add('z'); //Ziel
-        this.blocks.add('e'); //Exit-Symbol
+        this.blocks.add('e'); //exit-Symbol
+        this.blocks.add('^'); //fahrstuhl oben 
+        this.blocks.add('v'); //fahrstuhl unten
     }
 
     //Methode, die das Level anhand der Map anzeigt.
@@ -158,8 +163,37 @@ export class LevelLoader {
                 }
 
                 else if (char === 'e') {
-                    let exit = this.renderer.createSprite("exit", posX, posY, 0.2);
+                    let exit = this.renderer.createSprite("exit", posX, posY, 0.2, 0, 0);
                     this.levelSprites.push(exit);
+                }
+
+                else if (char === '^') {
+                    const elevator = new Elevator(posX, "top");
+                    
+                    //Damit im Hintergrund auch ein Fahrstuhl ist
+                    let e = this.renderer.createSprite("fahrstuhl", elevator.getPositionX(), elevator.getPositionY(), 1.6, 0.4, 0);
+                    this.levelSprites.push(e);
+                    
+                    elevator.sprite = this.elevatorRenderer.createElevatorSprite(elevator.getPositionX(), elevator.getPositionY());
+                    this.elevators.push(elevator);
+                    this.levelSprites.push(elevator.sprite);
+
+                    
+                }
+
+                else if (char === 'v') {
+                    const elevator = new Elevator(posX, "bottom");
+                    
+                    //Damit im Hintergrund auch ein Fahrstuhl ist
+                    let eBottom = this.renderer.createSprite("fahrstuhl", elevator.getPositionX(), elevator.getPositionY(), 1.6, 0.4, 0);
+                    let eTop = this.renderer.createSprite("fahrstuhl", elevator.getPositionX(), 212, 1.6, 0.4, 0);
+                    this.levelSprites.push(eBottom, eTop);
+                    
+                    elevator.sprite = this.elevatorRenderer.createElevatorSprite(elevator.getPositionX(), elevator.getPositionY());
+                    this.elevators.push(elevator);
+                    this.levelSprites.push(elevator.sprite);
+
+                    
                 }
             }
         }      
@@ -189,6 +223,7 @@ export class LevelLoader {
         this.spikes.length = 0;
         this.gumbas.length = 0;
         this.dbbros.length = 0;
+        this.elevators.length = 0;
         this.collision.clear();
     }
 

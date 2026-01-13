@@ -31,6 +31,18 @@ export class Collision {
 
     }
 
+    //Methode, die überprüft, ob eine Kollision mit dem Fahrstuhl! stattgefunden hat
+    collisionWithElevator(a, b) {
+      let bx = b.getPositionX();
+      let by = b.getPositionY();
+
+        return !
+        (a.x + a.width <= bx || 
+         a.x >= bx + b.width || 
+         a.y + a.height <= by || 
+         a.y >= by + b.height);
+    }
+
     //Methode, die mögliche Kollisionsblöcke in die Liste hinzufügt
     addCollider(c) { //Für Kollisionserkennung zum hinzufügen von möglichen Kollsionsblöcken
       this.colliders.push(c);
