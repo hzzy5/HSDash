@@ -106,7 +106,10 @@ export class Controller {
     isGameOver = false;
     isGameWin = false;
     gameLoopRunning = false;
-    levelFinished = false;
+
+    playerLocked = false; //kein playerUpdate(), wenn der Player im Fahrstuhl ist
+    pressLeftKey = false; //bug beim Fahrstuhl
+    pressRightKey = false;
 
     //LEVEL
     currentLevelIndex = 0; //beim ersten Level starten!!!
@@ -367,7 +370,7 @@ export class Controller {
       //E-Taste zurücksetzen, damit Aufzugfahren nicht nachträglich passieren kann. Nur im selben Frame
       this.takeElevator = false;
 
-      //console.log(this.gameStarted, this.isGameOver, this.isGameWin, this.isPaused);
+      console.log(Math.round(this.player.x), Math.round(this.player.y));
     }
 
     
@@ -400,6 +403,8 @@ export class Controller {
       //Wenn taste nicht mehr gedrückt dann muss das im array auch wieder zurückgesetzt werden
       const k = (typeof e.key === 'string') ? e.key.toLowerCase() : e.key;
       this.keys[k] = false;
+      this.pressLeftKey = false;
+      this.pressRightKey = false;
     }
 
 
@@ -414,9 +419,11 @@ export class Controller {
       let dir = 0; //Richtung: -1 = links, 1 = rechts, 0 = keine Bewegung -> wird nach jedem frame neu berechnet
       if (this.keys['a'] || this.keys['arrowleft']) {
         dir -= 1; // -= weil es nach jedem frame neu berechnet wird und so es möglich ist dass beide tasten gedrückt werden
+        this.pressLeftKey = true;
       }
       if (this.keys['d'] || this.keys['arrowright']) {
         dir += 1; //bei += genauso ( 0 += 1 = 1 -= 1 = 0)
+        this.pressRightKey = true;
       }
 
       //=== SPRINT (Shift) ===
@@ -461,6 +468,7 @@ export class Controller {
       // Horizontal bewegen
       //console.log("dir:", dir, "currentSpeed:", currentSpeed, "dt:", dt, "dx:", dx);
       this.player.move(dx, 0); 
+      console.log("move: " + this.player.x, this.player.y);
 
       //=== KOLLISIONSAUFLÖSUNG === 
       // Kollisionen nach horizontaler Bewegung lösen
@@ -802,43 +810,45 @@ export class Controller {
       for (const elevator of this.elevators) {
         //Player steht noch drinne
         if (elevator.playerInside) {
-            // prüfen ob Player weg ist, keine Kollision
-            // if (!this.collision.collisionWithElevator(this.player, elevator)) {
-            //     elevator.playerInside = false;
-            //     this.player.onElevator = false;
-            // }
+            //prüfen ob Player weg ist, keine Kollision
+            if (!this.collision.collisionWithElevator(this.player, elevator)) {
+                elevator.playerInside = false;
+                this.player.onElevator = false;
+            }
             continue;
         }
 
+        //Wenn der Fahrstuhl gerade fährt  
         if (elevator.state === "moving") continue;
 
+        //Wenn der Player im Fahrstuhl ist
         if (this.collision.collisionWithElevator(this.player, elevator)) {
             nearElevator = true;
 
-            // Hint anzeigen
+            //Hint anzeigen
             this.elevatorHint.visible = true;
             this.elevatorHint.x = this.player.x - this.elevatorHint.width / 2 + this.player.width / 2;
             this.elevatorHint.y = this.player.y - this.elevatorHint.height - 10;
             
-            //Aniamtion zum Öffnen des Fahrstuhls abspielen
+            //ANIMATION: TÜR ÖFFNEN
             //Tür öffnen, wenn noch nicht offen
             if (elevator.state === "idle" || elevator.state === "closed") {
                 elevator.state = "open";
                 this.elevatorRenderer.open(elevator);
             }
             
-            //Wenn der Fahrstuhl offen ist, kann es los
+            //Wenn der Fahrstuhl offen ist, kann er los fahren
             if (elevator.state === "open") {
                 elevator.state = "ready";
             }
 
-            // Taste E
+            //Taste E 
             if (this.takeElevator && elevator.state === "ready") {
+              if (this.pressLeftKey || this.pressRightKey) return; //Player muss still stehen
               this.takeElevator = false;
-              elevator.playerInside = true;
-              elevator.takeTheElevator();
-              this.player.takeTheElevator(elevator);
-              
+
+              elevator.takeTheElevator(); //playerInside
+              this.player.takeTheElevator(elevator); //player.onElevator
             }
         }
       
@@ -847,13 +857,14 @@ export class Controller {
         this.player.onElevator = false;
         }
 
+      //Sobald es keine Kollision mehr gibt
       if (!nearElevator) {
-        this.elevatorHint.visible = false;
+        this.elevatorHint.visible = false; //Hint verstecken 
 
         for (const elevator of this.elevators) {
             if (elevator.state === "ready" || elevator.state === "open") {
                 elevator.state = "closed";
-                this.elevatorRenderer.close(elevator);
+                this.elevatorRenderer.close(elevator); //Tür schließen
             }
         }
       }
@@ -881,6 +892,7 @@ export class Controller {
         this.player.vy = 0;
         this.player.onGround = false;
         this.player.state = "idle" ;
+        this.playerLocked = false;
 
         //Kamera zurücksetzen auf Player position
         this.cameraRenderer.resetCamera();
@@ -938,7 +950,10 @@ export class Controller {
         this.collected5Coins = 0;
         this.hudRenderer.updateCoinHud(this.collectedCoins, this.collected5Coins);
 
-        //this.levelFinished = false;
+        //Eingaben zurücksetzen, damit registrierte Sprünge nicht im neuen Spiel noch ausgeführt werden
+        this.jumpRequested = false;
+        this.dashRequested = false; 
+        this.takeElevator = false; 
     }
 
     //=== MUSIC BUTTON ============================================================================================

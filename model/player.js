@@ -175,8 +175,6 @@ export class Player {
     //Player 
     this.x = ex; // achor des Fahrstuhls ist schon mittig
     this.y = ey + this.height; // kommt eine etage runter raus
-
-    console.log(Math.round(this.x), this.y, this.state );
   }
 
 } //end class player

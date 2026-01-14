@@ -12,13 +12,13 @@ export class ElevatorRenderer {
         this.framesBackward // Reverse-Frames
     }
 
-    //Methode, um das DBBro-Sprite zu erstellen
+    //Methode, um das Elevator-Sprite zu erstellen
     createElevatorSprite(x, y) {
-    const sheet = PIXI.Assets.get("zielFahrstuhl").data.animations["frame"]; // Array von Frame-Namen
+    const sheet = PIXI.Assets.get("zielFahrstuhl").data.animations["frame"]; //Array aus Frames
 
     //String in pixi Textures konventieren
-    this.framesForward = sheet.map(name => PIXI.Texture.from(name));
-    this.framesBackward = [...this.framesForward].reverse();
+    this.framesForward = sheet.map(name => PIXI.Texture.from(name)); //Jedes Frame holen und darauf ein Pixi-Texture machen
+    this.framesBackward = [...this.framesForward].reverse(); //... Kopie des Arrays. Array wird in-place umgedreht
 
     this.elevator = new PIXI.AnimatedSprite(this.framesForward);
     this.elevator.anchor.set(0.4 , 0);

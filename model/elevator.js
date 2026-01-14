@@ -69,9 +69,9 @@ export class Elevator {
         this.currentFloor = "top";
     }
 
-    // Fahrt beendet
+    //Fahrt beendet
     this.state = "idle";
-    this.playerInside = true;
+    this.playerInside = true; //wird im Controller erst auf false gesetzt, wenn es keine Kollision meh gibt
 }
 
 
