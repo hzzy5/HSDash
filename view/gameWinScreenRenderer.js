@@ -290,7 +290,9 @@ export class GameWinScreenRenderer {
         //Player 
         const player = PIXI.Sprite.from("player");
         player.anchor.set(0.5, 0);
-        player.scale.set(1.5);
+        player.scale.set(2);
+        player.x = 0;
+        player.y = 0;
 
         // Container für Text + Player
         const container = new PIXI.Container();
@@ -331,9 +333,10 @@ export class GameWinScreenRenderer {
         container.addChild(text);
         
         container.visible = true;
+        //container.scale.set(1.25);
 
         // Zum Stage hinzufügen
-        this.container.addChild(container);
+        this.ui.addChild(container);
         
         return container;
     }

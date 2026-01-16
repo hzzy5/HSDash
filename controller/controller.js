@@ -114,6 +114,10 @@ export class Controller {
     //LEVEL
     currentLevelIndex = 0; //beim ersten Level starten!!!
     unlockedLevels = 1; //Anzahl der freigeschalteten Level, d.h. Lvl1 = 1, Lvl1 & 2 = 2
+    end = false; 
+    
+    endMessage = null; 
+
 
 
     //methode um das ganze Spiel zu initialisieren. Hier werden die Methoden aus der View usw aufgerufen. 
@@ -163,6 +167,11 @@ export class Controller {
             this.renderer.screen,
             this.collected5Coins //wird zu früh übergeben! Iwie coin anzeige und overlay trennen
         );
+        this.endMessage = this.gameWinScreenRenderer.showfinalMessage();
+        this.endMessage.x = window.innerWidth/2+325;
+        this.endMessage.y = window.innerHeight-265;
+        this.endMessage.visible = false;
+
 
 
         this.levelSelectRenderer = new LevelSelectRenderer(this.renderer.ui, this.renderer.screen, this.renderer.ticker);
@@ -297,17 +306,24 @@ export class Controller {
       this.gameWinScreenRenderer.createButton(
           //restart: Aktuelles Level neustarten
           () => {
+            this.endMessage.visible = false;
             this.restartGame();
             this.setGameState("gameStarted");
           }, 
           //next: Neues Level laden
           () => {
             this.loadLevel(this.currentLevelIndex+1);
-            this.setGameState("gameStarted");
+            if (this.end) {
+              this.endMessage.visible = true; 
+              return;
+            }
+              
+              this.setGameState("gameStarted");
           },
           //start: zum Startmenü
           () => {
             this.gameWinScreenRenderer.hide(); 
+            this.endMessage.visible = false;
             this.startScreenRenderer.show();
           }
       );
@@ -1058,6 +1074,7 @@ export class Controller {
         //Sonst Endscreen einblenden
       } else {
         console.log("Alle Level geschafft!");
+        this.end = true;
         //this.renderer.ticker.stop(); // oder Endscreen
       }
     }
