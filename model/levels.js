@@ -46,7 +46,7 @@ export var levels = [
 
     {
         name: "level02",
-        unlocked: true,
+        unlocked: false,
         background: "gebäude 4",
         goal:  {
             type: "zielFahrstuhl",

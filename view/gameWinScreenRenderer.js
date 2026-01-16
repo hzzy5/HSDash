@@ -285,5 +285,58 @@ export class GameWinScreenRenderer {
     }
 
 
+    //Methode, die eine Anzeige erzeugt, dass alle Level gespielt wurden. 
+    showfinalMessage() {
+        //Player 
+        const player = PIXI.Sprite.from("player");
+        player.anchor.set(0.5, 0);
+        player.scale.set(1.5);
+
+        // Container für Text + Player
+        const container = new PIXI.Container();
+        
+        //Sprechblase
+        const bubble = new PIXI.Graphics();
+        bubble.lineStyle(4, 0x000000, 1);
+        bubble.beginFill(0xffffff);
+        
+        bubble.drawRoundedRect(0, 0, 290, 100, 1);
+        
+        bubble.moveTo(220, 100);
+        bubble.lineTo(270, 100);
+        bubble.lineTo(245, 125);
+        bubble.closePath();
+        
+        bubble.endFill();
+        
+        //Text
+        const text = new PIXI.Text("Glückwunsch, du hast alle \nLevel gewonnen! \nRefreshe die Seite, um \nnochmal zu spielen.", {
+            fontFamily: "Press Start 2P",
+            fontSize: 10,
+            fill: 0x000000,
+            lineHeight: 20,
+        });
+
+        //Bubble über Player
+        bubble.x = player.x - bubble.width + player.width / 2 -10;
+        bubble.y = player.y - bubble.height -20;
+        
+        //Text mittig in der Bubble platzieren
+        text.x = bubble.x + bubble.width / 2- text.width / 2;
+        text.y = bubble.y + text.height / 4 -10;
+        
+        // Alles in Container packen
+        container.addChild(player);
+        container.addChild(bubble);
+        container.addChild(text);
+        
+        container.visible = true;
+
+        // Zum Stage hinzufügen
+        this.container.addChild(container);
+        
+        return container;
+    }
+
 
 } //end class

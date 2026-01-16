@@ -102,10 +102,7 @@ export class Renderer {
 
 
             //SPIELELEMENTE
-            //player: "assets/bilder/player4.png",
-            // sebastian: "assets/bilder_lvl1/playermodel.png",
-            // dennis: "assets/bilder_lvl1/playermodel2.png",
-            // blueFrame: "assets/bilder/rahmen.png",
+            player: "assets/bilder_lvl1/playermodelgro2.png",
             vorschau: "assets/bilder_lvl1/Vorschau.png",
 
             //coin: "assets/bilder/coin.png",
