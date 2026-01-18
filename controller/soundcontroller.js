@@ -124,7 +124,7 @@ export class SoundController{
             
         //da autoplay von den meisten Browsern unterdrückt wird, wird die Musik erst bei Interaktion mit der Website abgespielt
         if(this.shouldSoundBeOn){
-            if(!this.musicplaying){
+            if(!this.musicplaying && !this.bossmusicplaying){
                 this.backroundmusicLevel.play();
                 this.musicplaying = true;
             }
@@ -134,7 +134,7 @@ export class SoundController{
     //Diese Methode wird auch beim Starten des Levels aufgerufen, sollte die Musik nicht schon vorher angefangen haben
     backroundMusic(){
         if(this.shouldSoundBeOn){
-            if(!this.musicplaying){
+            if(!this.musicplaying && !this.bossmusicplaying){
                 this.backroundmusicLevel.play();
                 this.musicplaying = true;
             }
